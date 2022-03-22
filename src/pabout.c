@@ -25,12 +25,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <allegro.h>
+//#include <allegro.h>
+#include <stdlib.h>
 #include "color.h"
 #include "gui.h"
 #include "pabout.h"
 
-static BITMAP *about_bmp;
+//static BITMAP *about_bmp;
 
 static char *about_line[] = {
     "C   /                      ",
@@ -67,6 +68,7 @@ static char *about_line[] = {
 
 static void draw_about(void)
 {
+    /*
     int i, y;
 
     text_mode(color[C_PANEL_BACK]);
@@ -76,27 +78,28 @@ static void draw_about(void)
 
     y = 10;
     for (i = 0; about_line[i]; i++) {
-	switch (about_line[i][0]) {
-	case 'C':
-	    textout_centre(about_bmp, font, about_line[i]+1, 170, y, color[C_PANEL_TEXT]);
-	    break;
-	case 'J':
-	    textout_justify(about_bmp, font, about_line[i]+1, 10, 330, y, 150, color[C_PANEL_TEXT]);
-	    break;
-	case 'P':
-	    y += 5;
-	    break;
-	default:
-	    textout(about_bmp, font, about_line[i]+1, 10, y, color[C_PANEL_TEXT]);
-	    break;
-	}
-	y += 10;
+    switch (about_line[i][0]) {
+    case 'C':
+        textout_centre(about_bmp, font, about_line[i]+1, 170, y, color[C_PANEL_TEXT]);
+        break;
+    case 'J':
+        textout_justify(about_bmp, font, about_line[i]+1, 10, 330, y, 150, color[C_PANEL_TEXT]);
+        break;
+    case 'P':
+        y += 5;
+        break;
+    default:
+        textout(about_bmp, font, about_line[i]+1, 10, y, color[C_PANEL_TEXT]);
+        break;
     }
-    
+    y += 10;
+    }
+
     unscare_mouse();
-    release_bitmap(about_bmp);
+    release_bitmap(about_bmp);*/
 }
 
+/*
 void pabout_show(BITMAP *bmp)
 {
     about_bmp = bmp;
@@ -104,10 +107,11 @@ void pabout_show(BITMAP *bmp)
     clear_to_color(about_bmp, color[C_PANEL_BACK]);
     draw_about();
 }
+*/
 
 void pabout_hide(void)
 {
-    about_bmp = NULL;
+    //about_bmp = NULL;
 }
 
 void pabout_down(int mx, int my, int mb)

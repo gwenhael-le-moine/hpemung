@@ -25,14 +25,20 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <allegro.h>
+//#include <allegro.h>
+#include <stdlib.h>
 #include "color.h"
 
 #define RESERVED_LCD	128
 
 int color[C_COUNT];
 
-static PALETTE palette;
+typedef struct RGB
+{
+    unsigned char r, g, b;
+} RGB;
+
+//static PALETTE palette;
 
 static int lcd_0_r, lcd_0_g, lcd_0_b;
 static int lcd_1_r, lcd_1_g, lcd_1_b;
@@ -40,9 +46,9 @@ static int lcd_mode;
 
 static void set_lcd_color(int i, int v)
 {
-    palette[i].r = (lcd_0_r * (255 - v) + lcd_1_r * v) / 255;
-    palette[i].g = (lcd_0_g * (255 - v) + lcd_1_g * v) / 255;
-    palette[i].b = (lcd_0_b * (255 - v) + lcd_1_b * v) / 255;
+//    palette[i].r = (lcd_0_r * (255 - v) + lcd_1_r * v) / 255;
+//    palette[i].g = (lcd_0_g * (255 - v) + lcd_1_g * v) / 255;
+//    palette[i].b = (lcd_0_b * (255 - v) + lcd_1_b * v) / 255;
 }
 
 static int bit_count(unsigned int i)
@@ -50,8 +56,8 @@ static int bit_count(unsigned int i)
     int n = 0;
 
     while (i) {
-	n += i & 1;
-	i >>= 1;
+    n += i & 1;
+    i >>= 1;
     }
     return n;
 }
@@ -85,15 +91,16 @@ lcd_color_func lcd_color_functions[] = {
     exp_color
 };
 
-static void build_lcd_palette(void)
+void build_lcd_palette(void)
 {
+    /*
     int i;
 
     for (i = 0; i < RESERVED_LCD; i++) {
-	set_lcd_color(i, lcd_color_functions[lcd_mode](i));
+        set_lcd_color(i, lcd_color_functions[lcd_mode](i));
     }
-
-    set_palette_range(palette, 0, RESERVED_LCD-1, FALSE);
+     */
+  //  set_palette_range(palette, 0, RESERVED_LCD-1, FALSE);
 }
 
 void color_lcd(int r0, int g0, int b0, int r1, int g1, int b1)
@@ -113,43 +120,44 @@ void color_lcd_mode(int mode)
     build_lcd_palette();
 }
 
-void color_set(int i, int r, int g, int b)
+void color_set_emu(int i, int r, int g, int b)
 {
-    if (bitmap_color_depth(screen) == 8) {
-	palette[color[i]].r = r >> 2;
-	palette[color[i]].g = g >> 2;
-	palette[color[i]].b = b >> 2;
-	set_color(color[i], palette + color[i]);
-    } else {
-	color[i] = makecol(r, g, b);
-    }
+//    if (bitmap_color_depth(screen) == 8) {
+//	palette[color[i]].r = r >> 2;
+//	palette[color[i]].g = g >> 2;
+//	palette[color[i]].b = b >> 2;
+//	set_color(color[i], palette + color[i]);
+//    } else {
+//	color[i] = makecol(r, g, b);
+//    }
 }
 
 void color_init(void)
 {
     int i;
 
-    if (bitmap_color_depth(screen) == 8) {
-	for (i = 0; i < C_COUNT; i++) {
-	    color[i] = RESERVED_LCD + i;
-	}
+    //if (bitmap_color_depth(screen) == 8) {
+    for (i = 0; i < C_COUNT; i++) {
+        color[i] = RESERVED_LCD + i;
     }
-    color_set(C_BACKGROUND,	0,	0,	0);
-    color_set(C_PANEL_BACK,	64,	64,	64);
-    color_set(C_PANEL_BORDER,	128,	128,	128);
-    color_set(C_PANEL_TEXT,	255,	255,	255);
-    color_set(C_PANEL_DISABLED,	128,	128,	128);
-    color_set(C_BUTTON_BACK,	64,	64,	64);
-    color_set(C_BUTTON_BORDER,	128,	128,	128);
-    color_set(C_BUTTON_PUSHED,	128,	128,	128);
-    color_set(C_BUTTON_TEXT,	255,	255,	255);
-    color_set(C_BUTTON_DISABLED,128,	128,	128);
+    //}
+
+    color_set_emu(C_BACKGROUND,	0,	0,	0);
+    color_set_emu(C_PANEL_BACK,	64,	64,	64);
+    color_set_emu(C_PANEL_BORDER,	128,	128,	128);
+    color_set_emu(C_PANEL_TEXT,	255,	255,	255);
+    color_set_emu(C_PANEL_DISABLED,	128,	128,	128);
+    color_set_emu(C_BUTTON_BACK,	64,	64,	64);
+    color_set_emu(C_BUTTON_BORDER,	128,	128,	128);
+    color_set_emu(C_BUTTON_PUSHED,	128,	128,	128);
+    color_set_emu(C_BUTTON_TEXT,	255,	255,	255);
+    color_set_emu(C_BUTTON_DISABLED,128,	128,	128);
 
     color_lcd(128, 192, 128, 0, 0, 64);
     color_lcd_mode(LCD_MODE_GRAY4);
-    set_palette(palette);
-    set_mouse_sprite(NULL);
-    gui_bg_color = color[C_PANEL_BACK];
-    gui_mg_color = color[C_PANEL_DISABLED];
-    gui_fg_color = color[C_PANEL_TEXT];
+    //set_palette(palette);
+    //set_mouse_sprite(NULL);
+    //gui_bg_color = color[C_PANEL_BACK];
+    //gui_mg_color = color[C_PANEL_DISABLED];
+    //gui_fg_color = color[C_PANEL_TEXT];
 }

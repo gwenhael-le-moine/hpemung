@@ -23,18 +23,20 @@
 # along with hpemu; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-HPEMU = bin/hpemu.exe
+BIN = hpemu
 OBJS = obj/bus.o obj/color.o obj/cpu.o obj/disasm.o obj/display.o obj/emulator.o obj/gui.o obj/hdw.o obj/keyboard.o obj/main.o obj/opcodes.o obj/pabout.o obj/pcalc.o obj/pdebug.o obj/pfiles.o obj/pmenu.o obj/ports.o obj/ram.o obj/rom.o obj/rpl.o obj/timers.o
 
 CC = gcc
-CFLAGS = -Wall -Werror -O3
+CFLAGS = -Wall -Werror -O3 -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=unused-but-set-variable -Wno-error=missing-braces -Wno-error=incompatible-pointer-types
 
 all: hpemu
 
-hpemu: $(HPEMU)
+clean:
+	-rm $(BIN)
+	-rm $(OBJS)
 
-$(HPEMU): $(OBJS)
-	$(CC) -mwindows -o $@ $+ -lalleg
+$(BIN): $(OBJS)
+	$(CC) -o $@ $+ -lSDL2 -lSDL2_ttf
 
 obj/%.o: src/%.c
 	$(CC) $(CFLAGS) -c -o $@ $<
@@ -60,8 +62,3 @@ obj/ram.o: src/types.h src/bus.h src/ram.h
 obj/rom.o: src/types.h src/bus.h src/rom.h
 obj/rpl.o: src/types.h src/bus.h src/opinline.h src/rpl.h
 obj/timers.o: src/types.h src/cpu.h src/timers.h
-
-
-
-
-

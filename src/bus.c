@@ -49,15 +49,6 @@ static byte *read_map[256];
 static byte *write_map[256];
 static address hdw_seg;
 
-#define SEG_OF(adr)	((adr)>>12)
-#define OFFSET_OF(adr)	((adr)&0xFFF)
-#define CAN_READ(adr)	(read_map[SEG_OF(adr)] != NULL)
-#define CAN_WRITE(adr)	(write_map[SEG_OF(adr)] != NULL)
-#define MAP_READ(adr)	(read_map[SEG_OF(adr)]+OFFSET_OF(adr))
-#define MAP_WRITE(adr)	(write_map[SEG_OF(adr)]+OFFSET_OF(adr))
-
-#define MIN(a,b)	((a)<(b)?(a):(b))
-
 word crc;
 
 void bus_init(void)

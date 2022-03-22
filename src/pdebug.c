@@ -25,7 +25,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <allegro.h>
+//#include <allegro.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include "types.h"
 #include "emulator.h"
 #include "cpu.h"
@@ -40,20 +42,21 @@ static void break_up(boolean action);
 static void step_up(boolean action);
 
 static Button debug_buttons[] = {
-    { 0,    0,	79, 20,	BUTTON_B1RELEASE,   "Break",	NULL,	break_up },
-    { 80,   0,	79, 20,	BUTTON_B1RELEASE,   "Run",	NULL,	run_up },
-    { 160,  0,	79, 20,	BUTTON_B1RELEASE,   "Step",	NULL,	step_up },
-    { 0,    0,	0,  0,	0,		    NULL,	NULL,	NULL }
+    { 0,	0,    0,	79, 20,	BUTTON_B1RELEASE,   "Break",	NULL,	break_up },
+    { 1,	80,   0,	79, 20,	BUTTON_B1RELEASE,   "Run",	NULL,	run_up },
+    { 2,	160,  0,	79, 20,	BUTTON_B1RELEASE,   "Step",	NULL,	step_up },
+    { 3,	0,    0,	0,  0,	0,		    NULL,	NULL,	NULL }
 };
 
 #define BREAK_BUTTON	0
 #define RUN_BUTTON	1
 #define STEP_BUTTON	2
 
-static BITMAP *debug_bmp;
+//static BITMAP *debug_bmp;
 
 static void update_buttons(void)
 {
+	/*
     if (emulator_get_state() == EMULATOR_STOP) {
 	if (debug_buttons[RUN_BUTTON].flags & BUTTON_DISABLED) {
 	    debug_buttons[RUN_BUTTON].flags &= ~BUTTON_DISABLED;
@@ -80,77 +83,88 @@ static void update_buttons(void)
 	    debug_buttons[STEP_BUTTON].flags |= BUTTON_DISABLED;
 	    if (debug_bmp) button_draw(debug_bmp, debug_buttons + STEP_BUTTON);
 	}
-    }
+    }*/
 }
 
 static void run_up(boolean action)
 {
     if (action) {
-	emulator_set_state(EMULATOR_RUN);
+		emulator_set_state(EMULATOR_RUN);
     }
 }
 
 static void break_up(boolean action)
 {
     if (action) {
-	emulator_set_state(EMULATOR_STOP);
+		emulator_set_state(EMULATOR_STOP);
     }
 }
 
 static void step_up(boolean action)
 {
     if (action) {
-	emulator_set_state(EMULATOR_STEP);
+		emulator_set_state(EMULATOR_STEP);
     }
 }
 
-static void draw_cpu(void)
+/*static*/ void draw_cpu(void)
 {
     int c1 = color[C_PANEL_TEXT];
     int c2 = color[C_PANEL_DISABLED];
     int i;
     char *tmp;
 
-    if (!debug_bmp) {
-	return;
-    }
+//    if (!debug_bmp) {
+//	return;
+//    }
 
-    text_mode(color[C_PANEL_BACK]);
+    //text_mode(color[C_PANEL_BACK]);
 
-    acquire_bitmap(debug_bmp);
-    scare_mouse();
+    //acquire_bitmap(debug_bmp);
+    //scare_mouse();
 
     tmp = disassemble(bus_fast_peek(NULL, cpu.pc, NULL));
-    textprintf(debug_bmp, font, 10, 30,  c1, "PC = #%05X   %-24s", (int) cpu.pc, tmp);
-
-    textprintf(debug_bmp, font, 10, 50,  c1, "A  = #%s", nib_to_hex_rev(cpu.reg[A], 16));
-    textprintf(debug_bmp, font, 10, 60,  c1, "B  = #%s", nib_to_hex_rev(cpu.reg[B], 16));
-    textprintf(debug_bmp, font, 10, 70,  c1, "C  = #%s", nib_to_hex_rev(cpu.reg[C], 16));
-    textprintf(debug_bmp, font, 10, 80,  c1, "D  = #%s", nib_to_hex_rev(cpu.reg[D], 16));
-    textprintf(debug_bmp, font, 58, 90,  c2, "%*c%*c", (int) 16-cpu.p, 'P', (int) cpu.p+1, '\0');
-    textprintf(debug_bmp, font, 10, 100, c1, "R0 = #%s", nib_to_hex_rev(cpu.reg_r[0], 16));
-    textprintf(debug_bmp, font, 10, 110, c1, "R1 = #%s", nib_to_hex_rev(cpu.reg_r[1], 16));
-    textprintf(debug_bmp, font, 10, 120, c1, "R2 = #%s", nib_to_hex_rev(cpu.reg_r[2], 16));
-    textprintf(debug_bmp, font, 10, 130, c1, "R3 = #%s", nib_to_hex_rev(cpu.reg_r[3], 16));
-    textprintf(debug_bmp, font, 10, 140, c1, "R4 = #%s", nib_to_hex_rev(cpu.reg_r[4], 16));
+	
+	printf("PC = #%05X   %-24s\n", (int) cpu.pc, tmp);
+	
+	/*
+    printf("A  = #%s ", nib_to_hex_rev(cpu.reg[A], 16));
+    printf("B  = #%s ", nib_to_hex_rev(cpu.reg[B], 16));
+    printf("C  = #%s ", nib_to_hex_rev(cpu.reg[C], 16));
+    printf("D  = #%s ", nib_to_hex_rev(cpu.reg[D], 16));
+	printf("\n");
+    //printf("%*c%*c ", (int) 16-cpu.p, 'P', (int) cpu.p+1, '\0');
+	//printf("\n");
+    printf("R0 = #%s ", nib_to_hex_rev(cpu.reg_r[0], 16));
+    printf("R1 = #%s ", nib_to_hex_rev(cpu.reg_r[1], 16));
+    printf("R2 = #%s ", nib_to_hex_rev(cpu.reg_r[2], 16));
+    printf("R3 = #%s ", nib_to_hex_rev(cpu.reg_r[3], 16));
+    printf("R4 = #%s ", nib_to_hex_rev(cpu.reg_r[4], 16));
+	printf("\n");
 
     tmp = nib_to_hex(bus_fast_peek(NULL, cpu.d[0], NULL), 16);
-    textprintf(debug_bmp, font, 10, 160, c1, "D0 = #%05X   (%s)", (int) cpu.d[0], tmp);
+    printf("D0 = #%05X   (%s)\n", (int) cpu.d[0], tmp);
     tmp = nib_to_hex(bus_fast_peek(NULL, cpu.d[1], NULL), 16);
-    textprintf(debug_bmp, font, 10, 170, c1, "D1 = #%05X   (%s)", (int) cpu.d[1], tmp);
+    printf("D1 = #%05X   (%s)\n", (int) cpu.d[1], tmp);
 
-    textout(debug_bmp, font, "RSTK", 10, 190, c1);
+    //printf("RSTK", 10, 190, c1);
     for (i = 0; i < 8; i++) {
-	textprintf(debug_bmp, font, 50, 190+i*10, c1, "#%05X", (int) cpu.rstk[(cpu.rstk_ptr+i)&7]);
+		printf("    #%05X\n", (int) cpu.rstk[(cpu.rstk_ptr+i)&7]);
     }
+	printf("\n");
+	
 
-    textprintf(debug_bmp, font, 200, 50,  c1, "P = #%X", (int) cpu.p);
+    printf("P = #%X ", (int) cpu.p);
  
-    textprintf(debug_bmp, font, 200, 70,  c1, "OUT = #%s", nib_to_hex_rev(cpu.out, 3));
-    textprintf(debug_bmp, font, 200, 80,  c1, "IN = #%s", nib_to_hex_rev(cpu.in, 4));
+    printf("OUT = #%s ", nib_to_hex_rev(cpu.out, 3));
+    printf("IN = #%s ", nib_to_hex_rev(cpu.in, 4));
+    printf("ST = #%s ", nib_to_hex_rev(cpu.st, 4));
+	
+	printf("\n");
+	*/
+	
 
-    textprintf(debug_bmp, font, 200, 100, c1, "ST = #%s", nib_to_hex_rev(cpu.st, 4));
-
+	/*
     textout(debug_bmp, font, "MP", 200, 120, (cpu.hst & 0x8) ? c1 : c2);
     textout(debug_bmp, font, "SR", 224, 120, (cpu.hst & 0x4) ? c1 : c2);
     textout(debug_bmp, font, "SB", 248, 120, (cpu.hst & 0x2) ? c1 : c2);
@@ -168,22 +182,22 @@ static void draw_cpu(void)
     textout(debug_bmp, font, "Mask", 10, 320, c1);
     textout(debug_bmp, font, "-----", 58, 320, c1);
     if (bus_info.ram_sz_cfg) {
-	textprintf(debug_bmp, font, 114, 320, c1, "%05X", bus_info.ram_size);
+		textprintf(debug_bmp, font, 114, 320, c1, "%05X", bus_info.ram_size);
     } else {
-	textout(debug_bmp, font, "-----", 114, 320, c1);
+		textout(debug_bmp, font, "-----", 114, 320, c1);
     }
     if (bus_info.ce1_sz_cfg) {
-	textprintf(debug_bmp, font, 170, 320, c1, "%05X", bus_info.ce1_size);
+		textprintf(debug_bmp, font, 170, 320, c1, "%05X", bus_info.ce1_size);
     } else {
-	textout(debug_bmp, font, "-----", 170, 320, c1);
+		textout(debug_bmp, font, "-----", 170, 320, c1);
     }
     if (bus_info.ce2_sz_cfg) {
-	textprintf(debug_bmp, font, 226, 320, c1, "%05X", bus_info.ce2_size);
+		textprintf(debug_bmp, font, 226, 320, c1, "%05X", bus_info.ce2_size);
     } else {
-	textout(debug_bmp, font, "-----", 226, 320, c1);
+		textout(debug_bmp, font, "-----", 226, 320, c1);
     }
     if (bus_info.nce3_sz_cfg) {
-	textprintf(debug_bmp, font, 282, 320, c1, "%05X", bus_info.nce3_size);
+		textprintf(debug_bmp, font, 282, 320, c1, "%05X", bus_info.nce3_size);
     } else {
 	textout(debug_bmp, font, "-----", 282, 320, c1);
     }
@@ -216,22 +230,24 @@ static void draw_cpu(void)
 
     textprintf(debug_bmp, font, 10, 380, c1, "Instruction count = %u", cpu.inst_cnt);
     textprintf(debug_bmp, font, 10, 390, c1, "Cycle count = %u", cpu.cycles);
-
-    unscare_mouse();
-    release_bitmap(debug_bmp);
+*/
+//    unscare_mouse();
+//    release_bitmap(debug_bmp);
 }
 
 void pdebug_draw_true_speed(dword speed)
 {
-    if (!debug_bmp) {
-	return;
-    }
-    text_mode(color[C_PANEL_BACK]);
-    acquire_bitmap(debug_bmp);
-    scare_mouse();
-    textprintf(debug_bmp, font, 10, 410, color[C_PANEL_TEXT], "True speed: %10u Hz", speed);
-    unscare_mouse();
-    release_bitmap(debug_bmp);
+	 //printf("True speed: %10u Hz\n", speed);
+	
+//    if (!debug_bmp) {
+//	return;
+//    }
+//    text_mode(color[C_PANEL_BACK]);
+//    acquire_bitmap(debug_bmp);
+//    scare_mouse();
+//    textprintf(debug_bmp, font, 10, 410, color[C_PANEL_TEXT], "True speed: %10u Hz", speed);
+//    unscare_mouse();
+//    release_bitmap(debug_bmp);
 }
 
 void pdebug_state_changed(void)
@@ -240,6 +256,7 @@ void pdebug_state_changed(void)
     draw_cpu();
 }
 
+/*
 void pdebug_show(BITMAP *bmp)
 {
     update_buttons();
@@ -250,18 +267,19 @@ void pdebug_show(BITMAP *bmp)
     button_draw_all(debug_bmp, debug_buttons);
     draw_cpu();
 }
+*/
 
 void pdebug_hide(void)
 {
-    debug_bmp = NULL;
+    //debug_bmp = NULL;
 }
 
 void pdebug_down(int mx, int my, int mb)
 {
-    button_mouse_down(debug_bmp, debug_buttons, mx, my, mb);
+    //button_mouse_down(debug_bmp, debug_buttons, mx, my, mb);
 }
 
 void pdebug_up(int mx, int my, int mb)
 {
-    button_mouse_up(debug_bmp, debug_buttons, mx, my, mb);
+    //button_mouse_up(debug_bmp, debug_buttons, mx, my, mb);
 }
