@@ -46,6 +46,12 @@
 #include <unistd.h> // getcwd
 #endif
 
+#if defined(__linux__)
+#include <libgen.h>         // dirname
+#include <unistd.h>         // readlink
+#include <linux/limits.h>   // PATH_MAX
+#endif
+
 
 
 //static void load_up(boolean action);
@@ -53,7 +59,7 @@
 /*
 static Button files_buttons[] = {
     { 0,	0,    0,	79, 20,	BUTTON_B1RELEASE,   "Load", NULL,   load_up },
-    { 1,	0,    0,	0,  0,	0,		    NULL,   NULL,   NULL }
+    { 1,	0,    0,	0,  0,	0,          NULL,   NULL,   NULL }
 };
 */
 //static BITMAP *files_bmp;
@@ -65,81 +71,90 @@ static char	WorkingPath[512];
 
 static void getExePath()
 {
-	char	programPath[1024];
-	char	temp[1024];
-	memset(programPath,0,sizeof(programPath));
-	memset(temp,0,sizeof(temp));
-	
+    char	programPath[1024];
+    char	temp[1024];
+    memset(programPath,0,sizeof(programPath));
+    memset(temp,0,sizeof(temp));
+
 #if defined(__APPLE__)
-	CFBundleRef mainBundle = CFBundleGetMainBundle();
-	CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(mainBundle);
-	if (!CFURLGetFileSystemRepresentation(resourcesURL, TRUE, (UInt8 *)programPath, PATH_MAX)) // Error: expected unqualified-id before 'if'
-	{
-		// error!
-	}
-	CFRelease(resourcesURL); // error: expected constructor, destructor or type conversion before '(' token
-	
-	chdir(programPath); // error: expected constructor, destructor or type conversion before '(' token
-	//std::cout << "Current Path: " << path << std::endl; // error: expected constructor, destructor or type conversion before '<<' token
+    CFBundleRef mainBundle = CFBundleGetMainBundle();
+    CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(mainBundle);
+    if (!CFURLGetFileSystemRepresentation(resourcesURL, TRUE, (UInt8 *)programPath, PATH_MAX)) // Error: expected unqualified-id before 'if'
+    {
+        // error!
+    }
+    CFRelease(resourcesURL); // error: expected constructor, destructor or type conversion before '(' token
+
+    chdir(programPath); // error: expected constructor, destructor or type conversion before '(' token
+    //std::cout << "Current Path: " << path << std::endl; // error: expected constructor, destructor or type conversion before '<<' token
 #endif
-	
+
 #if defined(_WIN32)
-	GetModuleFileNameA(NULL,temp,sizeof(temp));
-	PathRemoveFileSpecA(temp);
-	
-	//recopy path and duplicate "\"
-	int j=0;
-	for(int i =0;i<(int)(strlen(temp)+1);i++)
-	{
-		programPath[j]=temp[i];
-		if (temp[i]=='\\')
-			programPath[j]='/'; // '\\';
-		j++;
-	}
+    GetModuleFileNameA(NULL,temp,sizeof(temp));
+    PathRemoveFileSpecA(temp);
+
+    //recopy path and duplicate "\"
+    int j=0;
+    for(int i =0;i<(int)(strlen(temp)+1);i++)
+    {
+        programPath[j]=temp[i];
+        if (temp[i]=='\\')
+            programPath[j]='/'; // '\\';
+        j++;
+    }
 #endif
-	
-	//setWorkingPath(programPath);
-	
-	memset(WorkingPath, 0, sizeof(WorkingPath));
-	strcpy(WorkingPath, programPath);
+
+    //setWorkingPath(programPath);
+#if defined(__linux__)
+    char result[PATH_MAX];
+    ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
+    const char *path;
+    if (count != -1) {
+      path = dirname(result);
+      strcpy(programPath, path);
+    }
+#endif
+
+    memset(WorkingPath, 0, sizeof(WorkingPath));
+    strcpy(WorkingPath, programPath);
 }
 
 
 static int file_size(char *name)
 {
-	memset(WorkingPath, 0, sizeof(WorkingPath));
-	getExePath();
-	
-	FILE *f;
-	char fullpath[1024];
-	sprintf(fullpath, "%s/%s", WorkingPath, name);
-	printf("%s\n", fullpath);
-	f = fopen(fullpath, "r");
-	if(!f) {
-		return 0;
-	}
-	fseek(f, 0, SEEK_END); // seek to end of file
-	int size = (int)ftell(f); // get current file pointer
-	fseek(f, 0, SEEK_SET); // seek back to beginning of file
-	// proceed with allocating memory and reading the file
-	fclose(f);
-	return size;
+    memset(WorkingPath, 0, sizeof(WorkingPath));
+    getExePath();
+
+    FILE *f;
+    char fullpath[1024];
+    sprintf(fullpath, "%s/%s", WorkingPath, name);
+    printf("%s\n", fullpath);
+    f = fopen(fullpath, "r");
+    if(!f) {
+        return 0;
+    }
+    fseek(f, 0, SEEK_END); // seek to end of file
+    int size = (int)ftell(f); // get current file pointer
+    fseek(f, 0, SEEK_SET); // seek back to beginning of file
+    // proceed with allocating memory and reading the file
+    fclose(f);
+    return size;
 }
 
 /*
 static int file_size(char *name)
 {
-	FILE *f;
-	f = fopen(name, "r");
-	if(!f) {
-		return NULL;
-	}
-	fseek(f, 0, SEEK_END); // seek to end of file
-	int size = ftell(f); // get current file pointer
-	fseek(f, 0, SEEK_SET); // seek back to beginning of file
-	// proceed with allocating memory and reading the file
-	fclose(f);
-	return size;
+    FILE *f;
+    f = fopen(name, "r");
+    if(!f) {
+        return NULL;
+    }
+    fseek(f, 0, SEEK_END); // seek to end of file
+    int size = ftell(f); // get current file pointer
+    fseek(f, 0, SEEK_SET); // seek back to beginning of file
+    // proceed with allocating memory and reading the file
+    fclose(f);
+    return size;
 }
 */
 
@@ -148,7 +163,7 @@ static int file_size(char *name)
 void load_file(char *name)
 {
     //PACKFILE *f;
-	FILE *f;
+    FILE *f;
     byte *buf;
     byte *obj;
     int i, j;
@@ -157,49 +172,49 @@ void load_file(char *name)
 
     fsize = file_size(name);
     if (fsize < 11)	// "PHPH48-X" + prologue (8 + 2.5)
-	return;
+    return;
 
     buf = malloc(fsize);
     if (!buf)
-	return;
+    return;
 
     //f = pack_fopen(name, "r");
-	f = fopen(name, "r");
+    f = fopen(name, "r");
     if (!f) {
-		free(buf);
-		return;
+        free(buf);
+        return;
     }
-	int res = (int)fread(buf, sizeof(char), fsize, f);
+    int res = (int)fread(buf, sizeof(char), fsize, f);
     if (res != fsize) { // pack_fread
-		free(buf);
-		//pack_fclose(f);
-		fclose(f);
-		return;
+        free(buf);
+        //pack_fclose(f);
+        fclose(f);
+        return;
     }
     //pack_fclose(f);
-	fclose(f);
+    fclose(f);
 
     if (memcmp(buf, "HPHP48-", 7)) {
-	free(buf);
-	return;
+    free(buf);
+    return;
     }
 
     obj = malloc((fsize - 8) * 2);
     if (!obj) {
-	free(buf);
-	return;
+    free(buf);
+    return;
     }
 
     for (i = 8, j = 0; i < fsize; i++) {
-	obj[j++] = buf[i] & 0x0F;
-	obj[j++] = (buf[i] >> 4) & 0x0F;
+    obj[j++] = buf[i] & 0x0F;
+    obj[j++] = (buf[i] >> 4) & 0x0F;
     }
     free(buf);
 
     size = rpl_object_size(obj);
     if (size > (fsize - 8) * 2) {
-	free(obj);
-	return;
+    free(obj);
+    return;
     }
     rpl_push_object(obj, size);
     free(obj);
@@ -216,7 +231,7 @@ void load_up(boolean action)
 
     if (action) {
 //		if (file_select_ex("Load Object", path, NULL, PATH_SIZE, 0, 0)) {
-//	    	load_file(path);
+//          load_file(path);
 //		}
     }
 }
