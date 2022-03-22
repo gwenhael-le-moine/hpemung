@@ -24,7 +24,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 BIN = hpemu
-OBJS = obj/bus.o obj/color.o obj/cpu.o obj/disasm.o obj/display.o obj/emulator.o obj/gui.o obj/hdw.o obj/keyboard.o obj/main.o obj/opcodes.o obj/pabout.o obj/pcalc.o obj/pdebug.o obj/pfiles.o obj/pmenu.o obj/ports.o obj/ram.o obj/rom.o obj/rpl.o obj/timers.o
+OBJS = bus.o color.o cpu.o disasm.o display.o emulator.o gui.o hdw.o keyboard.o main.o opcodes.o pabout.o pcalc.o pdebug.o pfiles.o pmenu.o ports.o ram.o rom.o rpl.o timers.o
 
 CC = gcc
 CFLAGS = -Wall -Werror -O3 -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=unused-but-set-variable -Wno-error=missing-braces -Wno-error=incompatible-pointer-types
@@ -38,27 +38,27 @@ clean:
 $(BIN): $(OBJS)
 	$(CC) -o $@ $+ -lSDL2 -lSDL2_ttf
 
-obj/%.o: src/%.c
+%.o: src/%.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-obj/bus.o: src/types.h src/rom.h src/ram.h src/ports.h src/hdw.h src/bus.h
-obj/color.o: src/color.h
-obj/cpu.o: src/types.h src/emulator.h src/bus.h src/opcodes.h src/cpu.h
-obj/cpu.o: src/types.h src/opcodes.h src/disasm.h
-obj/display.o: src/types.h src/bus.h
-obj/emulator.o: src/types.h src/cpu.h src/bus.h src/timers.h src/display.h src/gui.h src/pdebug.h src/emulator.h
-obj/gui.o: src/color.h src/pmenu.h src/pcalc.h src/pdebug.h src/pfiles.h src/pabout.h src/gui.h
-obj/hdw.o: src/types.h src/bus.h src/ports.h src/timers.h src/display.h src/hdw.h
-obj/keyboard.o: src/types.h src/cpu.h src/keyboard.h
-obj/main.o: src/types.h src/emulator.h src/gui.h src/color.h
-obj/opcodes.o: src/types.h src/cpu.h src/bus.h src/keyboard.h src/opcodes.h src/opinline.h
-obj/pabout.o: src/color.h src/gui.h src/pabout.h
-obj/pcalc.o: src/color.h src/display.h src/keyboard.h src/gui.h src/pcalc.h
-obj/pdebug.o: src/types.h src/emulator.h src/cpu.h src/bus.h src/disasm.h src/color.h src/gui.h src/pdebug.h
-obj/pfiles.o: src/color.h src/gui.h src/rpl.h src/pfiles.h
-obj/pmenu.o: src/emulator.h src/color.h src/gui.h src/pmenu.h
-obj/ports.o: src/types.h src/bus.h src/ports.h
-obj/ram.o: src/types.h src/bus.h src/ram.h
-obj/rom.o: src/types.h src/bus.h src/rom.h
-obj/rpl.o: src/types.h src/bus.h src/opinline.h src/rpl.h
-obj/timers.o: src/types.h src/cpu.h src/timers.h
+bus.o: src/types.h src/rom.h src/ram.h src/ports.h src/hdw.h src/bus.h
+color.o: src/color.h
+cpu.o: src/types.h src/emulator.h src/bus.h src/opcodes.h src/cpu.h
+cpu.o: src/types.h src/opcodes.h src/disasm.h
+display.o: src/types.h src/bus.h
+emulator.o: src/types.h src/cpu.h src/bus.h src/timers.h src/display.h src/gui.h src/pdebug.h src/emulator.h
+gui.o: src/color.h src/pmenu.h src/pcalc.h src/pdebug.h src/pfiles.h src/pabout.h src/gui.h
+hdw.o: src/types.h src/bus.h src/ports.h src/timers.h src/display.h src/hdw.h
+keyboard.o: src/types.h src/cpu.h src/keyboard.h
+main.o: src/types.h src/emulator.h src/gui.h src/color.h
+opcodes.o: src/types.h src/cpu.h src/bus.h src/keyboard.h src/opcodes.h src/opinline.h
+pabout.o: src/color.h src/gui.h src/pabout.h
+pcalc.o: src/color.h src/display.h src/keyboard.h src/gui.h src/pcalc.h
+pdebug.o: src/types.h src/emulator.h src/cpu.h src/bus.h src/disasm.h src/color.h src/gui.h src/pdebug.h
+pfiles.o: src/color.h src/gui.h src/rpl.h src/pfiles.h
+pmenu.o: src/emulator.h src/color.h src/gui.h src/pmenu.h
+ports.o: src/types.h src/bus.h src/ports.h
+ram.o: src/types.h src/bus.h src/ram.h
+rom.o: src/types.h src/bus.h src/rom.h
+rpl.o: src/types.h src/bus.h src/opinline.h src/rpl.h
+timers.o: src/types.h src/cpu.h src/timers.h
