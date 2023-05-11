@@ -35,8 +35,8 @@ typedef signed int address;
 typedef char boolean;
 
 #ifndef TRUE
-#define TRUE	-1
-#define FALSE	0
+#define TRUE -1
+#define FALSE 0
 #endif
 
 #endif

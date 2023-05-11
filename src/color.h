@@ -49,11 +49,11 @@ enum Colors {
     C_COUNT
 };
 
-extern int color[C_COUNT];
+extern int color[ C_COUNT ];
 
-void color_lcd(int r0, int g0, int b0, int r1, int g1, int b1);
-void color_lcd_mode(int mode);
-void color_set_emu(int i, int r, int g, int b);
-void color_init(void);
+void color_lcd( int r0, int g0, int b0, int r1, int g1, int b1 );
+void color_lcd_mode( int mode );
+void color_set_emu( int i, int r, int g, int b );
+void color_init( void );
 
 #endif

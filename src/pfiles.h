@@ -28,10 +28,10 @@
 #ifndef __PFILES_H
 #define __PFILES_H
 
-void load_up(boolean action);
-void load_file(char *name);
-void pfiles_hide(void);
-void pfiles_down(int mx, int my, int mb);
-void pfiles_up(int mx, int my, int mb);
+void load_up( boolean action );
+void load_file( char* name );
+void pfiles_hide( void );
+void pfiles_down( int mx, int my, int mb );
+void pfiles_up( int mx, int my, int mb );
 
 #endif

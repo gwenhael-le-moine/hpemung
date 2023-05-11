@@ -1,2 +1,2 @@
-/hpemu
-/*.o
+/src/*.o
+/dist/hpemu

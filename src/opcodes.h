@@ -31,11 +31,11 @@
 typedef struct Opcode Opcode;
 
 struct Opcode {
-    void (*exec)(byte *);
-    Opcode *next;
-    char *dissasm;
+    void ( *exec )( byte* );
+    Opcode* next;
+    char* dissasm;
 };
 
-extern Opcode opcodes[16];
+extern Opcode opcodes[ 16 ];
 
 #endif
