@@ -59,8 +59,8 @@ SDL_Texture* tex2Target = NULL;
 SDL_Texture* faceplateTexture = NULL;
 
 #ifdef SDL_TTF
-TTF_Font* ArialFonte = NULL;
-TTF_Font* ArialFonte2 = NULL;
+TTF_Font* ttffont = NULL;
+TTF_Font* ttffont2 = NULL;
 #endif
 
 SDL_TimerID my_timer0_id;
@@ -197,65 +197,65 @@ static int fullscreen = FALSE;
 
 static void parse_args( int argc, char* argv[] ) {
     while ( --argc ) {
-        argv++;
-        if ( argv[ 0 ][ 0 ] == '-' ) {
-            switch ( argv[ 0 ][ 1 ] ) {
-                case 'f':
-                    fullscreen = TRUE;
-                    break;
-                case 'w':
-                    fullscreen = FALSE;
-                    break;
-            }
-        }
+	argv++;
+	if ( argv[ 0 ][ 0 ] == '-' ) {
+	    switch ( argv[ 0 ][ 1 ] ) {
+		case 'f':
+		    fullscreen = TRUE;
+		    break;
+		case 'w':
+		    fullscreen = FALSE;
+		    break;
+	    }
+	}
     }
 }
 
 static void program_init( void ) {
     if ( SDL_Init( SDL_INIT_VIDEO | IMG_INIT_PNG | SDL_INIT_TIMER ) < 0 ) {
-        printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
-        return;
+	printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
+	return;
     }
 
 #ifdef SDL_TTF
     if ( TTF_Init() == -1 ) {
-        fprintf( stderr, "Erreur d'initialisation de TTF_Init : %s\n",
-                 TTF_GetError() );
-        exit( EXIT_FAILURE );
+	fprintf( stderr, "Erreur d'initialisation de TTF_Init : %s\n",
+		 TTF_GetError() );
+	exit( EXIT_FAILURE );
     }
 
-    ArialFonte = TTF_OpenFont( "FreeSans.ttf", 14 );
-    ArialFonte2 = TTF_OpenFont( "FreeSans.ttf", 10 );
+    ttffont = TTF_OpenFont( FONT_FILENAME, 14 );
+    ttffont2 = TTF_OpenFont( FONT_FILENAME, 10 );
 #endif
 
     window = SDL_CreateWindow( "jsEmu48", SDL_WINDOWPOS_UNDEFINED,
-                               SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
-                               SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
+			       SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
+			       SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
     if ( window == NULL ) {
-        printf( "Window could not be created! SDL_Error: %s\n",
-                SDL_GetError() );
-        return;
+	printf( "Window could not be created! SDL_Error: %s\n",
+		SDL_GetError() );
+	return;
     }
 
     renderer = SDL_CreateRenderer(
-        window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
+	window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
     if ( renderer == NULL ) {
-        printf( "Erreur lors de la creation d'un renderer : %s",
-                SDL_GetError() );
-        return;
+	printf( "Erreur lors de la creation d'un renderer : %s",
+		SDL_GetError() );
+	return;
     }
 
     tex2Target = SDL_CreateTexture( renderer, SDL_PIXELFORMAT_RGBA8888,
-                                    SDL_TEXTUREACCESS_TARGET, 504, 1124 );
+				    SDL_TEXTUREACCESS_TARGET, 504, 1124 );
     texTarget = SDL_CreateTexture( renderer, SDL_PIXELFORMAT_RGBA8888,
-                                   SDL_TEXTUREACCESS_STREAMING, 504, 1124 );
+				   SDL_TEXTUREACCESS_STREAMING, 504, 1124 );
 
     /*
     SDL_Surface * faceplate = IMG_Load("48face5.png");
     if(faceplate) {
-            //printf("init text2 %s\n", buttons->text);
+	    //printf("init text2 %s\n", buttons->text);
 
-            faceplateTexture = SDL_CreateTextureFromSurface( renderer, faceplate
+	    faceplateTexture = SDL_CreateTextureFromSurface( renderer, faceplate
     );
     }*/
 
@@ -280,7 +280,7 @@ void start_timers() {
     // my_timer0_id = SDL_AddTimer(100, my_callbackfunc0, NULL); // gui_update
     //	my_timer1_id = SDL_AddTimer(50, my_callbackfunc1, NULL); // display
     //	my_timer2_id = SDL_AddTimer(1000, my_callbackfunc2, NULL); // cpu real
-    //speed 	my_timer3_id = SDL_AddTimer(62, my_callbackfunc3, NULL); // timer1
+    //speed	my_timer3_id = SDL_AddTimer(62, my_callbackfunc3, NULL); // timer1
     //	my_timer4_id = SDL_AddTimer(500, my_callbackfunc4, NULL); // timer2
 }
 
@@ -293,8 +293,8 @@ static void program_exit( void ) {
     SDL_RemoveTimer(my_timer4_id);
     */
 #ifdef SDL_TTF
-    TTF_CloseFont( ArialFonte );
-    TTF_CloseFont( ArialFonte2 );
+    TTF_CloseFont( ttffont );
+    TTF_CloseFont( ttffont2 );
     TTF_Quit();
 #endif
     SDL_DestroyRenderer( renderer );
@@ -308,390 +308,390 @@ boolean refreshSDL() {
     while ( SDL_PollEvent( &event ) )
     // if(SDL_PollEvent(&event))
     {
-        switch ( event.type ) {
-            case SDL_MOUSEBUTTONUP: {
-                // printf("mouse up %d %d\n", event.button.x, event.button.y);
+	switch ( event.type ) {
+	    case SDL_MOUSEBUTTONUP: {
+		// printf("mouse up %d %d\n", event.button.x, event.button.y);
 
-                pcalc_up( event.button.x, event.button.y, 1 );
-            } break;
+		pcalc_up( event.button.x, event.button.y, 1 );
+	    } break;
 
-            case SDL_MOUSEBUTTONDOWN: {
-                // printf("mouse down %d %d\n", event.button.x, event.button.y);
+	    case SDL_MOUSEBUTTONDOWN: {
+		// printf("mouse down %d %d\n", event.button.x, event.button.y);
 
-                pcalc_down( event.button.x, event.button.y, 1 );
-            } break;
+		pcalc_down( event.button.x, event.button.y, 1 );
+	    } break;
 
-            case SDL_KEYDOWN:
-                printf( "%d %d\n", event.key.keysym.sym,
-                        event.key.keysym.scancode );
+	    case SDL_KEYDOWN:
+		printf( "%d %d\n", event.key.keysym.sym,
+			event.key.keysym.scancode );
 
-                pcalc_kb_down( event.key.keysym.scancode );
+		pcalc_kb_down( event.key.keysym.scancode );
 
-                switch ( event.key.keysym.scancode ) {
-                    case SDL_SCANCODE_ESCAPE:
-                        kbd_on_pressed();
-                        break;
-                    case SDL_SCANCODE_RETURN:
-                    case SDL_SCANCODE_KP_ENTER:
-                        kbd_key_pressed( 4, 4 );
-                        break;
-                    case SDL_SCANCODE_BACKSPACE:
-                        kbd_key_pressed( 4, 0 );
-                        break;
-                    case SDL_SCANCODE_LEFT:
-                        kbd_key_pressed( 6, 2 );
-                        break;
-                    case SDL_SCANCODE_RIGHT:
-                        kbd_key_pressed( 6, 0 );
-                        break;
-                    case SDL_SCANCODE_UP:
-                        kbd_key_pressed( 7, 1 );
-                        break;
-                    case SDL_SCANCODE_DOWN:
-                        kbd_key_pressed( 6, 1 );
-                        break;
-                    case SDL_SCANCODE_KP_PLUS:
-                        kbd_key_pressed( 0, 0 );
-                        break;
-                    case SDL_SCANCODE_KP_MINUS:
-                        kbd_key_pressed( 1, 0 );
-                        break;
-                    case SDL_SCANCODE_KP_MULTIPLY:
-                        kbd_key_pressed( 2, 0 );
-                        break;
-                    case SDL_SCANCODE_KP_DIVIDE:
-                        kbd_key_pressed( 3, 0 );
-                        break;
-                    case SDL_SCANCODE_A:
-                        kbd_key_pressed( 1, 4 );
-                        break;
-                    case SDL_SCANCODE_B:
-                        kbd_key_pressed( 8, 4 );
-                        break;
-                    case SDL_SCANCODE_C:
-                        kbd_key_pressed( 8, 3 );
-                        break;
-                    case SDL_SCANCODE_D:
-                        kbd_key_pressed( 8, 2 );
-                        break;
-                    case SDL_SCANCODE_E:
-                        kbd_key_pressed( 8, 1 );
-                        break;
-                    case SDL_SCANCODE_F:
-                        kbd_key_pressed( 8, 0 );
-                        break;
-                    case SDL_SCANCODE_G:
-                        kbd_key_pressed( 2, 4 );
-                        break;
-                    case SDL_SCANCODE_H:
-                        kbd_key_pressed( 7, 4 );
-                        break;
-                    case SDL_SCANCODE_I:
-                        kbd_key_pressed( 7, 3 );
-                        break;
-                    case SDL_SCANCODE_J:
-                        kbd_key_pressed( 7, 2 );
-                        break;
-                    case SDL_SCANCODE_K:
-                        kbd_key_pressed( 7, 1 );
-                        break;
-                    case SDL_SCANCODE_L:
-                        kbd_key_pressed( 7, 0 );
-                        break;
-                    case SDL_SCANCODE_M:
-                        kbd_key_pressed( 0, 4 );
-                        break;
-                    case SDL_SCANCODE_N:
-                        kbd_key_pressed( 6, 4 );
-                        break;
-                    case SDL_SCANCODE_O:
-                        kbd_key_pressed( 6, 3 );
-                        break;
-                    case SDL_SCANCODE_P:
-                        kbd_key_pressed( 6, 2 );
-                        break;
-                    case SDL_SCANCODE_Q:
-                        kbd_key_pressed( 6, 1 );
-                        break;
-                    case SDL_SCANCODE_R:
-                        kbd_key_pressed( 6, 0 );
-                        break;
-                    case SDL_SCANCODE_S:
-                        kbd_key_pressed( 3, 4 );
-                        break;
-                    case SDL_SCANCODE_T:
-                        kbd_key_pressed( 5, 4 );
-                        break;
-                    case SDL_SCANCODE_U:
-                        kbd_key_pressed( 5, 3 );
-                        break;
-                    case SDL_SCANCODE_V:
-                        kbd_key_pressed( 5, 2 );
-                        break;
-                    case SDL_SCANCODE_W:
-                        kbd_key_pressed( 5, 1 );
-                        break;
-                    case SDL_SCANCODE_X:
-                        kbd_key_pressed( 5, 0 );
-                        break;
-                    case SDL_SCANCODE_Y:
-                        kbd_key_pressed( 4, 3 );
-                        break;
-                    case SDL_SCANCODE_Z:
-                        kbd_key_pressed( 4, 2 );
-                        break;
-                    default:
-                        break;
-                }
-                break;
+		switch ( event.key.keysym.scancode ) {
+		    case SDL_SCANCODE_ESCAPE:
+			kbd_on_pressed();
+			break;
+		    case SDL_SCANCODE_RETURN:
+		    case SDL_SCANCODE_KP_ENTER:
+			kbd_key_pressed( 4, 4 );
+			break;
+		    case SDL_SCANCODE_BACKSPACE:
+			kbd_key_pressed( 4, 0 );
+			break;
+		    case SDL_SCANCODE_LEFT:
+			kbd_key_pressed( 6, 2 );
+			break;
+		    case SDL_SCANCODE_RIGHT:
+			kbd_key_pressed( 6, 0 );
+			break;
+		    case SDL_SCANCODE_UP:
+			kbd_key_pressed( 7, 1 );
+			break;
+		    case SDL_SCANCODE_DOWN:
+			kbd_key_pressed( 6, 1 );
+			break;
+		    case SDL_SCANCODE_KP_PLUS:
+			kbd_key_pressed( 0, 0 );
+			break;
+		    case SDL_SCANCODE_KP_MINUS:
+			kbd_key_pressed( 1, 0 );
+			break;
+		    case SDL_SCANCODE_KP_MULTIPLY:
+			kbd_key_pressed( 2, 0 );
+			break;
+		    case SDL_SCANCODE_KP_DIVIDE:
+			kbd_key_pressed( 3, 0 );
+			break;
+		    case SDL_SCANCODE_A:
+			kbd_key_pressed( 1, 4 );
+			break;
+		    case SDL_SCANCODE_B:
+			kbd_key_pressed( 8, 4 );
+			break;
+		    case SDL_SCANCODE_C:
+			kbd_key_pressed( 8, 3 );
+			break;
+		    case SDL_SCANCODE_D:
+			kbd_key_pressed( 8, 2 );
+			break;
+		    case SDL_SCANCODE_E:
+			kbd_key_pressed( 8, 1 );
+			break;
+		    case SDL_SCANCODE_F:
+			kbd_key_pressed( 8, 0 );
+			break;
+		    case SDL_SCANCODE_G:
+			kbd_key_pressed( 2, 4 );
+			break;
+		    case SDL_SCANCODE_H:
+			kbd_key_pressed( 7, 4 );
+			break;
+		    case SDL_SCANCODE_I:
+			kbd_key_pressed( 7, 3 );
+			break;
+		    case SDL_SCANCODE_J:
+			kbd_key_pressed( 7, 2 );
+			break;
+		    case SDL_SCANCODE_K:
+			kbd_key_pressed( 7, 1 );
+			break;
+		    case SDL_SCANCODE_L:
+			kbd_key_pressed( 7, 0 );
+			break;
+		    case SDL_SCANCODE_M:
+			kbd_key_pressed( 0, 4 );
+			break;
+		    case SDL_SCANCODE_N:
+			kbd_key_pressed( 6, 4 );
+			break;
+		    case SDL_SCANCODE_O:
+			kbd_key_pressed( 6, 3 );
+			break;
+		    case SDL_SCANCODE_P:
+			kbd_key_pressed( 6, 2 );
+			break;
+		    case SDL_SCANCODE_Q:
+			kbd_key_pressed( 6, 1 );
+			break;
+		    case SDL_SCANCODE_R:
+			kbd_key_pressed( 6, 0 );
+			break;
+		    case SDL_SCANCODE_S:
+			kbd_key_pressed( 3, 4 );
+			break;
+		    case SDL_SCANCODE_T:
+			kbd_key_pressed( 5, 4 );
+			break;
+		    case SDL_SCANCODE_U:
+			kbd_key_pressed( 5, 3 );
+			break;
+		    case SDL_SCANCODE_V:
+			kbd_key_pressed( 5, 2 );
+			break;
+		    case SDL_SCANCODE_W:
+			kbd_key_pressed( 5, 1 );
+			break;
+		    case SDL_SCANCODE_X:
+			kbd_key_pressed( 5, 0 );
+			break;
+		    case SDL_SCANCODE_Y:
+			kbd_key_pressed( 4, 3 );
+			break;
+		    case SDL_SCANCODE_Z:
+			kbd_key_pressed( 4, 2 );
+			break;
+		    default:
+			break;
+		}
+		break;
 
-            case SDL_KEYUP:
-                pcalc_kb_up( event.key.keysym.scancode );
+	    case SDL_KEYUP:
+		pcalc_kb_up( event.key.keysym.scancode );
 
-                switch ( event.key.keysym.scancode ) {
-                    case SDL_SCANCODE_ESCAPE:
-                        kbd_on_released();
-                        break;
-                    case SDL_SCANCODE_RETURN:
-                    case SDL_SCANCODE_KP_ENTER:
-                        kbd_key_released( 4, 4 );
-                        break;
-                    case SDL_SCANCODE_BACKSPACE:
-                        kbd_key_released( 4, 0 );
-                        break;
-                    case SDL_SCANCODE_LEFT:
-                        kbd_key_released( 6, 2 );
-                        break;
-                    case SDL_SCANCODE_RIGHT:
-                        kbd_key_released( 6, 0 );
-                        break;
-                    case SDL_SCANCODE_UP:
-                        kbd_key_released( 7, 1 );
-                        break;
-                    case SDL_SCANCODE_DOWN:
-                        kbd_key_released( 6, 1 );
-                        break;
-                    case SDL_SCANCODE_KP_PLUS:
-                        kbd_key_released( 0, 0 );
-                        break;
-                    case SDL_SCANCODE_KP_MINUS:
-                        kbd_key_released( 1, 0 );
-                        break;
-                    case SDL_SCANCODE_KP_MULTIPLY:
-                        kbd_key_released( 2, 0 );
-                        break;
-                    case SDL_SCANCODE_KP_DIVIDE:
-                        kbd_key_released( 3, 0 );
-                        break;
-                    case SDL_SCANCODE_A:
-                        kbd_key_released( 1, 4 );
-                        break;
-                    case SDL_SCANCODE_B:
-                        kbd_key_released( 8, 4 );
-                        break;
-                    case SDL_SCANCODE_C:
-                        kbd_key_released( 8, 3 );
-                        break;
-                    case SDL_SCANCODE_D:
-                        kbd_key_released( 8, 2 );
-                        break;
-                    case SDL_SCANCODE_E:
-                        kbd_key_released( 8, 1 );
-                        break;
-                    case SDL_SCANCODE_F:
-                        kbd_key_released( 8, 0 );
-                        break;
-                    case SDL_SCANCODE_G:
-                        kbd_key_released( 2, 4 );
-                        break;
-                    case SDL_SCANCODE_H:
-                        kbd_key_released( 7, 4 );
-                        break;
-                    case SDL_SCANCODE_I:
-                        kbd_key_released( 7, 3 );
-                        break;
-                    case SDL_SCANCODE_J:
-                        kbd_key_released( 7, 2 );
-                        break;
-                    case SDL_SCANCODE_K:
-                        kbd_key_released( 7, 1 );
-                        break;
-                    case SDL_SCANCODE_L:
-                        kbd_key_released( 7, 0 );
-                        break;
-                    case SDL_SCANCODE_M:
-                        kbd_key_released( 0, 4 );
-                        break;
-                    case SDL_SCANCODE_N:
-                        kbd_key_released( 6, 4 );
-                        break;
-                    case SDL_SCANCODE_O:
-                        kbd_key_released( 6, 3 );
-                        break;
-                    case SDL_SCANCODE_P:
-                        kbd_key_released( 6, 2 );
-                        break;
-                    case SDL_SCANCODE_Q:
-                        kbd_key_released( 6, 1 );
-                        break;
-                    case SDL_SCANCODE_R:
-                        kbd_key_released( 6, 0 );
-                        break;
-                    case SDL_SCANCODE_S:
-                        kbd_key_released( 3, 4 );
-                        break;
-                    case SDL_SCANCODE_T:
-                        kbd_key_released( 5, 4 );
-                        break;
-                    case SDL_SCANCODE_U:
-                        kbd_key_released( 5, 3 );
-                        break;
-                    case SDL_SCANCODE_V:
-                        kbd_key_released( 5, 2 );
-                        break;
-                    case SDL_SCANCODE_W:
-                        kbd_key_released( 5, 1 );
-                        break;
-                    case SDL_SCANCODE_X:
-                        kbd_key_released( 5, 0 );
-                        break;
-                    case SDL_SCANCODE_Y:
-                        kbd_key_released( 4, 3 );
-                        break;
-                    case SDL_SCANCODE_Z:
-                        kbd_key_released( 4, 2 );
-                        break;
-                    default:
-                        break;
-                }
+		switch ( event.key.keysym.scancode ) {
+		    case SDL_SCANCODE_ESCAPE:
+			kbd_on_released();
+			break;
+		    case SDL_SCANCODE_RETURN:
+		    case SDL_SCANCODE_KP_ENTER:
+			kbd_key_released( 4, 4 );
+			break;
+		    case SDL_SCANCODE_BACKSPACE:
+			kbd_key_released( 4, 0 );
+			break;
+		    case SDL_SCANCODE_LEFT:
+			kbd_key_released( 6, 2 );
+			break;
+		    case SDL_SCANCODE_RIGHT:
+			kbd_key_released( 6, 0 );
+			break;
+		    case SDL_SCANCODE_UP:
+			kbd_key_released( 7, 1 );
+			break;
+		    case SDL_SCANCODE_DOWN:
+			kbd_key_released( 6, 1 );
+			break;
+		    case SDL_SCANCODE_KP_PLUS:
+			kbd_key_released( 0, 0 );
+			break;
+		    case SDL_SCANCODE_KP_MINUS:
+			kbd_key_released( 1, 0 );
+			break;
+		    case SDL_SCANCODE_KP_MULTIPLY:
+			kbd_key_released( 2, 0 );
+			break;
+		    case SDL_SCANCODE_KP_DIVIDE:
+			kbd_key_released( 3, 0 );
+			break;
+		    case SDL_SCANCODE_A:
+			kbd_key_released( 1, 4 );
+			break;
+		    case SDL_SCANCODE_B:
+			kbd_key_released( 8, 4 );
+			break;
+		    case SDL_SCANCODE_C:
+			kbd_key_released( 8, 3 );
+			break;
+		    case SDL_SCANCODE_D:
+			kbd_key_released( 8, 2 );
+			break;
+		    case SDL_SCANCODE_E:
+			kbd_key_released( 8, 1 );
+			break;
+		    case SDL_SCANCODE_F:
+			kbd_key_released( 8, 0 );
+			break;
+		    case SDL_SCANCODE_G:
+			kbd_key_released( 2, 4 );
+			break;
+		    case SDL_SCANCODE_H:
+			kbd_key_released( 7, 4 );
+			break;
+		    case SDL_SCANCODE_I:
+			kbd_key_released( 7, 3 );
+			break;
+		    case SDL_SCANCODE_J:
+			kbd_key_released( 7, 2 );
+			break;
+		    case SDL_SCANCODE_K:
+			kbd_key_released( 7, 1 );
+			break;
+		    case SDL_SCANCODE_L:
+			kbd_key_released( 7, 0 );
+			break;
+		    case SDL_SCANCODE_M:
+			kbd_key_released( 0, 4 );
+			break;
+		    case SDL_SCANCODE_N:
+			kbd_key_released( 6, 4 );
+			break;
+		    case SDL_SCANCODE_O:
+			kbd_key_released( 6, 3 );
+			break;
+		    case SDL_SCANCODE_P:
+			kbd_key_released( 6, 2 );
+			break;
+		    case SDL_SCANCODE_Q:
+			kbd_key_released( 6, 1 );
+			break;
+		    case SDL_SCANCODE_R:
+			kbd_key_released( 6, 0 );
+			break;
+		    case SDL_SCANCODE_S:
+			kbd_key_released( 3, 4 );
+			break;
+		    case SDL_SCANCODE_T:
+			kbd_key_released( 5, 4 );
+			break;
+		    case SDL_SCANCODE_U:
+			kbd_key_released( 5, 3 );
+			break;
+		    case SDL_SCANCODE_V:
+			kbd_key_released( 5, 2 );
+			break;
+		    case SDL_SCANCODE_W:
+			kbd_key_released( 5, 1 );
+			break;
+		    case SDL_SCANCODE_X:
+			kbd_key_released( 5, 0 );
+			break;
+		    case SDL_SCANCODE_Y:
+			kbd_key_released( 4, 3 );
+			break;
+		    case SDL_SCANCODE_Z:
+			kbd_key_released( 4, 2 );
+			break;
+		    default:
+			break;
+		}
 
-                /*
+		/*
 
-                case SDLK_LEFT:
+		case SDLK_LEFT:
 
-                        break;
-                case SDLK_RIGHT:
-                        kbd_key_released  (1, 3);
-                        break;
-                case SDLK_UP:
+			break;
+		case SDLK_RIGHT:
+			kbd_key_released  (1, 3);
+			break;
+		case SDLK_UP:
 
-                        break;
-                case SDLK_DOWN:
+			break;
+		case SDLK_DOWN:
 
-                        break;
-                case SDLK_ESCAPE:
+			break;
+		case SDLK_ESCAPE:
 
-                        break;
-        */
-                break;
+			break;
+	*/
+		break;
 
-            case SDL_USEREVENT: {
-                printf( "SDL_USEREVENT\n" );
-                // if(event.user.code == 1)
+	    case SDL_USEREVENT: {
+		printf( "SDL_USEREVENT\n" );
+		// if(event.user.code == 1)
 
-                // void (*p) (void*) = event.user.data1;
-                // p(event.user.data2);
-            } break;
+		// void (*p) (void*) = event.user.data1;
+		// p(event.user.data2);
+	    } break;
 
-            case SDL_QUIT: {
-                please_exit = TRUE;
-                // emulator_state = EMULATOR_STOP;
-                return FALSE;
-            }
-        }
+	    case SDL_QUIT: {
+		please_exit = TRUE;
+		// emulator_state = EMULATOR_STOP;
+		return FALSE;
+	    }
+	}
     }
     return TRUE;
 }
 
 void mainloop() {
     if ( please_exit == TRUE ) {
-        printf( "please exit\n" );
-        return;
+	printf( "please exit\n" );
+	return;
     }
     if ( SDL_ready == TRUE ) {
 
-        currentTime = SDL_GetTicks();
+	currentTime = SDL_GetTicks();
 
 #ifdef EMSCRIPTEN
 
-        currentTime_emu = currentTime;
-        emuframecount = 0;
+	currentTime_emu = currentTime;
+	emuframecount = 0;
 
-        do {
-            emuframecount++;
-            emulator_run();
+	do {
+	    emuframecount++;
+	    emulator_run();
 
-            currentTime_emu = SDL_GetTicks() - currentTime;
-        } while ( currentTime_emu < 2 );
+	    currentTime_emu = SDL_GetTicks() - currentTime;
+	} while ( currentTime_emu < 2 );
 
-        // printf("EMU emuframecount = %d | time = %d\n", emuframecount,
-        // currentTime_emu);
+	// printf("EMU emuframecount = %d | time = %d\n", emuframecount,
+	// currentTime_emu);
 
 #else
 
-        emulator_run();
+	emulator_run();
 
 #endif
 
-        /*
-        framecount++;
+	/*
+	framecount++;
 
-        if (currentTime >= lastTime_timer_fps + 1000) {
-                //printf("Report(2) %dmsec: %d\n", delay_timer2, currentTime -
-        lastTime_timer2); lastTime_timer_fps = currentTime; printf("FPS = %d\n",
-        framecount); framecount = 0;
-        }
-        */
+	if (currentTime >= lastTime_timer_fps + 1000) {
+		//printf("Report(2) %dmsec: %d\n", delay_timer2, currentTime -
+	lastTime_timer2); lastTime_timer_fps = currentTime; printf("FPS = %d\n",
+	framecount); framecount = 0;
+	}
+	*/
 
-        // printf("mainloop() currentTime = %d\n", currentTime);
+	// printf("mainloop() currentTime = %d\n", currentTime);
 
 #if 1
-        // true_speed_proc
-        if ( currentTime > lastTime_timer2 + delay_timer2 ) {
-            // printf("Report(2) %dmsec: %d\n", delay_timer2, currentTime -
-            // lastTime_timer2);
-            lastTime_timer2 = currentTime;
-            true_speed_proc();
-        }
+	// true_speed_proc
+	if ( currentTime > lastTime_timer2 + delay_timer2 ) {
+	    // printf("Report(2) %dmsec: %d\n", delay_timer2, currentTime -
+	    // lastTime_timer2);
+	    lastTime_timer2 = currentTime;
+	    true_speed_proc();
+	}
 
-        // display_update
-        if ( currentTime > lastTime_timer1 + delay_timer1 ) {
-            // printf("Report(1) %dmsec: %d\n", delay_timer1, currentTime -
-            // lastTime_timer1);
-            lastTime_timer1 = currentTime;
-            display_update();
-        }
+	// display_update
+	if ( currentTime > lastTime_timer1 + delay_timer1 ) {
+	    // printf("Report(1) %dmsec: %d\n", delay_timer1, currentTime -
+	    // lastTime_timer1);
+	    lastTime_timer1 = currentTime;
+	    display_update();
+	}
 
-        // timer1
-        if ( currentTime > lastTime_timer3 + delay_timer3 ) {
-            // printf("Report(3) %dmsec: %d\n", delay_timer3, currentTime -
-            // lastTime_timer3);
-            lastTime_timer3 = currentTime;
-            timer1_update();
-        }
+	// timer1
+	if ( currentTime > lastTime_timer3 + delay_timer3 ) {
+	    // printf("Report(3) %dmsec: %d\n", delay_timer3, currentTime -
+	    // lastTime_timer3);
+	    lastTime_timer3 = currentTime;
+	    timer1_update();
+	}
 
-        // timer2
-        if ( currentTime > lastTime_timer4 + delay_timer4 ) {
-            // printf("Report(4) %dmsec: %d\n", delay_timer4, currentTime -
-            // lastTime_timer4);
-            lastTime_timer4 = currentTime;
-            timer2_update();
-        }
+	// timer2
+	if ( currentTime > lastTime_timer4 + delay_timer4 ) {
+	    // printf("Report(4) %dmsec: %d\n", delay_timer4, currentTime -
+	    // lastTime_timer4);
+	    lastTime_timer4 = currentTime;
+	    timer2_update();
+	}
 
-        // display show
-        if ( currentTime > lastTime_timer5 + delay_timer5 ) {
-            lastTime_timer5 = currentTime;
-            display_show();
-        }
+	// display show
+	if ( currentTime > lastTime_timer5 + delay_timer5 ) {
+	    lastTime_timer5 = currentTime;
+	    display_show();
+	}
 #endif
 
-        if ( refreshSDL() == FALSE ) {
+	if ( refreshSDL() == FALSE ) {
 #ifdef EMSCRIPTEN
-            printf( "emscripten_cancel_main_loop\n" );
-            emscripten_cancel_main_loop();
+	    printf( "emscripten_cancel_main_loop\n" );
+	    emscripten_cancel_main_loop();
 #endif
-            return;
-        }
+	    return;
+	}
     }
 }
 
@@ -714,7 +714,7 @@ int main( int argc, char* argv[] ) {
 #else
     printf( "NO emscripten_set_main_loop\n" );
     while ( please_exit == FALSE )
-        mainloop();
+	mainloop();
 #endif
 
     /*

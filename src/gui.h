@@ -28,7 +28,8 @@
 #ifndef __GUI_H
 #define __GUI_H
 
-#define SDL_TTF
+/* #define SDL_TTF */
+#define FONT_FILENAME "/usr/share/fonts/TTF/unifont.ttf"
 
 #include "types.h"
 

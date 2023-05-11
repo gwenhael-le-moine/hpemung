@@ -44,8 +44,8 @@
 extern SDL_Renderer* renderer;
 extern SDL_Texture* faceplateTexture;
 #ifdef SDL_TTF
-extern TTF_Font* ArialFonte;
-extern TTF_Font* ArialFonte2;
+extern TTF_Font* ttffont;
+extern TTF_Font* ttffont2;
 #endif
 
 SDL_Surface* surfA[ 49 ];
@@ -133,7 +133,7 @@ void drawText( int index, int x, int y, int btn_w, int btn_h ) {
 void gui_initKeyboard( Button* calcbuttons ) {
     printf( "init texts\n" );
 #ifdef SDL_TTF
-    if ( ArialFonte == NULL ) {
+    if ( ttffont == NULL ) {
         printf( "init texts error Font NULL\n" );
         return;
     }
@@ -150,7 +150,7 @@ void gui_initKeyboard( Button* calcbuttons ) {
         SDL_Surface* s = NULL;
         SDL_Texture* t = NULL;
         if ( buttons->text && strcmp( buttons->text, "" ) != 0 ) {
-            s = TTF_RenderText_Blended( ArialFonte, buttons->text,
+            s = TTF_RenderUTF8_Blended( ttffont, buttons->text,
                                         couleurBlanche );
             if ( s ) {
                 t = SDL_CreateTextureFromSurface( renderer, s );
@@ -170,7 +170,7 @@ void gui_initKeyboard( Button* calcbuttons ) {
         SDL_Surface* s = NULL;
         SDL_Texture* t = NULL;
         if ( buttons->textB && strcmp( buttons->textB, "" ) != 0 ) {
-            s = TTF_RenderText_Blended( ArialFonte2, buttons->textB,
+            s = TTF_RenderUTF8_Blended( ttffont2, buttons->textB,
                                         couleurPurple );
             if ( s ) {
                 t = SDL_CreateTextureFromSurface( renderer, s );
@@ -188,7 +188,7 @@ void gui_initKeyboard( Button* calcbuttons ) {
         SDL_Surface* s = NULL;
         SDL_Texture* t = NULL;
         if ( buttons->textC && strcmp( buttons->textC, "" ) != 0 ) {
-            s = TTF_RenderText_Blended( ArialFonte2, buttons->textC,
+            s = TTF_RenderUTF8_Blended( ttffont2, buttons->textC,
                                         couleurGreen );
             if ( s ) {
                 t = SDL_CreateTextureFromSurface( renderer, s );
@@ -206,7 +206,7 @@ void gui_initKeyboard( Button* calcbuttons ) {
         SDL_Surface* s = NULL;
         SDL_Texture* t = NULL;
         if ( buttons->textD && strcmp( buttons->textD, "" ) != 0 ) {
-            s = TTF_RenderText_Blended( ArialFonte2, buttons->textD,
+            s = TTF_RenderUTF8_Blended( ttffont2, buttons->textD,
                                         couleurYellow );
             if ( s ) {
                 t = SDL_CreateTextureFromSurface( renderer, s );
