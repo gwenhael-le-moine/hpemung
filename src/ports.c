@@ -15,35 +15,19 @@ void ports_init( void )
     bus_info.ce1_r_o = true;
     bus_info.ce1_bs = true;
 
-#if 1
-    // ce2 = port1 (unplugged)
-    bus_info.ce2_data = NULL;
-    bus_info.ce2_mask = 0x00000;
-    bus_info.ce2_r_o = true;
-#else
-#  define PORT1_SIZE ( 64 * 1024 ) // Nibbles
+#define PORT1_SIZE ( 256 * 1024 ) /* 128Kio in nibbles */
     // ce2 = port1 (plugged)
     bus_info.ce2_data = malloc( PORT1_SIZE );
     bus_info.ce2_mask = PORT1_SIZE - 1;
     bus_info.ce2_r_o = false;
-#endif
 
-#if 1
-    // nce3 = port2 (unplugged)
-    port2 = NULL;
-    port2mask = 0x00000;
-    bus_info.nce3_data = port2;
-    bus_info.nce3_mask = port2mask & 0x3FFFF;
-    bus_info.nce3_r_o = true;
-#else
-#  define PORT2_SIZE ( 512 * 1024 ) // Nibbles
+#define PORT2_SIZE ( 256 * 1024 ) /* 128Kio in nibbles */
     // nce3 = port2 (plugged)
     port2 = malloc( PORT2_SIZE );
     port2mask = PORT2_SIZE - 1;
     bus_info.nce3_data = port2;
     bus_info.nce3_mask = port2mask & 0x3FFFF;
     bus_info.nce3_r_o = false;
-#endif
 
     bus_info.ben = false;
     current_bank = 0;
