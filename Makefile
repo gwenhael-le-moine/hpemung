@@ -9,7 +9,6 @@ all: dist/hpemu
 dist/hpemu: src/bus.o \
 	src/color.o \
 	src/cpu.o \
-	src/disasm.o \
 	src/display.o \
 	src/emulator.o \
 	src/gui.o \

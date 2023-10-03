@@ -8,7 +8,7 @@ extern byte timer2_control;
 extern byte timer1_value;
 extern dword timer2_value;
 
-void timer1_update( void );
-void timer2_update( void );
+extern void timer1_update( void );
+extern void timer2_update( void );
 
 #endif

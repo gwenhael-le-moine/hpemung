@@ -2,6 +2,7 @@
 #define __PCALC_H
 
 #include <SDL2/SDL.h>
+
 #include "types.h"
 
 typedef struct {
@@ -10,12 +11,11 @@ typedef struct {
     void ( *up )( bool action );
 } KBMapping;
 
-void pcalc_init();
-void pcalc_show();
-void pcalc_hide( void );
-void pcalc_down( int mx, int my, int mb );
-void pcalc_up( int mx, int my, int mb );
-void pcalc_kb_down( SDL_Keycode sdl_event );
-void pcalc_kb_up( SDL_Keycode sdl_event );
+extern void pcalc_init();
+extern void pcalc_show();
+extern void pcalc_down( int mx, int my, int mb );
+extern void pcalc_up( int mx, int my, int mb );
+extern void pcalc_kb_down( SDL_Keycode sdl_event );
+extern void pcalc_kb_up( SDL_Keycode sdl_event );
 
 #endif

@@ -3,6 +3,8 @@
 
 #define RESERVED_LCD 128
 
+enum LCD_Modes { LCD_MODE_SIMPLE, LCD_MODE_GRAY4, LCD_MODE_GRAY8, LCD_MODE_EXP };
+
 int color[ C_COUNT ];
 
 typedef struct RGB {

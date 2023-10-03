@@ -12,11 +12,9 @@
 
 void rom_init( void )
 {
-    printf( "rom_init..\n" );
     int size;
     char* name = "hpemu.rom";
     byte *buf, *ptr1, *ptr2;
-    // PACKFILE *f;
     FILE* f;
 
     size = file_size( name );

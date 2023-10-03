@@ -34,7 +34,7 @@ enum RegisterNames { A, B, C, D };
 
 extern Cpu cpu;
 
-void cpu_interrupt( void );
-void execute_instruction( void );
+extern void cpu_interrupt( void );
+extern void execute_instruction( void );
 
 #endif

@@ -3,10 +3,10 @@
 
 #include "types.h"
 
-void hdw_init( void );
-void hdw_exit( void );
+extern void hdw_init( void );
+extern void hdw_exit( void );
 
-byte hdw_read_nibble( address adr );
-void hdw_write_nibble( byte data, address adr );
+extern byte hdw_read_nibble( address adr );
+extern void hdw_write_nibble( byte data, address adr );
 
 #endif

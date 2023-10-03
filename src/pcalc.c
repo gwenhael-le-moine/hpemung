@@ -257,11 +257,6 @@ void pcalc_show()
     button_draw_all( calc_buttons );
 }
 
-void pcalc_hide( void )
-{
-    // calc_bmp = NULL;
-}
-
 void pcalc_down( int mx, int my, int mb ) { button_mouse_down( calc_buttons, mx, my, mb ); }
 
 void pcalc_up( int mx, int my, int mb ) { button_mouse_up( calc_buttons, mx, my, mb ); }

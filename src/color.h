@@ -1,8 +1,6 @@
 #ifndef __COLOR_H
 #define __COLOR_H
 
-enum LCD_Modes { LCD_MODE_SIMPLE, LCD_MODE_GRAY4, LCD_MODE_GRAY8, LCD_MODE_EXP };
-
 enum Colors {
     C_BACKGROUND,
     C_PANEL_BACK,
@@ -19,9 +17,6 @@ enum Colors {
 
 extern int color[ C_COUNT ];
 
-void color_lcd( int r0, int g0, int b0, int r1, int g1, int b1 );
-void color_lcd_mode( int mode );
-void color_set_emu( int i, int r, int g, int b );
-void color_init( void );
+extern void color_init( void );
 
 #endif

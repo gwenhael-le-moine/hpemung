@@ -5,10 +5,10 @@
 
 extern bool kbd_on;
 
-void kbd_out_changed( void );
-void kbd_key_pressed( int row, int col );
-void kbd_key_released( int row, int col );
-void kbd_on_pressed( void );
-void kbd_on_released( void );
+extern void kbd_out_changed( void );
+extern void kbd_key_pressed( int row, int col );
+extern void kbd_key_released( int row, int col );
+extern void kbd_on_pressed( void );
+extern void kbd_on_released( void );
 
 #endif

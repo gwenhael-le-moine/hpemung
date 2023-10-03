@@ -41,8 +41,6 @@ static int emulator_state = EMULATOR_RUN;
 
 void emulator_set_state( int state ) { emulator_state = state; }
 
-int emulator_get_state( void ) { return emulator_state; }
-
 void emulator_init( void )
 {
     static bool locked = false;

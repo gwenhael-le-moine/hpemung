@@ -6,9 +6,9 @@
 #define PORT1_SIZE ( 256 * 1024 ) /* 128Kio in nibbles */
 #define PORT2_SIZE ( 256 * 1024 ) /* 128Kio in nibbles */
 
-void ports_init( void );
-void ports_exit( void );
-void ports_switch_bank( address adr );
-byte ports_card_detect( void );
+extern void ports_init( void );
+extern void ports_exit( void );
+extern void ports_switch_bank( address adr );
+extern byte ports_card_detect( void );
 
 #endif

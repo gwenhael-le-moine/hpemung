@@ -1,8 +1,9 @@
 #ifndef __DISPLAY_H
 #define __DISPLAY_H
 
-#include <SDL2/SDL.h>
 #include <stdlib.h>
+#include <SDL2/SDL.h>
+
 #include "types.h"
 
 extern address menu_base;
@@ -13,9 +14,9 @@ extern byte display_height;
 extern byte display_offset;
 extern bool display_enable;
 
-void display_init( void );
-void display_exit( void );
-void display_update( void );
-void display_show();
+extern void display_init( void );
+extern void display_exit( void );
+extern void display_update( void );
+extern void display_show( void );
 
 #endif

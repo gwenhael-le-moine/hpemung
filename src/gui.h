@@ -29,10 +29,10 @@ typedef struct {
 #define BUTTON_B2TOGGLE 0x08  // Mouse button 2 toggles this button
 #define BUTTON_B1RELEASE 0x10 // Releaseing mouse button 1 anywhere unpushes the button
 
-void gui_initKeyboard( Button* calcbuttons );
+extern void gui_initKeyboard( Button* calcbuttons );
 
-void button_draw_all( /*BITMAP *bmp,*/ Button* buttons );
-int button_mouse_down( /*BITMAP *bmp,*/ Button* butons, int mx, int my, int mb );
-int button_mouse_up( /*BITMAP *bmp,*/ Button* buttons, int mx, int my, int mb );
+extern void button_draw_all( /*BITMAP *bmp,*/ Button* buttons );
+extern int button_mouse_down( /*BITMAP *bmp,*/ Button* butons, int mx, int my, int mb );
+extern int button_mouse_up( /*BITMAP *bmp,*/ Button* buttons, int mx, int my, int mb );
 
 #endif

@@ -57,17 +57,17 @@ extern word crc;
 // FAST_PEEK_MAX must not be greater than the size of the hdw registers (64)
 #define FAST_PEEK_MAX 64
 
-void bus_init( void );
-void bus_exit( void );
+extern void bus_init( void );
+extern void bus_exit( void );
 
-void bus_read( byte* buf, address adr, address len );
-void bus_write( byte* buf, address adr, address len );
-byte* bus_fast_peek( byte* buf, address adr, address* len );
+extern void bus_read( byte* buf, address adr, address len );
+extern void bus_write( byte* buf, address adr, address len );
+extern byte* bus_fast_peek( byte* buf, address adr, address* len );
 
-void bus_remap( void );
-void bus_configure( address adr );
-void bus_unconfigure( address adr );
-void bus_reset( void );
-address bus_get_id();
+extern void bus_remap( void );
+extern void bus_configure( address adr );
+extern void bus_unconfigure( address adr );
+extern void bus_reset( void );
+extern address bus_get_id();
 
 #endif
