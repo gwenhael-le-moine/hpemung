@@ -1,4 +1,5 @@
 #include <stdlib.h>
+
 #include "color.h"
 
 #define RESERVED_LCD 128

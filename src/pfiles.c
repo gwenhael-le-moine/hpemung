@@ -1,14 +1,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <libgen.h>       // dirname
+#include <unistd.h>       // readlink
+#include <linux/limits.h> // PATH_MAX
+
 #include "color.h"
 #include "gui.h"
 #include "rpl.h"
 #include "pfiles.h"
-
-#include <libgen.h>       // dirname
-#include <unistd.h>       // readlink
-#include <linux/limits.h> // PATH_MAX
 
 char WorkingPath[ 512 ];
 

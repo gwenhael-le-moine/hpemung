@@ -2,6 +2,7 @@
 #define __OPINLINE_H
 
 #include <string.h>
+
 #include "emulator.h"
 #include "cpu.h"
 

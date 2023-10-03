@@ -1,20 +1,20 @@
 #include <stdlib.h>
 #include <stdio.h>
+
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
+
 #include "types.h"
 #include "emulator.h"
 #include "gui.h"
 #include "color.h"
-
 #include "display.h"
 #include "gui.h"
 #include "timers.h"
 #include "keyboard.h"
 #include "pcalc.h"
 #include "pfiles.h"
-
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
 
 const int SCREEN_WIDTH = 524;
 const int SCREEN_HEIGHT = 750;
