@@ -3,7 +3,7 @@ LIBS = $(shell pkg-config --libs sdl2 SDL2_ttf)
 CFLAGS = -Wall -Werror -O3 -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=unused-but-set-variable -Wno-error=missing-braces -Wno-error=incompatible-pointer-types
 CFLAGS += -DSDL_TTF=1 #-DFONT_FILENAME="/usr/share/fonts/TTF/unifont.ttf"
 
-.PHONY: all clean clean-all pretty-code install
+.PHONY: all clean clean-all pretty-code install mrproper
 
 all: dist/hpemu
 
@@ -34,8 +34,10 @@ dist/hpemu: src/bus.o \
 clean:
 	-rm src/*.o
 
-clean-all: clean
+mrproper: clean
 	-rm dist/hpemu
+
+clean-all: mrproper
 
 # Formatting
 pretty-code:
