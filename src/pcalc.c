@@ -268,7 +268,7 @@ void pcalc_up( int mx, int my, int mb ) { button_mouse_up( calc_buttons, mx, my,
 
 void pcalc_kb_down( SDL_Keycode sdl_event )
 {
-    printf( "%d\n", SDLK_0 );
+    /* printf( "%d\n", SDLK_0 ); */
     KBMapping* mapping = kb_sdl_mapping;
     while ( mapping->SDL_event_id ) {
         if ( sdl_event == mapping->SDL_event_id ) {

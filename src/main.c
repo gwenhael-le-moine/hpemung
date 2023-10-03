@@ -286,7 +286,7 @@ bool refreshSDL()
                 break;
 
             case SDL_KEYDOWN:
-                printf( "%d %d\n", event.key.keysym.sym, event.key.keysym.scancode );
+                /* printf( "%d %d\n", event.key.keysym.sym, event.key.keysym.scancode ); */
 
                 pcalc_kb_down( event.key.keysym.scancode );
 
@@ -593,7 +593,6 @@ void mainloop()
 
         // printf("mainloop() currentTime = %d\n", currentTime);
 
-#if 1
         // true_speed_proc
         if ( currentTime > lastTime_timer2 + delay_timer2 ) {
             // printf("Report(2) %dmsec: %d\n", delay_timer2, currentTime -
@@ -631,7 +630,6 @@ void mainloop()
             lastTime_timer5 = currentTime;
             display_show();
         }
-#endif
 
         if ( refreshSDL() == false ) {
             return;
@@ -649,14 +647,9 @@ int main( int argc, char* argv[] )
 
     // start_timers();
 
-    printf( "NO emscripten_set_main_loop\n" );
     while ( please_exit == false )
         mainloop();
 
-    /*
-    printf("NO emscripten_set_main_loop\n");
-    while(please_exit == false) mainloop();
-*/
     gui_exit();
     emulator_exit();
     program_exit();

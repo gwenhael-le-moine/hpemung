@@ -11,13 +11,14 @@ Cpu cpu;
 
 void cpu_interrupt( void )
 {
-    printf( "cpu_interrupt\n" );
-    if ( cpu.inte ) {
-        cpu.inte = false;
-        cpu.rstk_ptr = ( cpu.rstk_ptr - 1 ) & 7;
-        cpu.rstk[ cpu.rstk_ptr ] = cpu.pc;
-        cpu.pc = 0x0000F;
-    }
+    /* printf( "cpu_interrupt\n" ); */
+    if ( !cpu.inte )
+        return;
+
+    cpu.inte = false;
+    cpu.rstk_ptr = ( cpu.rstk_ptr - 1 ) & 7;
+    cpu.rstk[ cpu.rstk_ptr ] = cpu.pc;
+    cpu.pc = 0x0000F;
 }
 
 static void decode( byte* ptr )

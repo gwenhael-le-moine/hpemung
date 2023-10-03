@@ -98,7 +98,7 @@ static void stop_timer_proc( void ( *proc )( void ) )
 
 void emulator_set_state( int state )
 {
-    printf( "emulator_set_state\n" );
+    /* printf( "emulator_set_state\n" ); */
 #ifdef true_TIMER2
     if ( state != EMULATOR_STOP ) {
         start_timer_proc( timer2_update );
