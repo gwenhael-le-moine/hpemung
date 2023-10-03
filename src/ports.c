@@ -34,7 +34,8 @@ static byte current_bank;
 static byte* port2;
 static address port2mask;
 
-void ports_init( void ) {
+void ports_init( void )
+{
     // ce1 = bank switcher
     bus_info.ce1_data = NULL;
     bus_info.ce1_mask = 0x0007F;
@@ -47,7 +48,7 @@ void ports_init( void ) {
     bus_info.ce2_mask = 0x00000;
     bus_info.ce2_r_o = TRUE;
 #else
-#define PORT1_SIZE ( 64 * 1024 ) // Nibbles
+#  define PORT1_SIZE ( 64 * 1024 ) // Nibbles
     // ce2 = port1 (plugged)
     bus_info.ce2_data = malloc( PORT1_SIZE );
     bus_info.ce2_mask = PORT1_SIZE - 1;
@@ -62,7 +63,7 @@ void ports_init( void ) {
     bus_info.nce3_mask = port2mask & 0x3FFFF;
     bus_info.nce3_r_o = TRUE;
 #else
-#define PORT2_SIZE ( 512 * 1024 ) // Nibbles
+#  define PORT2_SIZE ( 512 * 1024 ) // Nibbles
     // nce3 = port2 (plugged)
     port2 = malloc( PORT2_SIZE );
     port2mask = PORT2_SIZE - 1;
@@ -77,7 +78,8 @@ void ports_init( void ) {
 
 void ports_exit( void ) {}
 
-void ports_switch_bank( address adr ) {
+void ports_switch_bank( address adr )
+{
     boolean need_remap = FALSE;
 
     if ( current_bank != ( ( ( byte )adr >> 1 ) & 0x1F ) ) {
@@ -100,7 +102,8 @@ void ports_switch_bank( address adr ) {
     }
 }
 
-byte ports_card_detect( void ) {
+byte ports_card_detect( void )
+{
     byte x = 0;
     if ( bus_info.nce3_data )
         x |= 0x1;

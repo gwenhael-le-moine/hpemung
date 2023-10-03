@@ -36,7 +36,7 @@
 BusInfo bus_info = {
     //  hdw	    ram sz  ram	    ce1 sz  ce1	    ce2 sz  ce2	    nce3 sz nce3
     0x00000, 0x00000, 0x00000, 0x00000, 0x00000, 0x00000, 0x00000, 0x00000,
-    0x00000, // base or size
+    0x00000,                                                       // base or size
     FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, // configured
     FALSE, FALSE, FALSE,                                           // read only
     //  ce1_bs  da19    ben
@@ -52,7 +52,8 @@ static address hdw_seg;
 
 word crc;
 
-void bus_init( void ) {
+void bus_init( void )
+{
     rom_init();
     hdw_init();
     ram_init();
@@ -60,23 +61,22 @@ void bus_init( void ) {
     bus_reset();
 }
 
-void bus_exit( void ) {
+void bus_exit( void )
+{
     rom_exit();
     hdw_exit();
     ram_exit();
     ports_exit();
 }
 
-static __inline void update_crc( byte nibble ) {
-    crc = ( crc >> 4 ) ^ ( ( ( crc ^ nibble ) & 0xF ) * 0x1081 );
-}
+static __inline void update_crc( byte nibble ) { crc = ( crc >> 4 ) ^ ( ( ( crc ^ nibble ) & 0xF ) * 0x1081 ); }
 
-void bus_read( byte* buf, address adr, address len ) {
+void bus_read( byte* buf, address adr, address len )
+{
     int n, i;
 
     while ( TRUE ) {
-        if ( hdw_seg == SEG_OF( adr ) &&
-             ( ( bus_info.hdw_base ^ adr ) & 0xFFFC0 ) == 0 ) {
+        if ( hdw_seg == SEG_OF( adr ) && ( ( bus_info.hdw_base ^ adr ) & 0xFFFC0 ) == 0 ) {
             n = MIN( len, 0x40 - ( adr & 0x3F ) );
             for ( i = 0; i < n; i++ ) {
                 buf[ i ] = hdw_read_nibble( ( adr & 0x3F ) + i );
@@ -85,8 +85,7 @@ void bus_read( byte* buf, address adr, address len ) {
                 update_crc( buf[ n - 1 ] );
             }
         } else {
-            if ( hdw_seg == SEG_OF( adr ) &&
-                 ( bus_info.hdw_base & 0xFFFC0 ) - adr > 0 ) {
+            if ( hdw_seg == SEG_OF( adr ) && ( bus_info.hdw_base & 0xFFFC0 ) - adr > 0 ) {
                 n = MIN( len, ( bus_info.hdw_base & 0xFFFC0 ) - adr );
             } else {
                 n = MIN( len, 0x1000 - OFFSET_OF( adr ) );
@@ -97,8 +96,7 @@ void bus_read( byte* buf, address adr, address len ) {
                 for ( i = 0; i < n; i++ ) {
                     buf[ i ] = ( ( i + adr ) & 1 ) ? 0xE : 0xD;
                 }
-                if ( bus_info.ce1_bs && bus_info.ce1_cfg &&
-                     ( ( bus_info.ce1_base ^ adr ) & bus_info.ce1_size ) ) {
+                if ( bus_info.ce1_bs && bus_info.ce1_cfg && ( ( bus_info.ce1_base ^ adr ) & bus_info.ce1_size ) ) {
                     ports_switch_bank( OFFSET_OF( adr + n ) );
                 }
             }
@@ -116,19 +114,18 @@ void bus_read( byte* buf, address adr, address len ) {
     }
 }
 
-void bus_write( byte* buf, address adr, address len ) {
+void bus_write( byte* buf, address adr, address len )
+{
     int n, i;
 
     while ( TRUE ) {
-        if ( hdw_seg == SEG_OF( adr ) &&
-             ( ( bus_info.hdw_base ^ adr ) & 0xFFFC0 ) == 0 ) {
+        if ( hdw_seg == SEG_OF( adr ) && ( ( bus_info.hdw_base ^ adr ) & 0xFFFC0 ) == 0 ) {
             n = MIN( len, 0x40 - ( adr & 0x3F ) );
             for ( i = 0; i < n; i++ ) {
                 hdw_write_nibble( buf[ i ], ( adr & 0x3F ) + i );
             }
         } else {
-            if ( hdw_seg == SEG_OF( adr ) &&
-                 ( bus_info.hdw_base & 0xFFFC0 ) - adr > 0 ) {
+            if ( hdw_seg == SEG_OF( adr ) && ( bus_info.hdw_base & 0xFFFC0 ) - adr > 0 ) {
                 n = MIN( len, ( bus_info.hdw_base & 0xFFFC0 ) - adr );
             } else {
                 n = MIN( len, 0x1000 - OFFSET_OF( adr ) );
@@ -136,8 +133,7 @@ void bus_write( byte* buf, address adr, address len ) {
             if ( CAN_WRITE( adr ) ) {
                 memcpy( MAP_WRITE( adr ), buf, n );
             } else if ( bus_info.ce1_bs ) {
-                if ( bus_info.ce1_cfg &&
-                     ( ( bus_info.ce1_base ^ adr ) & bus_info.ce1_size ) ) {
+                if ( bus_info.ce1_cfg && ( ( bus_info.ce1_base ^ adr ) & bus_info.ce1_size ) ) {
                     if ( !bus_info.nce3_r_o ) {
                         ports_switch_bank( OFFSET_OF( adr + n - 1 ) );
                     } else if ( ( adr + n ) & 1 ) {
@@ -158,19 +154,18 @@ void bus_write( byte* buf, address adr, address len ) {
     }
 }
 
-static void bus_peek( byte* buf, address adr, address len ) {
+static void bus_peek( byte* buf, address adr, address len )
+{
     int n, i;
 
     while ( TRUE ) {
-        if ( hdw_seg == SEG_OF( adr ) &&
-             ( ( bus_info.hdw_base ^ adr ) & 0xFFFC0 ) == 0 ) {
+        if ( hdw_seg == SEG_OF( adr ) && ( ( bus_info.hdw_base ^ adr ) & 0xFFFC0 ) == 0 ) {
             n = MIN( len, 0x40 - ( adr & 0x3F ) );
             for ( i = 0; i < n; i++ ) {
                 buf[ i ] = hdw_read_nibble( ( adr & 0x3F ) + i );
             }
         } else {
-            if ( hdw_seg == SEG_OF( adr ) &&
-                 ( bus_info.hdw_base & 0xFFFC0 ) - adr > 0 ) {
+            if ( hdw_seg == SEG_OF( adr ) && ( bus_info.hdw_base & 0xFFFC0 ) - adr > 0 ) {
                 n = MIN( len, ( bus_info.hdw_base & 0xFFFC0 ) - adr );
             } else {
                 n = MIN( len, 0x1000 - OFFSET_OF( adr ) );
@@ -194,7 +189,8 @@ static void bus_peek( byte* buf, address adr, address len ) {
 }
 
 /* Call only when you know that hdw is not in the range of nibbles read */
-static void bus_peek_no_hdw( byte* buf, address adr, address len ) {
+static void bus_peek_no_hdw( byte* buf, address adr, address len )
+{
     int n, i;
 
     while ( TRUE ) {
@@ -226,7 +222,8 @@ static void bus_peek_no_hdw( byte* buf, address adr, address len ) {
  * actual number of nibbles that can safetly be read through the pointer (can be
  * more or less then the original).
  */
-byte* bus_fast_peek( byte* buf, address adr, int* len ) {
+byte* bus_fast_peek( byte* buf, address adr, int* len )
+{
     static byte tmp_buf[ FAST_PEEK_MAX ];
     static int tmp_len;
     address adr2;
@@ -245,23 +242,20 @@ byte* bus_fast_peek( byte* buf, address adr, int* len ) {
     adr2 = adr + *len - 1;
 
     if ( ( SEG_OF( adr ) == hdw_seg || SEG_OF( adr2 ) == hdw_seg ) &&
-         ( ( ( bus_info.hdw_base ^ adr ) & 0xFFFC0 ) == 0 ||
-           ( ( bus_info.hdw_base ^ adr2 ) & 0xFFFC0 ) == 0 ) ) {
+         ( ( ( bus_info.hdw_base ^ adr ) & 0xFFFC0 ) == 0 || ( ( bus_info.hdw_base ^ adr2 ) & 0xFFFC0 ) == 0 ) ) {
         bus_peek( buf, adr, *len );
         return buf;
     } else if ( !CAN_READ( adr ) ) {
         bus_peek_no_hdw( buf, adr, *len );
         return buf;
     } else if ( SEG_OF( adr ) == SEG_OF( adr2 ) ) {
-        if ( hdw_seg == SEG_OF( adr ) &&
-             ( bus_info.hdw_base & 0xFFFC0 ) - adr > 0 ) {
+        if ( hdw_seg == SEG_OF( adr ) && ( bus_info.hdw_base & 0xFFFC0 ) - adr > 0 ) {
             *len = ( bus_info.hdw_base & 0xFFFC0 ) - adr;
         } else {
             *len = 0x1000 - OFFSET_OF( adr );
         }
         return MAP_READ( adr );
-    } else if ( CAN_READ( adr2 ) &&
-                MAP_READ( adr ) + *len - 1 == MAP_READ( adr2 ) ) {
+    } else if ( CAN_READ( adr2 ) && MAP_READ( adr ) + *len - 1 == MAP_READ( adr2 ) ) {
         if ( hdw_seg == SEG_OF( adr2 ) ) {
             *len = ( bus_info.hdw_base & 0xFFFC0 ) - adr;
         } else {
@@ -274,24 +268,19 @@ byte* bus_fast_peek( byte* buf, address adr, int* len ) {
     }
 }
 
-void bus_remap( void ) {
+void bus_remap( void )
+{
     int adr;
 
     for ( adr = 0; adr < 0x100000; adr += 0x01000 ) {
-        if ( bus_info.ram_cfg &&
-             ( ( bus_info.ram_base ^ adr ) & bus_info.ram_size ) == 0 ) {
-            read_map[ SEG_OF( adr ) ] =
-                bus_info.ram_data + ( adr & bus_info.ram_mask );
-            write_map[ SEG_OF( adr ) ] =
-                bus_info.ram_data + ( adr & bus_info.ram_mask );
-        } else if ( bus_info.ce2_cfg &&
-                    ( ( bus_info.ce2_base ^ adr ) & bus_info.ce2_size ) == 0 ) {
+        if ( bus_info.ram_cfg && ( ( bus_info.ram_base ^ adr ) & bus_info.ram_size ) == 0 ) {
+            read_map[ SEG_OF( adr ) ] = bus_info.ram_data + ( adr & bus_info.ram_mask );
+            write_map[ SEG_OF( adr ) ] = bus_info.ram_data + ( adr & bus_info.ram_mask );
+        } else if ( bus_info.ce2_cfg && ( ( bus_info.ce2_base ^ adr ) & bus_info.ce2_size ) == 0 ) {
             if ( bus_info.ce2_data ) {
-                read_map[ SEG_OF( adr ) ] =
-                    bus_info.ce2_data + ( adr & bus_info.ce2_mask );
+                read_map[ SEG_OF( adr ) ] = bus_info.ce2_data + ( adr & bus_info.ce2_mask );
                 if ( !bus_info.ce2_r_o ) {
-                    write_map[ SEG_OF( adr ) ] =
-                        bus_info.ce2_data + ( adr & bus_info.ce2_mask );
+                    write_map[ SEG_OF( adr ) ] = bus_info.ce2_data + ( adr & bus_info.ce2_mask );
                 } else {
                     write_map[ SEG_OF( adr ) ] = NULL;
                 }
@@ -299,14 +288,11 @@ void bus_remap( void ) {
                 read_map[ SEG_OF( adr ) ] = NULL;
                 write_map[ SEG_OF( adr ) ] = NULL;
             }
-        } else if ( bus_info.ce1_cfg &&
-                    ( ( bus_info.ce1_base ^ adr ) & bus_info.ce1_size ) == 0 ) {
+        } else if ( bus_info.ce1_cfg && ( ( bus_info.ce1_base ^ adr ) & bus_info.ce1_size ) == 0 ) {
             if ( bus_info.ce1_data ) {
-                read_map[ SEG_OF( adr ) ] =
-                    bus_info.ce1_data + ( adr & bus_info.ce1_mask );
+                read_map[ SEG_OF( adr ) ] = bus_info.ce1_data + ( adr & bus_info.ce1_mask );
                 if ( !bus_info.ce1_r_o ) {
-                    write_map[ SEG_OF( adr ) ] =
-                        bus_info.ce1_data + ( adr & bus_info.ce1_mask );
+                    write_map[ SEG_OF( adr ) ] = bus_info.ce1_data + ( adr & bus_info.ce1_mask );
                 } else {
                     write_map[ SEG_OF( adr ) ] = NULL;
                 }
@@ -314,14 +300,11 @@ void bus_remap( void ) {
                 read_map[ SEG_OF( adr ) ] = NULL;
                 write_map[ SEG_OF( adr ) ] = NULL;
             }
-        } else if ( bus_info.nce3_cfg && ( ( bus_info.nce3_base ^ adr ) &
-                                           bus_info.nce3_size ) == 0 ) {
+        } else if ( bus_info.nce3_cfg && ( ( bus_info.nce3_base ^ adr ) & bus_info.nce3_size ) == 0 ) {
             if ( bus_info.nce3_data && bus_info.ben && !bus_info.da19 ) {
-                read_map[ SEG_OF( adr ) ] =
-                    bus_info.nce3_data + ( adr & bus_info.nce3_mask );
+                read_map[ SEG_OF( adr ) ] = bus_info.nce3_data + ( adr & bus_info.nce3_mask );
                 if ( !bus_info.nce3_r_o ) {
-                    write_map[ SEG_OF( adr ) ] =
-                        bus_info.nce3_data + ( adr & bus_info.nce3_mask );
+                    write_map[ SEG_OF( adr ) ] = bus_info.nce3_data + ( adr & bus_info.nce3_mask );
                 } else {
                     write_map[ SEG_OF( adr ) ] = NULL;
                 }
@@ -330,9 +313,7 @@ void bus_remap( void ) {
                 write_map[ SEG_OF( adr ) ] = NULL;
             }
         } else {
-            read_map[ SEG_OF( adr ) ] =
-                bus_info.rom_data + ( adr & bus_info.rom_mask &
-                                      ( bus_info.da19 ? 0xFFFFF : 0x7FFFF ) );
+            read_map[ SEG_OF( adr ) ] = bus_info.rom_data + ( adr & bus_info.rom_mask & ( bus_info.da19 ? 0xFFFFF : 0x7FFFF ) );
             write_map[ SEG_OF( adr ) ] = NULL;
         }
     }
@@ -340,7 +321,8 @@ void bus_remap( void ) {
                         // invalid
 }
 
-void bus_configure( address adr ) {
+void bus_configure( address adr )
+{
     if ( !bus_info.hdw_cfg ) {
         bus_info.hdw_base = adr & 0xFFFC0;
         bus_info.hdw_cfg = TRUE;
@@ -376,34 +358,32 @@ void bus_configure( address adr ) {
     }
 }
 
-void bus_unconfigure( address adr ) {
+void bus_unconfigure( address adr )
+{
     if ( bus_info.hdw_cfg && ( ( adr ^ bus_info.hdw_base ) & 0xFFFC0 ) == 0 ) {
         bus_info.hdw_cfg = FALSE;
         hdw_seg = -1;
-    } else if ( bus_info.ram_cfg &&
-                ( ( adr ^ bus_info.ram_base ) & bus_info.ram_size ) == 0 ) {
+    } else if ( bus_info.ram_cfg && ( ( adr ^ bus_info.ram_base ) & bus_info.ram_size ) == 0 ) {
         bus_info.ram_cfg = FALSE;
         bus_info.ram_sz_cfg = FALSE;
         bus_remap();
-    } else if ( bus_info.ce2_cfg &&
-                ( ( adr ^ bus_info.ce2_base ) & bus_info.ce2_size ) == 0 ) {
+    } else if ( bus_info.ce2_cfg && ( ( adr ^ bus_info.ce2_base ) & bus_info.ce2_size ) == 0 ) {
         bus_info.ce2_cfg = FALSE;
         bus_info.ce2_sz_cfg = FALSE;
         bus_remap();
-    } else if ( bus_info.ce1_cfg &&
-                ( ( adr ^ bus_info.ce1_base ) & bus_info.ce1_size ) == 0 ) {
+    } else if ( bus_info.ce1_cfg && ( ( adr ^ bus_info.ce1_base ) & bus_info.ce1_size ) == 0 ) {
         bus_info.ce1_cfg = FALSE;
         bus_info.ce1_sz_cfg = FALSE;
         bus_remap();
-    } else if ( bus_info.nce3_cfg &&
-                ( ( adr ^ bus_info.nce3_base ) & bus_info.nce3_size ) == 0 ) {
+    } else if ( bus_info.nce3_cfg && ( ( adr ^ bus_info.nce3_base ) & bus_info.nce3_size ) == 0 ) {
         bus_info.nce3_cfg = FALSE;
         bus_info.nce3_sz_cfg = FALSE;
         bus_remap();
     }
 }
 
-void bus_reset( void ) {
+void bus_reset( void )
+{
     bus_info.hdw_base = 0x00000;
     bus_info.hdw_cfg = FALSE;
 
@@ -431,7 +411,8 @@ void bus_reset( void ) {
     bus_remap();
 }
 
-address bus_get_id( void ) {
+address bus_get_id( void )
+{
     if ( !bus_info.hdw_cfg ) {
         return bus_info.hdw_base | 0x00019;
     } else if ( !bus_info.ram_sz_cfg ) {

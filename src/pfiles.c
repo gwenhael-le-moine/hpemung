@@ -35,28 +35,29 @@
 #include "pfiles.h"
 
 #if defined( _WIN32 )
-#include <windows.h> // memset()
-#include <shlwapi.h> // PathRemoveFileSpecA
+#  include <windows.h> // memset()
+#  include <shlwapi.h> // PathRemoveFileSpecA
 #endif
 
 #if defined( __APPLE__ )
-#import <CoreFoundation/CoreFoundation.h>
-#include <string.h> // memset()
-#include <ctype.h>  // isalpha
-#include <unistd.h> // getcwd
+#  import <CoreFoundation/CoreFoundation.h>
+#  include <string.h> // memset()
+#  include <ctype.h>  // isalpha
+#  include <unistd.h> // getcwd
 #endif
 
 #if defined( __linux__ )
-#include <libgen.h>       // dirname
-#include <unistd.h>       // readlink
-#include <linux/limits.h> // PATH_MAX
+#  include <libgen.h>       // dirname
+#  include <unistd.h>       // readlink
+#  include <linux/limits.h> // PATH_MAX
 #endif
 
 // static void load_up(boolean action);
 
 /*
 static Button files_buttons[] = {
-    { 0,	0,    0,	79, 20,	BUTTON_B1RELEASE,   "Load", NULL,   load_up
+    { 0,	0,    0,	79, 20,	BUTTON_B1RELEASE,   "Load", NULL,
+load_up
 }, { 1,	0,    0,	0,  0,	0,          NULL,   NULL,   NULL }
 };
 */
@@ -64,7 +65,8 @@ static Button files_buttons[] = {
 
 static char WorkingPath[ 512 ];
 
-static void getExePath() {
+static void getExePath()
+{
     char programPath[ 1024 ];
     char temp[ 1024 ];
     memset( programPath, 0, sizeof( programPath ) );
@@ -73,9 +75,8 @@ static void getExePath() {
 #if defined( __APPLE__ )
     CFBundleRef mainBundle = CFBundleGetMainBundle();
     CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL( mainBundle );
-    if ( !CFURLGetFileSystemRepresentation(
-             resourcesURL, TRUE, ( UInt8* )programPath,
-             PATH_MAX ) ) // Error: expected unqualified-id before 'if'
+    if ( !CFURLGetFileSystemRepresentation( resourcesURL, TRUE, ( UInt8* )programPath,
+                                            PATH_MAX ) ) // Error: expected unqualified-id before 'if'
     {
         // error!
     }
@@ -117,7 +118,8 @@ static void getExePath() {
     strcpy( WorkingPath, programPath );
 }
 
-static int file_size( char* name ) {
+static int file_size( char* name )
+{
     memset( WorkingPath, 0, sizeof( WorkingPath ) );
     getExePath();
 
@@ -155,7 +157,8 @@ static int file_size(char *name)
 */
 
 // static
-void load_file( char* name ) {
+void load_file( char* name )
+{
     // PACKFILE *f;
     FILE* f;
     byte* buf;
@@ -219,15 +222,16 @@ void load_file( char* name ) {
 // /Users/admin/Documents/GIT/jsEmu48/jsEmu48/emutest2/emutest2/arkalite
 
 // static
-void load_up( boolean action ) {
-    static char path[ PATH_SIZE ] = "";
+void load_up( boolean action )
+{
+    /* static char path[ PATH_SIZE ] = ""; */
 
-    if ( action ) {
-        //		if (file_select_ex("Load Object", path, NULL, PATH_SIZE,
-        //0, 0)) {
-        //          load_file(path);
-        //		}
-    }
+    /* if ( action ) { */
+    /*     //		if (file_select_ex("Load Object", path, NULL, PATH_SIZE, */
+    /*     // 0, 0)) { */
+    /*     //          load_file(path); */
+    /*     //		} */
+    /* } */
 }
 
 /*
@@ -240,14 +244,17 @@ void pfiles_show(BITMAP *bmp)
 }
 */
 
-void pfiles_hide( void ) {
+void pfiles_hide( void )
+{
     // files_bmp = NULL;
 }
 
-void pfiles_down( int mx, int my, int mb ) {
+void pfiles_down( int mx, int my, int mb )
+{
     // button_mouse_down(files_bmp, files_buttons, mx, my, mb);
 }
 
-void pfiles_up( int mx, int my, int mb ) {
+void pfiles_up( int mx, int my, int mb )
+{
     // button_mouse_up(files_bmp, files_buttons, mx, my, mb);
 }

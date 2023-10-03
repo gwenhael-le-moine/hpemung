@@ -33,7 +33,8 @@ boolean kbd_on;
 
 static byte kbd_row[ 9 ];
 
-static void update_in( void ) {
+static void update_in( void )
+{
     byte in = 0;
 
     // TODO: Emulate real HP48 keyboard circuit
@@ -65,16 +66,15 @@ static void update_in( void ) {
 
 void kbd_out_changed( void ) { update_in(); }
 
-void kbd_key_pressed( int row, int col ) {
+void kbd_key_pressed( int row, int col )
+{
     boolean no_key = !cpu.in[ 0 ] && !cpu.in[ 1 ] && !cpu.in[ 3 ];
     kbd_row[ row ] |= 1 << col;
     update_in();
-    if ( cpu.shutdown && no_key &&
-         ( cpu.in[ 0 ] || cpu.in[ 1 ] || cpu.in[ 3 ] ) ) {
+    if ( cpu.shutdown && no_key && ( cpu.in[ 0 ] || cpu.in[ 1 ] || cpu.in[ 3 ] ) ) {
         cpu.shutdown = FALSE;
     }
-    if ( cpu.keyscan && no_key &&
-         ( cpu.in[ 0 ] || cpu.in[ 1 ] || cpu.in[ 3 ] ) ) {
+    if ( cpu.keyscan && no_key && ( cpu.in[ 0 ] || cpu.in[ 1 ] || cpu.in[ 3 ] ) ) {
         if ( cpu.inte ) {
             cpu.keyintp = FALSE;
             cpu_interrupt();
@@ -86,7 +86,8 @@ void kbd_key_pressed( int row, int col ) {
     }
 }
 
-void kbd_key_released( int row, int col ) {
+void kbd_key_released( int row, int col )
+{
     kbd_row[ row ] &= ~( 1 << col );
     update_in();
     if ( !cpu.in[ 0 ] && !cpu.in[ 1 ] && !cpu.in[ 3 ] ) {
@@ -94,7 +95,8 @@ void kbd_key_released( int row, int col ) {
     }
 }
 
-void kbd_on_pressed( void ) {
+void kbd_on_pressed( void )
+{
     boolean no_key = !cpu.in[ 3 ];
     kbd_on = TRUE;
     cpu.in[ 3 ] |= 8;
@@ -106,7 +108,8 @@ void kbd_on_pressed( void ) {
     }
 }
 
-void kbd_on_released( void ) {
+void kbd_on_released( void )
+{
     kbd_on = FALSE;
     cpu.in[ 3 ] &= ~8;
 }

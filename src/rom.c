@@ -34,26 +34,27 @@
 #include "rom.h"
 
 #if defined( _WIN32 )
-#include <windows.h> // memset()
-#include <shlwapi.h> // PathRemoveFileSpecA
+#  include <windows.h> // memset()
+#  include <shlwapi.h> // PathRemoveFileSpecA
 #endif
 
 #if defined( __APPLE__ )
-#import <CoreFoundation/CoreFoundation.h>
-#include <string.h> // memset()
-#include <ctype.h>  // isalpha
-#include <unistd.h> // getcwd
+#  import <CoreFoundation/CoreFoundation.h>
+#  include <string.h> // memset()
+#  include <ctype.h>  // isalpha
+#  include <unistd.h> // getcwd
 #endif
 
 #if defined( __linux__ )
-#include <libgen.h>       // dirname
-#include <unistd.h>       // readlink
-#include <linux/limits.h> // PATH_MAX
+#  include <libgen.h>       // dirname
+#  include <unistd.h>       // readlink
+#  include <linux/limits.h> // PATH_MAX
 #endif
 
 static char WorkingPath[ 512 ];
 
-static void getExePath() {
+static void getExePath()
+{
     char programPath[ 1024 ] = ".";
     char temp[ 1024 ];
     memset( programPath, 0, sizeof( programPath ) );
@@ -62,9 +63,8 @@ static void getExePath() {
 #if defined( __APPLE__ )
     CFBundleRef mainBundle = CFBundleGetMainBundle();
     CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL( mainBundle );
-    if ( !CFURLGetFileSystemRepresentation(
-             resourcesURL, TRUE, ( UInt8* )programPath,
-             PATH_MAX ) ) // Error: expected unqualified-id before 'if'
+    if ( !CFURLGetFileSystemRepresentation( resourcesURL, TRUE, ( UInt8* )programPath,
+                                            PATH_MAX ) ) // Error: expected unqualified-id before 'if'
     {
         // error!
     }
@@ -108,7 +108,8 @@ static void getExePath() {
     printf( "exec path = %s\n", WorkingPath );
 }
 
-static int file_size( char* name ) {
+static int file_size( char* name )
+{
     memset( WorkingPath, 0, sizeof( WorkingPath ) );
     getExePath();
 
@@ -128,7 +129,8 @@ static int file_size( char* name ) {
     return size;
 }
 
-void rom_init( void ) {
+void rom_init( void )
+{
     printf( "rom_init..\n" );
     int size;
     char* name = "hpemu.rom";
@@ -190,7 +192,8 @@ void rom_init( void ) {
     printf( "rom_init succeed!\n" );
 }
 
-void rom_exit( void ) {
+void rom_exit( void )
+{
     free( bus_info.rom_data );
     bus_info.rom_data = NULL;
     bus_info.rom_mask = 0x00000;

@@ -57,35 +57,41 @@ typedef struct {
     void ( *proc )( void );
 } TimerEvent;
 
-static CycleEvent cycle_events[] = { { 0, 16, timer1_update },
+static CycleEvent cycle_events[] = {
+    {0,  16,   timer1_update },
 #ifndef TRUE_TIMER2
-                                     { 0, 8192, timer2_update },
+    { 0, 8192, timer2_update },
 #endif
-                                     { 0, 4096, display_update },
-                                     { 0, 0, NULL } };
+    { 0, 4096, display_update},
+    { 0, 0,    NULL          }
+};
 
 static TimerEvent timer_events[] = {
-    { 0, 1000000 / 20 /*BPS_TO_TIMER(20)*/, FALSE, gui_update },
-    { 0, 1000000 /*BPS_TO_TIMER(1)*/, FALSE, true_speed_proc },
+    {0,  1000000 / 20 /*BPS_TO_TIMER(20)*/,     FALSE, gui_update     },
+    { 0, 1000000 /*BPS_TO_TIMER(1)*/,           FALSE, true_speed_proc},
 #ifdef TRUE_TIMER2
-    { 0, 1000000 / 8192 /*BPS_TO_TIMER(8192)*/, FALSE, timer2_update },
+    { 0, 1000000 / 8192 /*BPS_TO_TIMER(8192)*/, FALSE, timer2_update  },
 #endif
-    { 0, 0, FALSE, NULL } };
+    { 0, 0,                                     FALSE, NULL           }
+};
 
 volatile boolean please_exit = FALSE;
 dword emulator_speed = 4000000;
 static int emulator_state = EMULATOR_RUN; // EMULATOR_STOP;
 
-void true_speed_proc( void ) {
+void true_speed_proc( void )
+{
     static dword last_cycles;
 
     pdebug_draw_true_speed( cpu.cycles - last_cycles );
     last_cycles = cpu.cycles;
 }
 
-static void timer_event_proc( void* what ) { ( ( TimerEvent* )what )->value++; }
+/* static void timer_event_proc( void* what ) { ( ( TimerEvent* )what
+ * )->value++; } */
 
-static void start_timer_proc( void ( *proc )( void ) ) {
+static void start_timer_proc( void ( *proc )( void ) )
+{
     TimerEvent* ptr = timer_events;
 
     while ( ptr->proc && ptr->proc != proc ) {
@@ -100,7 +106,8 @@ static void start_timer_proc( void ( *proc )( void ) ) {
     }
 }
 
-static void stop_timer_proc( void ( *proc )( void ) ) {
+static void stop_timer_proc( void ( *proc )( void ) )
+{
     TimerEvent* ptr = timer_events;
 
     while ( ptr->proc && ptr->proc != proc ) {
@@ -114,7 +121,8 @@ static void stop_timer_proc( void ( *proc )( void ) ) {
     }
 }
 
-void emulator_set_state( int state ) {
+void emulator_set_state( int state )
+{
     printf( "emulator_set_state\n" );
 #ifdef TRUE_TIMER2
     if ( state != EMULATOR_STOP ) {
@@ -129,7 +137,8 @@ void emulator_set_state( int state ) {
 
 int emulator_get_state( void ) { return emulator_state; }
 
-void emulator_init( void ) {
+void emulator_init( void )
+{
     static boolean locked = FALSE;
 
     bus_init();
@@ -142,12 +151,14 @@ void emulator_init( void ) {
     }
 }
 
-void emulator_exit( void ) {
+void emulator_exit( void )
+{
     display_exit();
     bus_exit();
 }
 
-boolean emulator_run( void ) {
+boolean emulator_run( void )
+{
     CycleEvent* cep;
     TimerEvent* tep;
     dword delta;

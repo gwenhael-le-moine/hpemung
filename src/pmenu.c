@@ -32,64 +32,68 @@
 #include "gui.h"
 #include "pmenu.h"
 
-static void exit_up( boolean action );
-static void debug_up( boolean action );
-static void files_up( boolean action );
-static void about_up( boolean action );
+/* static void exit_up( boolean action ); */
+/* static void debug_up( boolean action ); */
+/* static void files_up( boolean action ); */
+/* static void about_up( boolean action ); */
 
-static Button menu_buttons[] = {
-    { 0, 0, 0, 79, 20, BUTTON_B1RELEASE, "Exit", NULL, exit_up },
-    { 1, 80, 0, 79, 20, BUTTON_B1RELEASE, "Debug", NULL, debug_up },
-    { 2, 160, 0, 79, 20, BUTTON_B1RELEASE, "Files", NULL, files_up },
-    { 3, 240, 0, 79, 20, BUTTON_DISABLED | BUTTON_B1RELEASE, "About", NULL,
-      about_up },
-    { 4, 0, 0, 0, 0, 0, NULL, NULL, NULL } };
+/* static Button menu_buttons[] = { */
+/*     {0,  0,   0, 79, 20, BUTTON_B1RELEASE,                   "Exit",  NULL, exit_up }, */
+/*     { 1, 80,  0, 79, 20, BUTTON_B1RELEASE,                   "Debug", NULL, debug_up}, */
+/*     { 2, 160, 0, 79, 20, BUTTON_B1RELEASE,                   "Files", NULL, files_up}, */
+/*     { 3, 240, 0, 79, 20, BUTTON_DISABLED | BUTTON_B1RELEASE, "About", NULL, about_up}, */
+/*     { 4, 0,   0, 0,  0,  0,                                  NULL,    NULL, NULL    } */
+/* }; */
 
 enum MenuButtons { MENU_EXIT, MENU_DEBUG, MENU_FILES, MENU_ABOUT, MENU_COUNT };
 
 // static BITMAP *menu_bmp;
 
-static void exit_up( boolean action ) {
-    if ( action ) {
-        please_exit = TRUE;
-    }
-}
+/* static void exit_up( boolean action ) */
+/* { */
+/*     if ( action ) { */
+/*         please_exit = TRUE; */
+/*     } */
+/* } */
 
-static void debug_up( boolean action ) {
-    //    if (action) {
-    //	menu_buttons[MENU_DEBUG].flags |= BUTTON_DISABLED;
-    //	menu_buttons[MENU_FILES].flags &= ~BUTTON_DISABLED;
-    //	menu_buttons[MENU_ABOUT].flags &= ~BUTTON_DISABLED;
-    //	button_draw_all(menu_bmp, menu_buttons);
-    //	gui_hide_panel(PANEL_FILES);
-    //	gui_hide_panel(PANEL_ABOUT);
-    //	gui_show_panel(PANEL_DEBUG);
-    //    }
-}
+/* static void debug_up( boolean action ) */
+/* { */
+/*     //    if (action) { */
+/*     //	menu_buttons[MENU_DEBUG].flags |= BUTTON_DISABLED; */
+/*     //	menu_buttons[MENU_FILES].flags &= ~BUTTON_DISABLED; */
+/*     //	menu_buttons[MENU_ABOUT].flags &= ~BUTTON_DISABLED; */
+/*     //	button_draw_all(menu_bmp, menu_buttons); */
+/*     //	gui_hide_panel(PANEL_FILES); */
+/*     //	gui_hide_panel(PANEL_ABOUT); */
+/*     //	gui_show_panel(PANEL_DEBUG); */
+/*     //    } */
+/* } */
 
-static void files_up( boolean action ) {
-    //    if (action) {
-    //	menu_buttons[MENU_DEBUG].flags &= ~BUTTON_DISABLED;
-    //	menu_buttons[MENU_FILES].flags |= BUTTON_DISABLED;
-    //	menu_buttons[MENU_ABOUT].flags &= ~BUTTON_DISABLED;
-    //	button_draw_all(menu_bmp, menu_buttons);
-    //	gui_hide_panel(PANEL_DEBUG);
-    //	gui_hide_panel(PANEL_ABOUT);
-    //	gui_show_panel(PANEL_FILES);
-    //    }
-}
+/* static void files_up( boolean action ) */
+/* { */
+/*     //    if (action) { */
+/*     //	menu_buttons[MENU_DEBUG].flags &= ~BUTTON_DISABLED; */
+/*     //	menu_buttons[MENU_FILES].flags |= BUTTON_DISABLED; */
+/*     //	menu_buttons[MENU_ABOUT].flags &= ~BUTTON_DISABLED; */
+/*     //	button_draw_all(menu_bmp, menu_buttons); */
+/*     //	gui_hide_panel(PANEL_DEBUG); */
+/*     //	gui_hide_panel(PANEL_ABOUT); */
+/*     //	gui_show_panel(PANEL_FILES); */
+/*     //    } */
+/* } */
 
-static void about_up( boolean action ) {
-    //    if (action) {
-    //	menu_buttons[MENU_DEBUG].flags &= ~BUTTON_DISABLED;
-    //	menu_buttons[MENU_FILES].flags &= ~BUTTON_DISABLED;
-    //	menu_buttons[MENU_ABOUT].flags |= BUTTON_DISABLED;
-    //	button_draw_all(menu_bmp, menu_buttons);
-    //	gui_hide_panel(PANEL_DEBUG);
-    //	gui_hide_panel(PANEL_FILES);
-    //	gui_show_panel(PANEL_ABOUT);
-    //    }
-}
+/* static void about_up( boolean action ) */
+/* { */
+/*     //    if (action) { */
+/*     //	menu_buttons[MENU_DEBUG].flags &= ~BUTTON_DISABLED; */
+/*     //	menu_buttons[MENU_FILES].flags &= ~BUTTON_DISABLED; */
+/*     //	menu_buttons[MENU_ABOUT].flags |= BUTTON_DISABLED; */
+/*     //	button_draw_all(menu_bmp, menu_buttons); */
+/*     //	gui_hide_panel(PANEL_DEBUG); */
+/*     //	gui_hide_panel(PANEL_FILES); */
+/*     //	gui_show_panel(PANEL_ABOUT); */
+/*     //    } */
+/* } */
 
 /*
 void pmenu_show(BITMAP *bmp)
@@ -101,14 +105,17 @@ void pmenu_show(BITMAP *bmp)
 }
 */
 
-void pmenu_hide( void ) {
+void pmenu_hide( void )
+{
     // menu_bmp = NULL;
 }
 
-void pmenu_down( int mx, int my, int mb ) {
+void pmenu_down( int mx, int my, int mb )
+{
     // button_mouse_down(menu_bmp, menu_buttons, mx, my, mb);
 }
 
-void pmenu_up( int mx, int my, int mb ) {
+void pmenu_up( int mx, int my, int mb )
+{
     // button_mouse_up(menu_bmp, menu_buttons, mx, my, mb);
 }

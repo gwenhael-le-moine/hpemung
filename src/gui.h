@@ -28,19 +28,11 @@
 #ifndef __GUI_H
 #define __GUI_H
 
-/* #define SDL_TTF */
 #define FONT_FILENAME "/usr/share/fonts/TTF/unifont.ttf"
 
 #include "types.h"
 
-enum Panels {
-    PANEL_MENU,
-    PANEL_CALC,
-    PANEL_DEBUG,
-    PANEL_FILES,
-    PANEL_ABOUT,
-    PANEL_COUNT
-};
+enum Panels { PANEL_MENU, PANEL_CALC, PANEL_DEBUG, PANEL_FILES, PANEL_ABOUT, PANEL_COUNT };
 
 typedef struct {
     int index;
@@ -60,12 +52,11 @@ typedef struct {
  * Use BUTTON_B1RELEASE | BUTTON_B2TOGGLE for calculator buttons.
  * Use BUTTON_B1TOGGLE for toggle buttons
  */
-#define BUTTON_PUSHED 0x01   // Set if button is pushed
-#define BUTTON_DISABLED 0x02 // If set the button will be grayed out
-#define BUTTON_B1TOGGLE 0x04 // Mouse button 1 toggles this button
-#define BUTTON_B2TOGGLE 0x08 // Mouse button 2 toggles this button
-#define BUTTON_B1RELEASE                                                       \
-    0x10 // Releaseing mouse button 1 anywhere unpushes the button
+#define BUTTON_PUSHED 0x01    // Set if button is pushed
+#define BUTTON_DISABLED 0x02  // If set the button will be grayed out
+#define BUTTON_B1TOGGLE 0x04  // Mouse button 1 toggles this button
+#define BUTTON_B2TOGGLE 0x08  // Mouse button 2 toggles this button
+#define BUTTON_B1RELEASE 0x10 // Releaseing mouse button 1 anywhere unpushes the button
 
 void gui_initKeyboard( Button* calcbuttons );
 void gui_init( void );
@@ -78,8 +69,7 @@ void gui_hide_panel( int i );
 void button_draw(BITMAP *bmp, Button *buttons);
 */
 void button_draw_all( /*BITMAP *bmp,*/ Button* buttons );
-int button_mouse_down( /*BITMAP *bmp,*/ Button* butons, int mx, int my,
-                       int mb );
+int button_mouse_down( /*BITMAP *bmp,*/ Button* butons, int mx, int my, int mb );
 int button_mouse_up( /*BITMAP *bmp,*/ Button* buttons, int mx, int my, int mb );
 
 #endif

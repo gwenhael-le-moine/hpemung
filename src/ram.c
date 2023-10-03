@@ -33,7 +33,8 @@
 
 static address ram_size = 256 * 1024; // in nibbles, not bytes!
 
-void ram_init( void ) {
+void ram_init( void )
+{
     byte* buf;
 
     buf = malloc( ram_size );
@@ -45,7 +46,8 @@ void ram_init( void ) {
     bus_info.ram_mask = ram_size - 1;
 }
 
-void ram_exit( void ) {
+void ram_exit( void )
+{
     free( bus_info.ram_data );
     bus_info.ram_data = NULL;
     bus_info.ram_mask = 0x00000;

@@ -50,15 +50,16 @@ static const char* f_tab[ 8 ] = { "P", "WP", "XS", "X", "S", "M", "B", "W" };
 
 #define HEX( x ) ( hex_tab[ x ] )
 
-#define ADD_OFFSET( x, s )                                                     \
-    do {                                                                       \
-        if ( *( s ) == '+' ) {                                                 \
-            ( s )++;                                                           \
-            ( x ) += *( s )++ - '0';                                           \
-        }                                                                      \
+#define ADD_OFFSET( x, s )                                                                                                                 \
+    do {                                                                                                                                   \
+        if ( *( s ) == '+' ) {                                                                                                             \
+            ( s )++;                                                                                                                       \
+            ( x ) += *( s )++ - '0';                                                                                                       \
+        }                                                                                                                                  \
     } while ( 0 )
 
-static __inline int nib_to_signed( byte* nib, int len ) {
+static __inline int nib_to_signed( byte* nib, int len )
+{
     int x;
 
     len--;
@@ -72,7 +73,8 @@ static __inline int nib_to_signed( byte* nib, int len ) {
     return x;
 }
 
-static void expand( char* dest, char* src, byte* ptr ) {
+static void expand( char* dest, char* src, byte* ptr )
+{
     int i, n;
     int x;
 
@@ -203,8 +205,7 @@ static void expand( char* dest, char* src, byte* ptr ) {
 
                 case 'i': // R-register number
                     i = *src++ - '0';
-                    *dest++ = '0' + ( ( ptr[ i ] & 7 ) > 4 ? ptr[ i ] & 3
-                                                           : ptr[ i ] & 7 );
+                    *dest++ = '0' + ( ( ptr[ i ] & 7 ) > 4 ? ptr[ i ] & 3 : ptr[ i ] & 7 );
                     break;
 
                 case '#': // "#" or "=" for comparisons
@@ -281,7 +282,8 @@ static void expand( char* dest, char* src, byte* ptr ) {
     *dest = '\0';
 }
 
-char* disassemble( byte* ptr ) {
+char* disassemble( byte* ptr )
+{
     static char buffer[ 64 ];
 
     Opcode* op = opcodes;
@@ -299,7 +301,8 @@ char* disassemble( byte* ptr ) {
     return buffer;
 }
 
-char* nib_to_hex( byte* nib, int n ) {
+char* nib_to_hex( byte* nib, int n )
+{
     static char buffer[ 17 ];
 
     buffer[ n ] = '\0';
@@ -309,7 +312,8 @@ char* nib_to_hex( byte* nib, int n ) {
     return buffer;
 }
 
-char* nib_to_hex_rev( byte* nib, int n ) {
+char* nib_to_hex_rev( byte* nib, int n )
+{
     static char buffer[ 17 ];
 
     buffer[ n ] = '\0';

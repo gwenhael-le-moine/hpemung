@@ -54,7 +54,7 @@ static boolean in_menu;
 static byte off_cur_line;
 static byte off_line;
 static int off_cnt;
-static boolean shouldClear = TRUE;
+/* static boolean shouldClear = TRUE; */
 static boolean shouldRender = FALSE;
 static int screen_draw_count = 0;
 static boolean drawGS = FALSE;
@@ -65,7 +65,8 @@ extern SDL_Texture* texTarget;
 extern SDL_Texture* tex2Target;
 extern SDL_Texture* faceplateTexture;
 
-void clearLCD() {
+void clearLCD()
+{
     //	SDL_SetRenderDrawColor(renderer, 0x44, 0x44, 0x66, 0xFF);
     //	SDL_SetRenderDrawColor(renderer, 119, 172, 130, 0xFF); // vert clair
     SDL_SetRenderDrawColor( renderer, 48, 68, 90, 0xFF ); // bleu foncé
@@ -79,7 +80,8 @@ void clearLCD() {
     // SDL_SetRenderTarget(renderer, texTarget);
 }
 
-void endLCD() {
+void endLCD()
+{
     // Reset render target
     //	SDL_SetRenderTarget( renderer, NULL );
 
@@ -95,24 +97,27 @@ void endLCD() {
     pcalc_show();
 }
 
-void renderLCD() {
+void renderLCD()
+{
     // SDL_RenderPresent( renderer );
 }
 
-static void fade_lcd_line( int y ) {
-    /*
-byte *lcd_line0 = (byte *)lcd->line[y*2];
-byte *lcd_line1 = (byte *)lcd->line[y*2+1];
-int x = 0;
+/* static void fade_lcd_line( int y ) { */
+/*     /\* */
+/* byte *lcd_line0 = (byte *)lcd->line[y*2]; */
+/* byte *lcd_line1 = (byte *)lcd->line[y*2+1]; */
+/* int x = 0; */
 
-while (x < 131) {
-    lcd_line0[x*2] = lcd_line0[x*2+1] = lcd_line1[x*2] = lcd_line1[x*2+1] =
-(lcd_line0[x*2] >> 1); x++;
-}
-    */
-}
+/* while (x < 131) { */
+/*     lcd_line0[x*2] = lcd_line0[x*2+1] = lcd_line1[x*2] = lcd_line1[x*2+1] =
+ */
+/* (lcd_line0[x*2] >> 1); x++; */
+/* } */
+/*     *\/ */
+/* } */
 
-static address draw_lcd_line( address adr, int y ) {
+static address draw_lcd_line( address adr, int y )
+{
     //	printf("draw_lcd_line %d ", y);
 
     int x = 0;
@@ -141,8 +146,7 @@ static address draw_lcd_line( address adr, int y ) {
             bit = 4;
         }
 
-        byte pixel =
-            ( ( data & 1 ) << 6 ); // (lcd_line0[x*2] >> 1) | ((data & 1) << 6);
+        byte pixel = ( ( data & 1 ) << 6 ); // (lcd_line0[x*2] >> 1) | ((data & 1) << 6);
         if ( pixel != '\0' ) {
             pixel = '\3';
             // printf("%c ", pixel);
@@ -203,21 +207,23 @@ static address draw_lcd_line( address adr, int y ) {
         x++;
     }
 
-    return ( adr + 0x22 + ( !in_menu && ( display_offset & 4 ) ? 2 : 0 ) ) &
-           0xFFFFF;
+    return ( adr + 0x22 + ( !in_menu && ( display_offset & 4 ) ? 2 : 0 ) ) & 0xFFFFF;
 }
 
-void display_init( void ) {
+void display_init( void )
+{
     // lcd = create_bitmap_ex(8, 131*2, 64*2);
     // clear_to_color(lcd, 0);
 }
 
-void display_exit( void ) {
+void display_exit( void )
+{
     // destroy_bitmap (lcd);
     // lcd = NULL;
 }
 
-void display_show() {
+void display_show()
+{
     SDL_SetRenderDrawColor( renderer, 48, 68, 90, 0xFF ); // bleu foncé
     SDL_RenderClear( renderer );
 
@@ -239,8 +245,7 @@ void display_show() {
             printf( "error\n" );
         }
 
-        if ( SDL_LockTexture( texTarget, NULL, ( void** )&pixels, &pitch ) !=
-             0 ) {
+        if ( SDL_LockTexture( texTarget, NULL, ( void** )&pixels, &pitch ) != 0 ) {
             printf( "SDL_LockTexture: %s.\n", SDL_GetError() );
         }
 
@@ -283,8 +288,7 @@ void display_show() {
 
                 // Before setting the color, we need to know where we have to
                 // place it.
-                Uint32 pixelPosition =
-                    y * ( pitch / sizeof( unsigned int ) ) + x;
+                Uint32 pixelPosition = y * ( pitch / sizeof( unsigned int ) ) + x;
 
                 pixels[ pixelPosition ] = color;
             }
@@ -303,7 +307,8 @@ void display_show() {
     SDL_RenderPresent( renderer );
 }
 
-void display_update( void ) {
+void display_update( void )
+{
     if ( !display_enable && !off_cnt ) { /* Turn off display */
         off_cnt = 1;
         off_cur_line = off_line = display_line_count;
@@ -322,7 +327,7 @@ void display_update( void ) {
         //	acquire_screen();
         //	scare_mouse_area(LCD_X, LCD_Y+display_line_count*2, 131*2, 2);
         //	blit(lcd, screen, 0, display_line_count*2, LCD_X,
-        //LCD_Y+display_line_count*2, 131*2, 2); 	unscare_mouse();
+        // LCD_Y+display_line_count*2, 131*2, 2);        unscare_mouse();
         //	release_screen();
 
         if ( !in_menu ) {

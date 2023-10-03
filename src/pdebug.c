@@ -37,15 +37,16 @@
 #include "gui.h"
 #include "pdebug.h"
 
-static void run_up( boolean action );
-static void break_up( boolean action );
-static void step_up( boolean action );
+/* static void run_up( boolean action ); */
+/* static void break_up( boolean action ); */
+/* static void step_up( boolean action ); */
 
-static Button debug_buttons[] = {
-    { 0, 0, 0, 79, 20, BUTTON_B1RELEASE, "Break", NULL, break_up },
-    { 1, 80, 0, 79, 20, BUTTON_B1RELEASE, "Run", NULL, run_up },
-    { 2, 160, 0, 79, 20, BUTTON_B1RELEASE, "Step", NULL, step_up },
-    { 3, 0, 0, 0, 0, 0, NULL, NULL, NULL } };
+/* static Button debug_buttons[] = { */
+/*     {0,  0,   0, 79, 20, BUTTON_B1RELEASE, "Break", NULL, NULL, NULL, break_up, NULL}, */
+/*     { 1, 80,  0, 79, 20, BUTTON_B1RELEASE, "Run",   NULL, NULL, NULL, run_up,   NULL}, */
+/*     { 2, 160, 0, 79, 20, BUTTON_B1RELEASE, "Step",  NULL, NULL, NULL, step_up,  NULL}, */
+/*     { 3, 0,   0, 0,  0,  0,                NULL,    NULL, NULL, NULL, NULL,     NULL} */
+/* }; */
 
 #define BREAK_BUTTON 0
 #define RUN_BUTTON 1
@@ -53,7 +54,8 @@ static Button debug_buttons[] = {
 
 // static BITMAP *debug_bmp;
 
-static void update_buttons( void ) {
+static void update_buttons( void )
+{
     /*
 if (emulator_get_state() == EMULATOR_STOP) {
     if (debug_buttons[RUN_BUTTON].flags & BUTTON_DISABLED) {
@@ -84,29 +86,33 @@ if (emulator_get_state() == EMULATOR_STOP) {
 }*/
 }
 
-static void run_up( boolean action ) {
-    if ( action ) {
-        emulator_set_state( EMULATOR_RUN );
-    }
-}
+/* static void run_up( boolean action ) */
+/* { */
+/*     if ( action ) { */
+/*         emulator_set_state( EMULATOR_RUN ); */
+/*     } */
+/* } */
 
-static void break_up( boolean action ) {
-    if ( action ) {
-        emulator_set_state( EMULATOR_STOP );
-    }
-}
+/* static void break_up( boolean action ) */
+/* { */
+/*     if ( action ) { */
+/*         emulator_set_state( EMULATOR_STOP ); */
+/*     } */
+/* } */
 
-static void step_up( boolean action ) {
-    if ( action ) {
-        emulator_set_state( EMULATOR_STEP );
-    }
-}
+/* static void step_up( boolean action ) */
+/* { */
+/*     if ( action ) { */
+/*         emulator_set_state( EMULATOR_STEP ); */
+/*     } */
+/* } */
 
-/*static*/ void draw_cpu( void ) {
-    int c1 = color[ C_PANEL_TEXT ];
-    int c2 = color[ C_PANEL_DISABLED ];
-    int i;
-    char* tmp;
+/*static*/ void draw_cpu( void )
+{
+    /* int c1 = color[ C_PANEL_TEXT ]; */
+    /* int c2 = color[ C_PANEL_DISABLED ]; */
+    /* int i; */
+    /* char* tmp; */
 
     //    if (!debug_bmp) {
     //	return;
@@ -117,9 +123,9 @@ static void step_up( boolean action ) {
     // acquire_bitmap(debug_bmp);
     // scare_mouse();
 
-    tmp = disassemble( bus_fast_peek( NULL, cpu.pc, NULL ) );
+    /* tmp = disassemble( bus_fast_peek( NULL, cpu.pc, NULL ) ); */
 
-    printf( "PC = #%05X   %-24s\n", ( int )cpu.pc, tmp );
+    /* printf( "PC = #%05X   %-24s\n", ( int )cpu.pc, tmp ); */
 
     /*
 printf("A  = #%s ", nib_to_hex_rev(cpu.reg[A], 16));
@@ -225,7 +231,8 @@ cpu.cycles);
     //    release_bitmap(debug_bmp);
 }
 
-void pdebug_draw_true_speed( dword speed ) {
+void pdebug_draw_true_speed( dword speed )
+{
     // printf("True speed: %10u Hz\n", speed);
 
     //    if (!debug_bmp) {
@@ -238,7 +245,8 @@ void pdebug_draw_true_speed( dword speed ) {
     //    %10u Hz", speed); unscare_mouse(); release_bitmap(debug_bmp);
 }
 
-void pdebug_state_changed( void ) {
+void pdebug_state_changed( void )
+{
     update_buttons();
     draw_cpu();
 }
@@ -256,14 +264,17 @@ void pdebug_show(BITMAP *bmp)
 }
 */
 
-void pdebug_hide( void ) {
+void pdebug_hide( void )
+{
     // debug_bmp = NULL;
 }
 
-void pdebug_down( int mx, int my, int mb ) {
+void pdebug_down( int mx, int my, int mb )
+{
     // button_mouse_down(debug_bmp, debug_buttons, mx, my, mb);
 }
 
-void pdebug_up( int mx, int my, int mb ) {
+void pdebug_up( int mx, int my, int mb )
+{
     // button_mouse_up(debug_bmp, debug_buttons, mx, my, mb);
 }

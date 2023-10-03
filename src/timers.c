@@ -44,7 +44,8 @@ byte timer2_control;
 byte timer1_value;
 dword timer2_value;
 
-void timer1_update( void ) {
+void timer1_update( void )
+{
     if ( timer2_control & TIMER_RUN ) {
         timer1_value--;
         timer1_value &= 0xF;
@@ -71,7 +72,8 @@ void timer1_update( void ) {
     }
 }
 
-void timer2_update( void ) {
+void timer2_update( void )
+{
     if ( timer2_control & TIMER_RUN ) {
         timer2_value--;
         if ( timer2_value & 0x80000000 ) {

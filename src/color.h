@@ -28,12 +28,7 @@
 #ifndef __COLOR_H
 #define __COLOR_H
 
-enum LCD_Modes {
-    LCD_MODE_SIMPLE,
-    LCD_MODE_GRAY4,
-    LCD_MODE_GRAY8,
-    LCD_MODE_EXP
-};
+enum LCD_Modes { LCD_MODE_SIMPLE, LCD_MODE_GRAY4, LCD_MODE_GRAY8, LCD_MODE_EXP };
 
 enum Colors {
     C_BACKGROUND,

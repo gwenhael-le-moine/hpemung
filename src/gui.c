@@ -37,16 +37,12 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#ifdef SDL_TTF
 #include <SDL2/SDL_ttf.h>
-#endif
 
 extern SDL_Renderer* renderer;
 extern SDL_Texture* faceplateTexture;
-#ifdef SDL_TTF
 extern TTF_Font* ttffont;
 extern TTF_Font* ttffont2;
-#endif
 
 SDL_Surface* surfA[ 49 ];
 SDL_Texture* textA[ 49 ];
@@ -86,7 +82,8 @@ pabout_up },
      */
 };
 
-void drawText( int index, int x, int y, int btn_w, int btn_h ) {
+void drawText( int index, int x, int y, int btn_w, int btn_h )
+{
     SDL_Surface* letterSurface = surfA[ index ];
     SDL_Texture* letterTexture = textA[ index ];
     if ( letterSurface != NULL && letterTexture != NULL ) {
@@ -130,28 +127,25 @@ void drawText( int index, int x, int y, int btn_w, int btn_h ) {
     }
 }
 
-void gui_initKeyboard( Button* calcbuttons ) {
+void gui_initKeyboard( Button* calcbuttons )
+{
     printf( "init texts\n" );
-#ifdef SDL_TTF
     if ( ttffont == NULL ) {
         printf( "init texts error Font NULL\n" );
         return;
     }
-#endif
-    SDL_Color couleurBlanche = { 255, 255, 255 };
-    SDL_Color couleurGreen = { 125, 215, 235 };
-    SDL_Color couleurPurple = { 191, 192, 236 };
-    SDL_Color couleurYellow = { 128, 108, 29 };
+    SDL_Color couleurBlanche = { 255, 255, 255, 255 };
+    SDL_Color couleurGreen = { 125, 215, 235, 255 };
+    SDL_Color couleurPurple = { 191, 192, 236, 255 };
+    SDL_Color couleurYellow = { 128, 108, 29, 255 };
 
-#ifdef SDL_TTF
     int i = 0;
     Button* buttons = calcbuttons;
     while ( buttons->text ) {
         SDL_Surface* s = NULL;
         SDL_Texture* t = NULL;
         if ( buttons->text && strcmp( buttons->text, "" ) != 0 ) {
-            s = TTF_RenderUTF8_Blended( ttffont, buttons->text,
-                                        couleurBlanche );
+            s = TTF_RenderUTF8_Blended( ttffont, buttons->text, couleurBlanche );
             if ( s ) {
                 t = SDL_CreateTextureFromSurface( renderer, s );
             }
@@ -170,8 +164,7 @@ void gui_initKeyboard( Button* calcbuttons ) {
         SDL_Surface* s = NULL;
         SDL_Texture* t = NULL;
         if ( buttons->textB && strcmp( buttons->textB, "" ) != 0 ) {
-            s = TTF_RenderUTF8_Blended( ttffont2, buttons->textB,
-                                        couleurPurple );
+            s = TTF_RenderUTF8_Blended( ttffont2, buttons->textB, couleurPurple );
             if ( s ) {
                 t = SDL_CreateTextureFromSurface( renderer, s );
             }
@@ -188,8 +181,7 @@ void gui_initKeyboard( Button* calcbuttons ) {
         SDL_Surface* s = NULL;
         SDL_Texture* t = NULL;
         if ( buttons->textC && strcmp( buttons->textC, "" ) != 0 ) {
-            s = TTF_RenderUTF8_Blended( ttffont2, buttons->textC,
-                                        couleurGreen );
+            s = TTF_RenderUTF8_Blended( ttffont2, buttons->textC, couleurGreen );
             if ( s ) {
                 t = SDL_CreateTextureFromSurface( renderer, s );
             }
@@ -206,8 +198,7 @@ void gui_initKeyboard( Button* calcbuttons ) {
         SDL_Surface* s = NULL;
         SDL_Texture* t = NULL;
         if ( buttons->textD && strcmp( buttons->textD, "" ) != 0 ) {
-            s = TTF_RenderUTF8_Blended( ttffont2, buttons->textD,
-                                        couleurYellow );
+            s = TTF_RenderUTF8_Blended( ttffont2, buttons->textD, couleurYellow );
             if ( s ) {
                 t = SDL_CreateTextureFromSurface( renderer, s );
             }
@@ -217,13 +208,12 @@ void gui_initKeyboard( Button* calcbuttons ) {
         i++;
         buttons++;
     }
-
-#endif
 }
 
 void gui_init( void ) {}
 
-void gui_exit( void ) {
+void gui_exit( void )
+{
     int i;
 
     for ( i = 0; i < PANEL_COUNT; i++ ) {
@@ -231,12 +221,12 @@ void gui_exit( void ) {
     }
 }
 
-static __inline int panel_at( int x, int y ) {
+static __inline int panel_at( int x, int y )
+{
     int i;
 
     for ( i = PANEL_COUNT; i >= 0; i-- ) {
-        if ( panels[ i ].flags & PANEL_FLAG_VISIBLE && x >= panels[ i ].x &&
-             x < panels[ i ].x + panels[ i ].w && y >= panels[ i ].y &&
+        if ( panels[ i ].flags & PANEL_FLAG_VISIBLE && x >= panels[ i ].x && x < panels[ i ].x + panels[ i ].w && y >= panels[ i ].y &&
              y < panels[ i ].y + panels[ i ].h ) {
             break;
         }
@@ -244,7 +234,8 @@ static __inline int panel_at( int x, int y ) {
     return i;
 }
 
-void gui_update( void ) {
+void gui_update( void )
+{
     /*
 static int down_panel = -1;
 static int down_mb = 0;
@@ -275,7 +266,8 @@ panels[down_panel].y, down_mb); down_mb = 0; down_panel = -1;
      */
 }
 
-void gui_show_panel( int i ) {
+void gui_show_panel( int i )
+{
     /*
 if (!(panels[i].flags & PANEL_FLAG_VISIBLE)) {
     panels[i].flags |= PANEL_FLAG_VISIBLE;
@@ -287,7 +279,8 @@ color[C_PANEL_BORDER]); panels[i].show(panels[i].bmp); unscare_mouse();
 }*/
 }
 
-void gui_hide_panel( int i ) {
+void gui_hide_panel( int i )
+{
     /*
 if (panels[i].flags & PANEL_FLAG_VISIBLE) {
     panels[i].flags &= ~PANEL_FLAG_VISIBLE;
@@ -297,7 +290,8 @@ if (panels[i].flags & PANEL_FLAG_VISIBLE) {
 }*/
 }
 
-void button_draw( Button* b ) {
+void button_draw( Button* b )
+{
     SDL_Rect rectToDraw = { b->x * 2, b->y * 2, b->w * 2, b->h * 2 };
 
     SDL_SetRenderDrawColor( renderer, 0x00, 0x00, 0x00, 0x33 );
@@ -305,9 +299,8 @@ void button_draw( Button* b ) {
 
     drawText( b->index, b->x * 2, 10 + b->y * 2, b->w * 2, b->h * 2 );
 
-    int c;
-
-    c = color[ ( b->flags & BUTTON_PUSHED ) ? C_BUTTON_PUSHED : C_BUTTON_BACK ];
+    /* int c = color[ ( b->flags & BUTTON_PUSHED ) ? C_BUTTON_PUSHED :
+     * C_BUTTON_BACK ]; */
 
     if ( b->flags & BUTTON_PUSHED ) {
         SDL_SetRenderDrawColor( renderer, 0xFF, 0x00, 0x00, 0xFF );
@@ -333,18 +326,19 @@ textout_centre(bmp, font, b->text, b->x+b->w/2, b->y+(b->h-text_height
      */
 }
 
-void button_draw_all( Button* buttons ) {
+void button_draw_all( Button* buttons )
+{
     while ( buttons->text ) {
         button_draw( buttons );
         buttons++;
     }
 }
 
-static __inline Button* find_button( Button* b, int x, int y ) {
+static __inline Button* find_button( Button* b, int x, int y )
+{
     while ( b->text ) {
         // if (x >= b->x && x < b->x+b->w && y >= b->y && y < b->y+b->h) {
-        if ( x >= b->x * 2 && x < b->x * 2 + b->w * 2 && y >= b->y * 2 &&
-             y < b->y * 2 + b->h * 2 ) {
+        if ( x >= b->x * 2 && x < b->x * 2 + b->w * 2 && y >= b->y * 2 && y < b->y * 2 + b->h * 2 ) {
             return b;
         }
         b++;
@@ -352,7 +346,8 @@ static __inline Button* find_button( Button* b, int x, int y ) {
     return NULL;
 }
 
-int button_mouse_down( Button* buttons, int mx, int my, int mb ) {
+int button_mouse_down( Button* buttons, int mx, int my, int mb )
+{
     Button* b = find_button( buttons, mx, my );
     if ( !b ) {
         return 0;
@@ -360,8 +355,7 @@ int button_mouse_down( Button* buttons, int mx, int my, int mb ) {
     printf( "Press %s\n", b->text );
 
     if ( !( b->flags & BUTTON_DISABLED ) ) {
-        if ( ( mb == 2 && ( b->flags & BUTTON_B2TOGGLE ) ) ||
-             ( mb == 1 && ( b->flags & BUTTON_B1TOGGLE ) ) ) {
+        if ( ( mb == 2 && ( b->flags & BUTTON_B2TOGGLE ) ) || ( mb == 1 && ( b->flags & BUTTON_B1TOGGLE ) ) ) {
 
             if ( b->flags & BUTTON_PUSHED ) {
                 b->flags &= ~BUTTON_PUSHED;
@@ -384,8 +378,8 @@ int button_mouse_down( Button* buttons, int mx, int my, int mb ) {
     return 1;
 }
 
-int button_mouse_up( /*BITMAP *bmp,*/ Button* buttons, int mx, int my,
-                     int mb ) {
+int button_mouse_up( /*BITMAP *bmp,*/ Button* buttons, int mx, int my, int mb )
+{
     Button* b = find_button( buttons, mx, my );
     int ret = ( b != NULL );
     if ( b ) {
@@ -393,8 +387,7 @@ int button_mouse_up( /*BITMAP *bmp,*/ Button* buttons, int mx, int my,
     }
 
     if ( b && !( b->flags & BUTTON_DISABLED ) ) {
-        if ( mb == 1 && ( b->flags & BUTTON_PUSHED ) &&
-             !( b->flags & BUTTON_B1TOGGLE ) ) {
+        if ( mb == 1 && ( b->flags & BUTTON_PUSHED ) && !( b->flags & BUTTON_B1TOGGLE ) ) {
             b->flags &= ~BUTTON_PUSHED;
             // button_draw(bmp, b);
             if ( b->up )
@@ -403,8 +396,7 @@ int button_mouse_up( /*BITMAP *bmp,*/ Button* buttons, int mx, int my,
     }
     if ( mb == 1 ) {
         for ( b = buttons; b->text; b++ ) {
-            if ( ( b->flags & ( BUTTON_B1RELEASE | BUTTON_PUSHED ) ) ==
-                 ( BUTTON_B1RELEASE | BUTTON_PUSHED ) ) {
+            if ( ( b->flags & ( BUTTON_B1RELEASE | BUTTON_PUSHED ) ) == ( BUTTON_B1RELEASE | BUTTON_PUSHED ) ) {
                 b->flags &= ~BUTTON_PUSHED;
                 // button_draw(bmp, b);
                 if ( b->up )

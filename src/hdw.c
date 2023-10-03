@@ -38,7 +38,8 @@ void hdw_init( void ) {}
 
 void hdw_exit( void ) {}
 
-byte hdw_read_nibble( address adr ) {
+byte hdw_read_nibble( address adr )
+{
     switch ( adr ) {
 
         case 0x00:
@@ -59,8 +60,7 @@ byte hdw_read_nibble( address adr ) {
         case 0x28:
             return display_line_count & 0xF;
         case 0x29:
-            return ( display_line_count >> 4 ) | ( hdw_ram[ 0x29 ] & 0x4 ) |
-                   ( bus_info.da19 ? 0x8 : 0x0 );
+            return ( display_line_count >> 4 ) | ( hdw_ram[ 0x29 ] & 0x4 ) | ( bus_info.da19 ? 0x8 : 0x0 );
 
         case 0x2E:
             return timer1_control;
@@ -91,7 +91,8 @@ byte hdw_read_nibble( address adr ) {
     }
 }
 
-void hdw_write_nibble( byte data, address adr ) {
+void hdw_write_nibble( byte data, address adr )
+{
     int tmp;
 
     switch ( adr ) {

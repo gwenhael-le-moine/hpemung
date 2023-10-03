@@ -43,13 +43,14 @@ static int lcd_0_r, lcd_0_g, lcd_0_b;
 static int lcd_1_r, lcd_1_g, lcd_1_b;
 static int lcd_mode;
 
-static void set_lcd_color( int i, int v ) {
-    //    palette[i].r = (lcd_0_r * (255 - v) + lcd_1_r * v) / 255;
-    //    palette[i].g = (lcd_0_g * (255 - v) + lcd_1_g * v) / 255;
-    //    palette[i].b = (lcd_0_b * (255 - v) + lcd_1_b * v) / 255;
-}
+/* static void set_lcd_color( int i, int v ) { */
+/*     //    palette[i].r = (lcd_0_r * (255 - v) + lcd_1_r * v) / 255; */
+/*     //    palette[i].g = (lcd_0_g * (255 - v) + lcd_1_g * v) / 255; */
+/*     //    palette[i].b = (lcd_0_b * (255 - v) + lcd_1_b * v) / 255; */
+/* } */
 
-static int bit_count( unsigned int i ) {
+static int bit_count( unsigned int i )
+{
     int n = 0;
 
     while ( i ) {
@@ -69,10 +70,10 @@ static int exp_color( int i ) { return i * 255 / 127; }
 
 typedef int ( *lcd_color_func )( int i );
 
-lcd_color_func lcd_color_functions[] = { simple_color, gray4_color, gray8_color,
-                                         exp_color };
+lcd_color_func lcd_color_functions[] = { simple_color, gray4_color, gray8_color, exp_color };
 
-void build_lcd_palette( void ) {
+void build_lcd_palette( void )
+{
     /*
     int i;
 
@@ -83,7 +84,8 @@ void build_lcd_palette( void ) {
     //  set_palette_range(palette, 0, RESERVED_LCD-1, FALSE);
 }
 
-void color_lcd( int r0, int g0, int b0, int r1, int g1, int b1 ) {
+void color_lcd( int r0, int g0, int b0, int r1, int g1, int b1 )
+{
     lcd_0_r = r0 >> 2;
     lcd_0_g = g0 >> 2;
     lcd_0_b = b0 >> 2;
@@ -93,12 +95,14 @@ void color_lcd( int r0, int g0, int b0, int r1, int g1, int b1 ) {
     build_lcd_palette();
 }
 
-void color_lcd_mode( int mode ) {
+void color_lcd_mode( int mode )
+{
     lcd_mode = mode;
     build_lcd_palette();
 }
 
-void color_set_emu( int i, int r, int g, int b ) {
+void color_set_emu( int i, int r, int g, int b )
+{
     //    if (bitmap_color_depth(screen) == 8) {
     //	palette[color[i]].r = r >> 2;
     //	palette[color[i]].g = g >> 2;
@@ -109,7 +113,8 @@ void color_set_emu( int i, int r, int g, int b ) {
     //    }
 }
 
-void color_init( void ) {
+void color_init( void )
+{
     int i;
 
     // if (bitmap_color_depth(screen) == 8) {

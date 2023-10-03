@@ -36,7 +36,8 @@ Cpu cpu;
 
 #define MAX_OPC_LEN 21
 
-void cpu_interrupt( void ) {
+void cpu_interrupt( void )
+{
     printf( "cpu_interrupt\n" );
     if ( cpu.inte ) {
         cpu.inte = FALSE;
@@ -46,7 +47,8 @@ void cpu_interrupt( void ) {
     }
 }
 
-static void decode( byte* ptr ) {
+static void decode( byte* ptr )
+{
     Opcode* op = opcodes;
     int i = 0;
 
@@ -63,15 +65,15 @@ static void decode( byte* ptr ) {
     }
 }
 
-void execute_instruction( void ) {
+void execute_instruction( void )
+{
     static byte buffer[ FAST_PEEK_MAX ];
     static byte* ptr;
     static dword old_map_cnt;
     static address len;
     static address adr;
 
-    if ( cpu.pc < adr || adr + len < cpu.pc + MAX_OPC_LEN ||
-         bus_info.map_cnt != old_map_cnt || !ptr ) {
+    if ( cpu.pc < adr || adr + len < cpu.pc + MAX_OPC_LEN || bus_info.map_cnt != old_map_cnt || !ptr ) {
         len = MAX_OPC_LEN;
         adr = cpu.pc;
         ptr = bus_fast_peek( buffer, adr, &len );
