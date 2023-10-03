@@ -34,7 +34,7 @@ SDL_TimerID my_timer2_id;
 SDL_TimerID my_timer3_id;
 SDL_TimerID my_timer4_id;
 
-boolean SDL_ready = false;
+bool SDL_ready = false;
 
 unsigned int framecount = 0;
 unsigned int emuframecount = 0;
@@ -261,7 +261,7 @@ static void program_exit( void )
     SDL_Quit();
 }
 
-boolean refreshSDL()
+bool refreshSDL()
 {
     SDL_Event event;
     // SDL_WaitEvent(&event);

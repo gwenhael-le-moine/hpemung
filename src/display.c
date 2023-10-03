@@ -14,7 +14,7 @@ address display_line_offset;
 byte display_line_count;
 byte display_height;
 byte display_offset;
-boolean display_enable;
+bool display_enable;
 
 byte lcdScreen[ 131 * 64 ];
 byte prev_lcdScreen[ 131 * 64 ];
@@ -23,14 +23,14 @@ byte prev2_lcdScreen[ 131 * 64 ];
 byte lcdScreenGS[ 131 * 64 ];
 
 static address cur_adr;
-static boolean in_menu;
+static bool in_menu;
 static byte off_cur_line;
 static byte off_line;
 static int off_cnt;
-/* static boolean shouldClear = true; */
-static boolean shouldRender = false;
+/* static bool shouldClear = true; */
+static bool shouldRender = false;
 static int screen_draw_count = 0;
-static boolean drawGS = false;
+static bool drawGS = false;
 
 extern SDL_Renderer* renderer;
 extern SDL_Window* window;

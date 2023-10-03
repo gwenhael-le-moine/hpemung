@@ -17,7 +17,7 @@ typedef struct {
     char* textC;
     char* textD;
     void ( *down )( void );
-    void ( *up )( boolean action );
+    void ( *up )( bool action );
 } Button;
 
 /* Button flags:

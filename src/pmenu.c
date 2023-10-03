@@ -4,10 +4,10 @@
 #include "gui.h"
 #include "pmenu.h"
 
-/* static void exit_up( boolean action ); */
-/* static void debug_up( boolean action ); */
-/* static void files_up( boolean action ); */
-/* static void about_up( boolean action ); */
+/* static void exit_up( bool action ); */
+/* static void debug_up( bool action ); */
+/* static void files_up( bool action ); */
+/* static void about_up( bool action ); */
 
 /* static Button menu_buttons[] = { */
 /*     {0,  0,   0, 79, 20, BUTTON_B1RELEASE,                   "Exit",  NULL, exit_up }, */
@@ -21,14 +21,14 @@ enum MenuButtons { MENU_EXIT, MENU_DEBUG, MENU_FILES, MENU_ABOUT, MENU_COUNT };
 
 // static BITMAP *menu_bmp;
 
-/* static void exit_up( boolean action ) */
+/* static void exit_up( bool action ) */
 /* { */
 /*     if ( action ) { */
 /*         please_exit = true; */
 /*     } */
 /* } */
 
-/* static void debug_up( boolean action ) */
+/* static void debug_up( bool action ) */
 /* { */
 /*     //    if (action) { */
 /*     //	menu_buttons[MENU_DEBUG].flags |= BUTTON_DISABLED; */
@@ -41,7 +41,7 @@ enum MenuButtons { MENU_EXIT, MENU_DEBUG, MENU_FILES, MENU_ABOUT, MENU_COUNT };
 /*     //    } */
 /* } */
 
-/* static void files_up( boolean action ) */
+/* static void files_up( bool action ) */
 /* { */
 /*     //    if (action) { */
 /*     //	menu_buttons[MENU_DEBUG].flags &= ~BUTTON_DISABLED; */
@@ -54,7 +54,7 @@ enum MenuButtons { MENU_EXIT, MENU_DEBUG, MENU_FILES, MENU_ABOUT, MENU_COUNT };
 /*     //    } */
 /* } */
 
-/* static void about_up( boolean action ) */
+/* static void about_up( bool action ) */
 /* { */
 /*     //    if (action) { */
 /*     //	menu_buttons[MENU_DEBUG].flags &= ~BUTTON_DISABLED; */

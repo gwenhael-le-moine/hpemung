@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-extern boolean kbd_on;
+extern bool kbd_on;
 
 void kbd_out_changed( void );
 void kbd_key_pressed( int row, int col );

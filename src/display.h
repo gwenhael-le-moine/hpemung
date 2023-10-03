@@ -11,7 +11,7 @@ extern address display_line_offset;
 extern byte display_line_count;
 extern byte display_height;
 extern byte display_offset;
-extern boolean display_enable;
+extern bool display_enable;
 
 void display_init( void );
 void display_exit( void );

@@ -53,7 +53,7 @@ void ports_exit( void ) {}
 
 void ports_switch_bank( address adr )
 {
-    boolean need_remap = false;
+    bool need_remap = false;
 
     if ( current_bank != ( ( ( byte )adr >> 1 ) & 0x1F ) ) {
         current_bank = ( ( byte )adr >> 1 ) & 0x1F;

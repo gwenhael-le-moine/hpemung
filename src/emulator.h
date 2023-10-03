@@ -7,12 +7,12 @@ enum EmulatorStates { EMULATOR_STOP, EMULATOR_STEP, EMULATOR_RUN };
 
 void true_speed_proc( void );
 
-extern volatile boolean please_exit;
+extern volatile bool please_exit;
 extern dword emulator_speed;
 
 void emulator_init( void );
 void emulator_exit( void );
-boolean emulator_run( void );
+bool emulator_run( void );
 
 void emulator_set_state( int state );
 int emulator_get_state( void );

@@ -25,7 +25,7 @@ typedef struct {
 typedef struct {
     volatile int value;
     int speed;
-    boolean running;
+    bool running;
     void ( *proc )( void );
 } TimerEvent;
 
@@ -47,7 +47,7 @@ static TimerEvent timer_events[] = {
     { 0, 0,                                     false, NULL           }
 };
 
-volatile boolean please_exit = false;
+volatile bool please_exit = false;
 dword emulator_speed = 4000000;
 static int emulator_state = EMULATOR_RUN; // EMULATOR_STOP;
 
@@ -111,7 +111,7 @@ int emulator_get_state( void ) { return emulator_state; }
 
 void emulator_init( void )
 {
-    static boolean locked = false;
+    static bool locked = false;
 
     bus_init();
     display_init();
@@ -129,13 +129,13 @@ void emulator_exit( void )
     bus_exit();
 }
 
-boolean emulator_run( void )
+bool emulator_run( void )
 {
     CycleEvent* cep;
     TimerEvent* tep;
     dword delta;
 
-    static boolean first_run = false;
+    static bool first_run = false;
     if ( first_run == false && emulator_state == EMULATOR_RUN ) {
         first_run = true;
         start_timer_proc( gui_update );

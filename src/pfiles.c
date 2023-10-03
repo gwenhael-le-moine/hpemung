@@ -24,7 +24,7 @@
 #  include <linux/limits.h> // PATH_MAX
 #endif
 
-// static void load_up(boolean action);
+// static void load_up(bool action);
 
 /*
 static Button files_buttons[] = {
@@ -194,7 +194,7 @@ void load_file( char* name )
 // /Users/admin/Documents/GIT/jsEmu48/jsEmu48/emutest2/emutest2/arkalite
 
 // static
-void load_up( boolean action )
+void load_up( bool action )
 {
     /* static char path[ PATH_SIZE ] = ""; */
 

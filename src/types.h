@@ -7,6 +7,5 @@ typedef unsigned char byte;
 typedef unsigned short word;
 typedef unsigned int dword;
 typedef signed int address;
-typedef char boolean;
 
 #endif

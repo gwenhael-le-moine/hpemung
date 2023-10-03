@@ -15,12 +15,12 @@ typedef struct {
     address pc;
     address rstk[ 8 ];
     int rstk_ptr;
-    boolean carry : 1;
-    boolean dec : 1;
-    boolean shutdown : 1;
-    boolean inte : 1;
-    boolean keyscan : 1;
-    boolean keyintp : 1;
+    bool carry : 1;
+    bool dec : 1;
+    bool shutdown : 1;
+    bool inte : 1;
+    bool keyscan : 1;
+    bool keyintp : 1;
     dword cycles;
     dword inst_cnt;
 } Cpu;

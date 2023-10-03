@@ -2,7 +2,7 @@
 #include "cpu.h"
 #include "keyboard.h"
 
-boolean kbd_on;
+bool kbd_on;
 
 static byte kbd_row[ 9 ];
 
@@ -41,7 +41,7 @@ void kbd_out_changed( void ) { update_in(); }
 
 void kbd_key_pressed( int row, int col )
 {
-    boolean no_key = !cpu.in[ 0 ] && !cpu.in[ 1 ] && !cpu.in[ 3 ];
+    bool no_key = !cpu.in[ 0 ] && !cpu.in[ 1 ] && !cpu.in[ 3 ];
     kbd_row[ row ] |= 1 << col;
     update_in();
     if ( cpu.shutdown && no_key && ( cpu.in[ 0 ] || cpu.in[ 1 ] || cpu.in[ 3 ] ) ) {
@@ -70,7 +70,7 @@ void kbd_key_released( int row, int col )
 
 void kbd_on_pressed( void )
 {
-    boolean no_key = !cpu.in[ 3 ];
+    bool no_key = !cpu.in[ 3 ];
     kbd_on = true;
     cpu.in[ 3 ] |= 8;
     if ( cpu.shutdown && no_key ) {

@@ -7,107 +7,107 @@
 #include "pfiles.h"
 
 static void dn00( void ) { kbd_key_pressed( 0, 0 ); }
-static void up00( boolean action ) { kbd_key_released( 0, 0 ); }
+static void up00( bool action ) { kbd_key_released( 0, 0 ); }
 static void dn01( void ) { kbd_key_pressed( 0, 1 ); }
-static void up01( boolean action ) { kbd_key_released( 0, 1 ); }
+static void up01( bool action ) { kbd_key_released( 0, 1 ); }
 static void dn02( void ) { kbd_key_pressed( 0, 2 ); }
-static void up02( boolean action ) { kbd_key_released( 0, 2 ); }
+static void up02( bool action ) { kbd_key_released( 0, 2 ); }
 static void dn03( void ) { kbd_key_pressed( 0, 3 ); }
-static void up03( boolean action ) { kbd_key_released( 0, 3 ); }
+static void up03( bool action ) { kbd_key_released( 0, 3 ); }
 static void dn04( void ) { kbd_key_pressed( 0, 4 ); }
-static void up04( boolean action ) { kbd_key_released( 0, 4 ); }
+static void up04( bool action ) { kbd_key_released( 0, 4 ); }
 static void dn10( void ) { kbd_key_pressed( 1, 0 ); }
-static void up10( boolean action ) { kbd_key_released( 1, 0 ); }
+static void up10( bool action ) { kbd_key_released( 1, 0 ); }
 static void dn11( void ) { kbd_key_pressed( 1, 1 ); }
-static void up11( boolean action ) { kbd_key_released( 1, 1 ); }
+static void up11( bool action ) { kbd_key_released( 1, 1 ); }
 static void dn12( void ) { kbd_key_pressed( 1, 2 ); }
-static void up12( boolean action ) { kbd_key_released( 1, 2 ); }
+static void up12( bool action ) { kbd_key_released( 1, 2 ); }
 static void dn13( void ) { kbd_key_pressed( 1, 3 ); }
-static void up13( boolean action ) { kbd_key_released( 1, 3 ); }
+static void up13( bool action ) { kbd_key_released( 1, 3 ); }
 static void dn14( void ) { kbd_key_pressed( 1, 4 ); }
-static void up14( boolean action ) { kbd_key_released( 1, 4 ); }
+static void up14( bool action ) { kbd_key_released( 1, 4 ); }
 static void dn15( void ) { kbd_key_pressed( 1, 5 ); }
-static void up15( boolean action ) { kbd_key_released( 1, 5 ); }
+static void up15( bool action ) { kbd_key_released( 1, 5 ); }
 static void dn20( void ) { kbd_key_pressed( 2, 0 ); }
-static void up20( boolean action ) { kbd_key_released( 2, 0 ); }
+static void up20( bool action ) { kbd_key_released( 2, 0 ); }
 static void dn21( void ) { kbd_key_pressed( 2, 1 ); }
-static void up21( boolean action ) { kbd_key_released( 2, 1 ); }
+static void up21( bool action ) { kbd_key_released( 2, 1 ); }
 static void dn22( void ) { kbd_key_pressed( 2, 2 ); }
-static void up22( boolean action ) { kbd_key_released( 2, 2 ); }
+static void up22( bool action ) { kbd_key_released( 2, 2 ); }
 static void dn23( void ) { kbd_key_pressed( 2, 3 ); }
-static void up23( boolean action ) { kbd_key_released( 2, 3 ); }
+static void up23( bool action ) { kbd_key_released( 2, 3 ); }
 static void dn24( void ) { kbd_key_pressed( 2, 4 ); }
-static void up24( boolean action ) { kbd_key_released( 2, 4 ); }
+static void up24( bool action ) { kbd_key_released( 2, 4 ); }
 static void dn25( void ) { kbd_key_pressed( 2, 5 ); }
-static void up25( boolean action ) { kbd_key_released( 2, 5 ); }
+static void up25( bool action ) { kbd_key_released( 2, 5 ); }
 static void dn30( void ) { kbd_key_pressed( 3, 0 ); }
-static void up30( boolean action ) { kbd_key_released( 3, 0 ); }
+static void up30( bool action ) { kbd_key_released( 3, 0 ); }
 static void dn31( void ) { kbd_key_pressed( 3, 1 ); }
-static void up31( boolean action ) { kbd_key_released( 3, 1 ); }
+static void up31( bool action ) { kbd_key_released( 3, 1 ); }
 static void dn32( void ) { kbd_key_pressed( 3, 2 ); }
-static void up32( boolean action ) { kbd_key_released( 3, 2 ); }
+static void up32( bool action ) { kbd_key_released( 3, 2 ); }
 static void dn33( void ) { kbd_key_pressed( 3, 3 ); }
-static void up33( boolean action ) { kbd_key_released( 3, 3 ); }
+static void up33( bool action ) { kbd_key_released( 3, 3 ); }
 static void dn34( void ) { kbd_key_pressed( 3, 4 ); }
-static void up34( boolean action ) { kbd_key_released( 3, 4 ); }
+static void up34( bool action ) { kbd_key_released( 3, 4 ); }
 static void dn35( void ) { kbd_key_pressed( 3, 5 ); }
-static void up35( boolean action ) { kbd_key_released( 3, 5 ); }
+static void up35( bool action ) { kbd_key_released( 3, 5 ); }
 static void dn40( void ) { kbd_key_pressed( 4, 0 ); }
-static void up40( boolean action ) { kbd_key_released( 4, 0 ); }
+static void up40( bool action ) { kbd_key_released( 4, 0 ); }
 static void dn41( void ) { kbd_key_pressed( 4, 1 ); }
-static void up41( boolean action ) { kbd_key_released( 4, 1 ); }
+static void up41( bool action ) { kbd_key_released( 4, 1 ); }
 static void dn42( void ) { kbd_key_pressed( 4, 2 ); }
-static void up42( boolean action ) { kbd_key_released( 4, 2 ); }
+static void up42( bool action ) { kbd_key_released( 4, 2 ); }
 static void dn43( void ) { kbd_key_pressed( 4, 3 ); }
-static void up43( boolean action ) { kbd_key_released( 4, 3 ); }
+static void up43( bool action ) { kbd_key_released( 4, 3 ); }
 static void dn44( void ) { kbd_key_pressed( 4, 4 ); }
-static void up44( boolean action ) { kbd_key_released( 4, 4 ); }
+static void up44( bool action ) { kbd_key_released( 4, 4 ); }
 static void dn50( void ) { kbd_key_pressed( 5, 0 ); }
-static void up50( boolean action ) { kbd_key_released( 5, 0 ); }
+static void up50( bool action ) { kbd_key_released( 5, 0 ); }
 static void dn51( void ) { kbd_key_pressed( 5, 1 ); }
-static void up51( boolean action ) { kbd_key_released( 5, 1 ); }
+static void up51( bool action ) { kbd_key_released( 5, 1 ); }
 static void dn52( void ) { kbd_key_pressed( 5, 2 ); }
-static void up52( boolean action ) { kbd_key_released( 5, 2 ); }
+static void up52( bool action ) { kbd_key_released( 5, 2 ); }
 static void dn53( void ) { kbd_key_pressed( 5, 3 ); }
-static void up53( boolean action ) { kbd_key_released( 5, 3 ); }
+static void up53( bool action ) { kbd_key_released( 5, 3 ); }
 static void dn54( void ) { kbd_key_pressed( 5, 4 ); }
-static void up54( boolean action ) { kbd_key_released( 5, 4 ); }
+static void up54( bool action ) { kbd_key_released( 5, 4 ); }
 static void dn60( void ) { kbd_key_pressed( 6, 0 ); }
-static void up60( boolean action ) { kbd_key_released( 6, 0 ); }
+static void up60( bool action ) { kbd_key_released( 6, 0 ); }
 static void dn61( void ) { kbd_key_pressed( 6, 1 ); }
-static void up61( boolean action ) { kbd_key_released( 6, 1 ); }
+static void up61( bool action ) { kbd_key_released( 6, 1 ); }
 static void dn62( void ) { kbd_key_pressed( 6, 2 ); }
-static void up62( boolean action ) { kbd_key_released( 6, 2 ); }
+static void up62( bool action ) { kbd_key_released( 6, 2 ); }
 static void dn63( void ) { kbd_key_pressed( 6, 3 ); }
-static void up63( boolean action ) { kbd_key_released( 6, 3 ); }
+static void up63( bool action ) { kbd_key_released( 6, 3 ); }
 static void dn64( void ) { kbd_key_pressed( 6, 4 ); }
-static void up64( boolean action ) { kbd_key_released( 6, 4 ); }
+static void up64( bool action ) { kbd_key_released( 6, 4 ); }
 static void dn70( void ) { kbd_key_pressed( 7, 0 ); }
-static void up70( boolean action ) { kbd_key_released( 7, 0 ); }
+static void up70( bool action ) { kbd_key_released( 7, 0 ); }
 static void dn71( void ) { kbd_key_pressed( 7, 1 ); }
-static void up71( boolean action ) { kbd_key_released( 7, 1 ); }
+static void up71( bool action ) { kbd_key_released( 7, 1 ); }
 static void dn72( void ) { kbd_key_pressed( 7, 2 ); }
-static void up72( boolean action ) { kbd_key_released( 7, 2 ); }
+static void up72( bool action ) { kbd_key_released( 7, 2 ); }
 static void dn73( void ) { kbd_key_pressed( 7, 3 ); }
-static void up73( boolean action ) { kbd_key_released( 7, 3 ); }
+static void up73( bool action ) { kbd_key_released( 7, 3 ); }
 static void dn74( void ) { kbd_key_pressed( 7, 4 ); }
-static void up74( boolean action ) { kbd_key_released( 7, 4 ); }
+static void up74( bool action ) { kbd_key_released( 7, 4 ); }
 static void dn80( void ) { kbd_key_pressed( 8, 0 ); }
-static void up80( boolean action ) { kbd_key_released( 8, 0 ); }
+static void up80( bool action ) { kbd_key_released( 8, 0 ); }
 static void dn81( void ) { kbd_key_pressed( 8, 1 ); }
-static void up81( boolean action ) { kbd_key_released( 8, 1 ); }
+static void up81( bool action ) { kbd_key_released( 8, 1 ); }
 static void dn82( void ) { kbd_key_pressed( 8, 2 ); }
-static void up82( boolean action ) { kbd_key_released( 8, 2 ); }
+static void up82( bool action ) { kbd_key_released( 8, 2 ); }
 static void dn83( void ) { kbd_key_pressed( 8, 3 ); }
-static void up83( boolean action ) { kbd_key_released( 8, 3 ); }
+static void up83( bool action ) { kbd_key_released( 8, 3 ); }
 static void dn84( void ) { kbd_key_pressed( 8, 4 ); }
-static void up84( boolean action ) { kbd_key_released( 8, 4 ); }
+static void up84( bool action ) { kbd_key_released( 8, 4 ); }
 static void dnON( void ) { kbd_on_pressed(); }
-static void upON( boolean action ) { kbd_on_released(); }
+static void upON( bool action ) { kbd_on_released(); }
 
 static void dnZelda( void ) {}
-static void upZelda( boolean action ) { load_file( "zeldahp.dir" ); }
-// static void upZelda(boolean action)	{  load_file("Arkalite.lib"); }
+static void upZelda( bool action ) { load_file( "zeldahp.dir" ); }
+// static void upZelda(bool action)	{  load_file("Arkalite.lib"); }
 
 const int pox = 2;
 const int poy = 55;

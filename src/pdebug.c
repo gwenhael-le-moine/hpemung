@@ -9,9 +9,9 @@
 #include "gui.h"
 #include "pdebug.h"
 
-/* static void run_up( boolean action ); */
-/* static void break_up( boolean action ); */
-/* static void step_up( boolean action ); */
+/* static void run_up( bool action ); */
+/* static void break_up( bool action ); */
+/* static void step_up( bool action ); */
 
 /* static Button debug_buttons[] = { */
 /*     {0,  0,   0, 79, 20, BUTTON_B1RELEASE, "Break", NULL, NULL, NULL, break_up, NULL}, */
@@ -58,21 +58,21 @@ if (emulator_get_state() == EMULATOR_STOP) {
 }*/
 }
 
-/* static void run_up( boolean action ) */
+/* static void run_up( bool action ) */
 /* { */
 /*     if ( action ) { */
 /*         emulator_set_state( EMULATOR_RUN ); */
 /*     } */
 /* } */
 
-/* static void break_up( boolean action ) */
+/* static void break_up( bool action ) */
 /* { */
 /*     if ( action ) { */
 /*         emulator_set_state( EMULATOR_STOP ); */
 /*     } */
 /* } */
 
-/* static void step_up( boolean action ) */
+/* static void step_up( bool action ) */
 /* { */
 /*     if ( action ) { */
 /*         emulator_set_state( EMULATOR_STEP ); */
