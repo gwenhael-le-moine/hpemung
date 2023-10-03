@@ -1,30 +1,3 @@
-/*
- *     /
- *    /__  ___  ___  ____
- *   /  / /  / /__/ / / / /  /
- *  /  / /__/ /__  /   / /__/
- *      /
- *     /    version 0.9.0
- *
- * Copyright 2002 Daniel Nilsson
- *
- * This file is part of hpemu.
- *
- * Hpemu is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Hpemu is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with hpemu; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <stdlib.h>
@@ -54,10 +27,10 @@ static boolean in_menu;
 static byte off_cur_line;
 static byte off_line;
 static int off_cnt;
-/* static boolean shouldClear = TRUE; */
-static boolean shouldRender = FALSE;
+/* static boolean shouldClear = true; */
+static boolean shouldRender = false;
 static int screen_draw_count = 0;
-static boolean drawGS = FALSE;
+static boolean drawGS = false;
 
 extern SDL_Renderer* renderer;
 extern SDL_Window* window;
@@ -163,7 +136,7 @@ static address draw_lcd_line( address adr, int y )
         byte prev2_pixel = prev2_lcdScreen[ x + y * 131 ];
         // byte prev3_pixel = prev3_lcdScreen[x+y*131];
 
-        if ( drawGS == TRUE ) {
+        if ( drawGS == true ) {
             if ( prev2_pixel == '\0' && prev_pixel == '\0' && pixel == '\0' ) {
                 pixelGS = '\0';
             }
@@ -233,8 +206,8 @@ void display_show()
         SDL_RenderCopy( renderer, faceplateTexture, NULL, &r3 );
     }
 
-    if ( shouldRender == TRUE ) {
-        shouldRender = FALSE;
+    if ( shouldRender == true ) {
+        shouldRender = false;
 
         int pitch, w, h;
         Uint32* pixels;
@@ -345,7 +318,7 @@ void display_update( void )
             in_menu = 0;
             cur_adr = display_base;
 
-            shouldRender = TRUE;
+            shouldRender = true;
 
             screen_draw_count++;
             if ( screen_draw_count == 3 ) {
@@ -355,9 +328,9 @@ void display_update( void )
         }
 
         if ( screen_draw_count == 0 ) {
-            drawGS = TRUE;
+            drawGS = true;
         } else {
-            drawGS = FALSE;
+            drawGS = false;
         }
 
     } else if ( off_cnt <= 7 ) { /* Display is off and still fading */
@@ -383,9 +356,9 @@ void display_update( void )
         }*/
     }
 
-    if ( shouldRender == TRUE ) {
-        // shouldRender = FALSE;
-        // shouldClear = TRUE;
+    if ( shouldRender == true ) {
+        // shouldRender = false;
+        // shouldClear = true;
         // endLCD();
     }
 }

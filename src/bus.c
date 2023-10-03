@@ -1,30 +1,3 @@
-/*
- *     /
- *    /__  ___  ___  ____
- *   /  / /  / /__/ / / / /  /
- *  /  / /__/ /__  /   / /__/
- *      /
- *     /    version 0.9.0
- *
- * Copyright 2002 Daniel Nilsson
- *
- * This file is part of hpemu.
- *
- * Hpemu is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Hpemu is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with hpemu; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-
 #include <string.h>
 #include "types.h"
 #include "rom.h"
@@ -37,10 +10,10 @@ BusInfo bus_info = {
     //  hdw	    ram sz  ram	    ce1 sz  ce1	    ce2 sz  ce2	    nce3 sz nce3
     0x00000, 0x00000, 0x00000, 0x00000, 0x00000, 0x00000, 0x00000, 0x00000,
     0x00000,                                                       // base or size
-    FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, // configured
-    FALSE, FALSE, FALSE,                                           // read only
+    false, false, false, false, false, false, false, false, false, // configured
+    false, false, false,                                           // read only
     //  ce1_bs  da19    ben
-    FALSE, FALSE, FALSE,
+    false, false, false,
     //  rom	    ram	    ce1	    ce2	    nce3
     NULL, NULL, NULL, NULL, NULL,               // data
     0x00000, 0x00000, 0x00000, 0x00000, 0x00000 // mask
@@ -75,7 +48,7 @@ void bus_read( byte* buf, address adr, address len )
 {
     int n, i;
 
-    while ( TRUE ) {
+    while ( true ) {
         if ( hdw_seg == SEG_OF( adr ) && ( ( bus_info.hdw_base ^ adr ) & 0xFFFC0 ) == 0 ) {
             n = MIN( len, 0x40 - ( adr & 0x3F ) );
             for ( i = 0; i < n; i++ ) {
@@ -118,7 +91,7 @@ void bus_write( byte* buf, address adr, address len )
 {
     int n, i;
 
-    while ( TRUE ) {
+    while ( true ) {
         if ( hdw_seg == SEG_OF( adr ) && ( ( bus_info.hdw_base ^ adr ) & 0xFFFC0 ) == 0 ) {
             n = MIN( len, 0x40 - ( adr & 0x3F ) );
             for ( i = 0; i < n; i++ ) {
@@ -158,7 +131,7 @@ static void bus_peek( byte* buf, address adr, address len )
 {
     int n, i;
 
-    while ( TRUE ) {
+    while ( true ) {
         if ( hdw_seg == SEG_OF( adr ) && ( ( bus_info.hdw_base ^ adr ) & 0xFFFC0 ) == 0 ) {
             n = MIN( len, 0x40 - ( adr & 0x3F ) );
             for ( i = 0; i < n; i++ ) {
@@ -193,7 +166,7 @@ static void bus_peek_no_hdw( byte* buf, address adr, address len )
 {
     int n, i;
 
-    while ( TRUE ) {
+    while ( true ) {
         n = MIN( len, 0x1000 - OFFSET_OF( adr ) );
         if ( CAN_READ( adr ) ) {
             memcpy( buf, MAP_READ( adr ), n );
@@ -325,35 +298,35 @@ void bus_configure( address adr )
 {
     if ( !bus_info.hdw_cfg ) {
         bus_info.hdw_base = adr & 0xFFFC0;
-        bus_info.hdw_cfg = TRUE;
+        bus_info.hdw_cfg = true;
         hdw_seg = SEG_OF( adr );
     } else if ( !bus_info.ram_sz_cfg ) {
         bus_info.ram_size = adr & 0xFF000;
-        bus_info.ram_sz_cfg = TRUE;
+        bus_info.ram_sz_cfg = true;
     } else if ( !bus_info.ram_cfg ) {
         bus_info.ram_base = adr & 0xFF000;
-        bus_info.ram_cfg = TRUE;
+        bus_info.ram_cfg = true;
         bus_remap();
     } else if ( !bus_info.ce1_sz_cfg ) {
         bus_info.ce1_size = adr & 0xFF000;
-        bus_info.ce1_sz_cfg = TRUE;
+        bus_info.ce1_sz_cfg = true;
     } else if ( !bus_info.ce1_cfg ) {
         bus_info.ce1_base = adr & 0xFF000;
-        bus_info.ce1_cfg = TRUE;
+        bus_info.ce1_cfg = true;
         bus_remap();
     } else if ( !bus_info.ce2_sz_cfg ) {
         bus_info.ce2_size = adr & 0xFF000;
-        bus_info.ce2_sz_cfg = TRUE;
+        bus_info.ce2_sz_cfg = true;
     } else if ( !bus_info.ce2_cfg ) {
         bus_info.ce2_base = adr & 0xFF000;
-        bus_info.ce2_cfg = TRUE;
+        bus_info.ce2_cfg = true;
         bus_remap();
     } else if ( !bus_info.nce3_sz_cfg ) {
         bus_info.nce3_size = adr & 0xFF000;
-        bus_info.nce3_sz_cfg = TRUE;
+        bus_info.nce3_sz_cfg = true;
     } else if ( !bus_info.nce3_cfg ) {
         bus_info.nce3_base = adr & 0xFF000;
-        bus_info.nce3_cfg = TRUE;
+        bus_info.nce3_cfg = true;
         bus_remap();
     }
 }
@@ -361,23 +334,23 @@ void bus_configure( address adr )
 void bus_unconfigure( address adr )
 {
     if ( bus_info.hdw_cfg && ( ( adr ^ bus_info.hdw_base ) & 0xFFFC0 ) == 0 ) {
-        bus_info.hdw_cfg = FALSE;
+        bus_info.hdw_cfg = false;
         hdw_seg = -1;
     } else if ( bus_info.ram_cfg && ( ( adr ^ bus_info.ram_base ) & bus_info.ram_size ) == 0 ) {
-        bus_info.ram_cfg = FALSE;
-        bus_info.ram_sz_cfg = FALSE;
+        bus_info.ram_cfg = false;
+        bus_info.ram_sz_cfg = false;
         bus_remap();
     } else if ( bus_info.ce2_cfg && ( ( adr ^ bus_info.ce2_base ) & bus_info.ce2_size ) == 0 ) {
-        bus_info.ce2_cfg = FALSE;
-        bus_info.ce2_sz_cfg = FALSE;
+        bus_info.ce2_cfg = false;
+        bus_info.ce2_sz_cfg = false;
         bus_remap();
     } else if ( bus_info.ce1_cfg && ( ( adr ^ bus_info.ce1_base ) & bus_info.ce1_size ) == 0 ) {
-        bus_info.ce1_cfg = FALSE;
-        bus_info.ce1_sz_cfg = FALSE;
+        bus_info.ce1_cfg = false;
+        bus_info.ce1_sz_cfg = false;
         bus_remap();
     } else if ( bus_info.nce3_cfg && ( ( adr ^ bus_info.nce3_base ) & bus_info.nce3_size ) == 0 ) {
-        bus_info.nce3_cfg = FALSE;
-        bus_info.nce3_sz_cfg = FALSE;
+        bus_info.nce3_cfg = false;
+        bus_info.nce3_sz_cfg = false;
         bus_remap();
     }
 }
@@ -385,27 +358,27 @@ void bus_unconfigure( address adr )
 void bus_reset( void )
 {
     bus_info.hdw_base = 0x00000;
-    bus_info.hdw_cfg = FALSE;
+    bus_info.hdw_cfg = false;
 
     bus_info.ram_base = 0x00000;
     bus_info.ram_size = 0x00000;
-    bus_info.ram_cfg = FALSE;
-    bus_info.ram_sz_cfg = FALSE;
+    bus_info.ram_cfg = false;
+    bus_info.ram_sz_cfg = false;
 
     bus_info.ce1_base = 0x00000;
     bus_info.ce1_size = 0x00000;
-    bus_info.ce1_cfg = FALSE;
-    bus_info.ce1_sz_cfg = FALSE;
+    bus_info.ce1_cfg = false;
+    bus_info.ce1_sz_cfg = false;
 
     bus_info.ce2_base = 0x00000;
     bus_info.ce2_size = 0x00000;
-    bus_info.ce2_cfg = FALSE;
-    bus_info.ce2_sz_cfg = FALSE;
+    bus_info.ce2_cfg = false;
+    bus_info.ce2_sz_cfg = false;
 
     bus_info.nce3_base = 0x00000;
     bus_info.nce3_size = 0x00000;
-    bus_info.nce3_cfg = FALSE;
-    bus_info.nce3_sz_cfg = FALSE;
+    bus_info.nce3_cfg = false;
+    bus_info.nce3_sz_cfg = false;
 
     hdw_seg = -1;
     bus_remap();

@@ -1,30 +1,3 @@
-/*
- *     /
- *    /__  ___  ___  ____
- *   /  / /  / /__/ / / / /  /
- *  /  / /__/ /__  /   / /__/
- *      /
- *     /    version 0.9.0
- *
- * Copyright 2002 Daniel Nilsson
- *
- * This file is part of hpemu.
- *
- * Hpemu is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Hpemu is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with hpemu; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-
 #include <string.h>
 #include "types.h"
 #include "cpu.h"
@@ -75,14 +48,14 @@ static void op01( byte* opc ) // RTN
 
 static void op02_3( byte* opc ) // RTNSC / RTNCC
 {
-    cpu.carry = ( opc[ 1 ] & 1 ) ? FALSE : TRUE;
+    cpu.carry = ( opc[ 1 ] & 1 ) ? false : true;
     cpu.pc = rstk_pop();
     cpu.cycles += 9;
 }
 
 static void op04_5( byte* opc ) // SETHEX / SETDEC
 {
-    cpu.dec = ( opc[ 1 ] & 1 ) ? TRUE : FALSE;
+    cpu.dec = ( opc[ 1 ] & 1 ) ? true : false;
     cpu.pc += 2;
     cpu.cycles += 3;
 }
@@ -133,10 +106,10 @@ static void op0C( byte* opc ) // P=P+1
 {
     if ( cpu.p != 0xF ) {
         cpu.p++;
-        cpu.carry = FALSE;
+        cpu.carry = false;
     } else {
         cpu.p = 0;
-        cpu.carry = TRUE;
+        cpu.carry = true;
     }
     update_fields();
     cpu.pc += 2;
@@ -147,10 +120,10 @@ static void op0D( byte* opc ) // P=P-1
 {
     if ( cpu.p ) {
         cpu.p--;
-        cpu.carry = FALSE;
+        cpu.carry = false;
     } else {
         cpu.p = 0xF;
-        cpu.carry = TRUE;
+        cpu.carry = true;
     }
     update_fields();
     cpu.pc += 2;
@@ -172,11 +145,11 @@ static void op0E( byte* opc ) // r=r&s f/A / r=r!s f/A
 static void op0F( byte* opc ) // RTI
 {
     // TODO: Implement RTI
-    cpu.inte = TRUE;
+    cpu.inte = true;
     cpu.pc = rstk_pop();
     cpu.cycles += 9;
     if ( ( cpu.keyintp && cpu.keyscan ) || kbd_on ) {
-        cpu.keyintp = FALSE;
+        cpu.keyintp = false;
         cpu_interrupt();
     }
 }
@@ -267,9 +240,9 @@ static void op16_7( byte* opc ) // Di=Di+
     cpu.d[ opc[ 1 ] & 1 ] += opc[ 2 ] + 1;
     if ( cpu.d[ opc[ 1 ] & 1 ] & ~0xFFFFF ) {
         cpu.d[ opc[ 1 ] & 1 ] &= 0xFFFFF;
-        cpu.carry = TRUE;
+        cpu.carry = true;
     } else {
-        cpu.carry = FALSE;
+        cpu.carry = false;
     }
     cpu.pc += 3;
     cpu.cycles += 7;
@@ -280,9 +253,9 @@ static void op18_C( byte* opc ) // Di=Di-
     cpu.d[ ( opc[ 1 ] >> 2 ) & 1 ] -= opc[ 2 ] + 1;
     if ( cpu.d[ ( opc[ 1 ] >> 2 ) & 1 ] & ~0xFFFFF ) {
         cpu.d[ ( opc[ 1 ] >> 2 ) & 1 ] &= 0xFFFFF;
-        cpu.carry = TRUE;
+        cpu.carry = true;
     } else {
-        cpu.carry = FALSE;
+        cpu.carry = false;
     }
     cpu.pc += 3;
     cpu.cycles += 7;
@@ -394,7 +367,7 @@ static void op807( byte* opc ) // SHUTND
 {
     // TODO: Fix SHUTDN
     if ( !cpu.in[ 0 ] && !cpu.in[ 1 ] && !cpu.in[ 3 ] ) {
-        cpu.shutdown = TRUE;
+        cpu.shutdown = true;
     }
     cpu.pc += 3;
     cpu.cycles += 5;
@@ -402,11 +375,11 @@ static void op807( byte* opc ) // SHUTND
 
 static void op8080( byte* opc ) // INTON
 {
-    cpu.keyscan = TRUE;
+    cpu.keyscan = true;
     cpu.pc += 4;
     cpu.cycles += 5;
     if ( cpu.keyintp ) {
-        cpu.keyintp = FALSE;
+        cpu.keyintp = false;
         cpu_interrupt();
     }
 }
@@ -454,7 +427,7 @@ static void op808C_E( byte* opc ) // PC=(r)
 static void op808F( byte* opc ) // INTOFF
 {
     // TODO: Implement INTOFF
-    cpu.keyscan = FALSE;
+    cpu.keyscan = false;
     cpu.pc += 4;
     cpu.cycles += 5;
 }
@@ -589,7 +562,7 @@ static void op82( byte* opc ) // HST=0
 
 static void op83( byte* opc ) // ?HST=0
 {
-    cpu.carry = ( cpu.hst & opc[ 2 ] ) ? FALSE : TRUE;
+    cpu.carry = ( cpu.hst & opc[ 2 ] ) ? false : true;
     goyes( opc, 3 );
     cpu.cycles += 6;
 }
@@ -612,7 +585,7 @@ static void op86_7( byte* opc ) // ?ST=b
 
 static void op88_9( byte* opc ) // ?P# / ?P=
 {
-    cpu.carry = ( cpu.p == opc[ 2 ] ) == ( opc[ 1 ] & 1 ) ? TRUE : FALSE;
+    cpu.carry = ( cpu.p == opc[ 2 ] ) == ( opc[ 1 ] & 1 ) ? true : false;
     goyes( opc, 3 );
     cpu.cycles += 6;
 }

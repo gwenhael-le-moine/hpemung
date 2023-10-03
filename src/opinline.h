@@ -1,30 +1,3 @@
-/*
- *     /
- *    /__  ___  ___  ____
- *   /  / /  / /__/ / / / /  /
- *  /  / /__/ /__  /   / /__/
- *      /
- *     /    version 0.9.0
- *
- * Copyright 2002 Daniel Nilsson
- *
- * This file is part of hpemu.
- *
- * Hpemu is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Hpemu is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with hpemu; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-
 #ifndef __OPINLINE_H
 #define __OPINLINE_H
 
@@ -127,35 +100,35 @@ static __inline void reg_ex( byte* reg1, byte* reg2, int len )
     memcpy( reg2, tmp, len );
 }
 
-static __inline void comp_bit_zero( byte* reg, int bit ) { cpu.carry = ( reg[ bit >> 2 ] & ( 1 << ( bit & 3 ) ) ) ? FALSE : TRUE; }
+static __inline void comp_bit_zero( byte* reg, int bit ) { cpu.carry = ( reg[ bit >> 2 ] & ( 1 << ( bit & 3 ) ) ) ? false : true; }
 
 static __inline void comp_zero( byte* reg, int len )
 {
     while ( len-- ) {
         if ( *reg++ ) {
-            cpu.carry = FALSE;
+            cpu.carry = false;
             return;
         }
     }
-    cpu.carry = TRUE;
+    cpu.carry = true;
 }
 
 static __inline void comp_eq( byte* reg1, byte* reg2, int len )
 {
     while ( len-- ) {
         if ( *reg1++ != *reg2++ ) {
-            cpu.carry = FALSE;
+            cpu.carry = false;
             return;
         }
     }
-    cpu.carry = TRUE;
+    cpu.carry = true;
 }
 
 static __inline void comp_gt( byte* reg1, byte* reg2, int len )
 {
     while ( --len && reg1[ len ] == reg2[ len ] )
         ;
-    cpu.carry = ( reg1[ len ] > reg2[ len ] ) ? TRUE : FALSE;
+    cpu.carry = ( reg1[ len ] > reg2[ len ] ) ? true : false;
 }
 
 static __inline void alu_add( byte* dest, byte* src, int len )
@@ -176,7 +149,7 @@ static __inline void alu_add( byte* dest, byte* src, int len )
         dest++;
         src++;
     }
-    cpu.carry = c ? TRUE : FALSE;
+    cpu.carry = c ? true : false;
 }
 
 static __inline void alu_sub( byte* dest, byte* src, int len )
@@ -195,7 +168,7 @@ static __inline void alu_sub( byte* dest, byte* src, int len )
         dest++;
         src++;
     }
-    cpu.carry = c ? TRUE : FALSE;
+    cpu.carry = c ? true : false;
 }
 
 static __inline void alu_sub2( byte* dest, byte* src, int len )
@@ -214,7 +187,7 @@ static __inline void alu_sub2( byte* dest, byte* src, int len )
         dest++;
         src++;
     }
-    cpu.carry = c ? TRUE : FALSE;
+    cpu.carry = c ? true : false;
 }
 
 static __inline void alu_add_con( byte* reg, byte con, int i, int len )
@@ -223,13 +196,13 @@ static __inline void alu_add_con( byte* reg, byte con, int i, int len )
     while ( len-- ) {
         reg[ i ]++;
         if ( !( reg[ i ] & 0xF0 ) ) {
-            cpu.carry = FALSE;
+            cpu.carry = false;
             return;
         }
         reg[ i ] -= 16;
         i = ( i + 1 ) & 0xF;
     }
-    cpu.carry = TRUE;
+    cpu.carry = true;
 }
 
 static __inline void alu_sub_con( byte* reg, byte con, int i, int len )
@@ -238,13 +211,13 @@ static __inline void alu_sub_con( byte* reg, byte con, int i, int len )
     while ( len-- ) {
         reg[ i ]--;
         if ( !( reg[ i ] & 0xF0 ) ) {
-            cpu.carry = FALSE;
+            cpu.carry = false;
             return;
         }
         reg[ i ] += 16;
         i = ( i + 1 ) & 0xF;
     }
-    cpu.carry = TRUE;
+    cpu.carry = true;
 }
 
 static __inline void alu_inc( byte* reg, int len )
@@ -263,18 +236,18 @@ static __inline void alu_inc( byte* reg, int len )
             }
             reg++;
         }
-        cpu.carry = c ? TRUE : FALSE;
+        cpu.carry = c ? true : false;
     } else {
         while ( len-- ) {
             ( *reg )++;
             if ( !( *reg & 0xF0 ) ) {
-                cpu.carry = FALSE;
+                cpu.carry = false;
                 return;
             }
             *reg -= 16;
             reg++;
         }
-        cpu.carry = TRUE;
+        cpu.carry = true;
     }
 }
 
@@ -285,13 +258,13 @@ static __inline void alu_dec( byte* reg, int len )
     while ( len-- ) {
         ( *reg )--;
         if ( !( *reg & 0xF0 ) ) {
-            cpu.carry = FALSE;
+            cpu.carry = false;
             return;
         }
         *reg += base;
         reg++;
     }
-    cpu.carry = TRUE;
+    cpu.carry = true;
 }
 
 static __inline void alu_neg( byte* reg, int len )
@@ -302,7 +275,7 @@ static __inline void alu_neg( byte* reg, int len )
         reg++;
         len--;
     }
-    cpu.carry = len ? TRUE : FALSE;
+    cpu.carry = len ? true : false;
     if ( cpu.carry ) {
         *reg = base - *reg;
         if ( *reg & 0xF0 )
@@ -329,7 +302,7 @@ static __inline void alu_not( byte* reg, int len )
             *reg &= 7;
         reg++;
     }
-    cpu.carry = FALSE;
+    cpu.carry = false;
 }
 
 static __inline void alu_and( byte* dest, byte* src, int len )

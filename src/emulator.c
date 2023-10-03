@@ -1,31 +1,3 @@
-/*
- *     /
- *    /__  ___  ___  ____
- *   /  / /  / /__/ / / / /  /
- *  /  / /__/ /__  /   / /__/
- *      /
- *     /    version 0.9.0
- *
- * Copyright 2002 Daniel Nilsson
- *
- * This file is part of hpemu.
- *
- * Hpemu is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Hpemu is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with hpemu; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-
-// #include <allegro.h>
 #include <SDL2/SDL.h>
 #include <stdlib.h>
 #include "types.h"
@@ -37,10 +9,10 @@
 #include "pdebug.h"
 #include "emulator.h"
 
-/* Define TRUE_TIMER2 to make timer2 run in true speed (8192 hz).
+/* Define true_TIMER2 to make timer2 run in true speed (8192 hz).
  * If it is not defined timer2 is syncronized to the cpu speed.
  */
-// #define TRUE_TIMER2
+// #define true_TIMER2
 
 #define MAX_DELTA 4000
 
@@ -59,7 +31,7 @@ typedef struct {
 
 static CycleEvent cycle_events[] = {
     {0,  16,   timer1_update },
-#ifndef TRUE_TIMER2
+#ifndef true_TIMER2
     { 0, 8192, timer2_update },
 #endif
     { 0, 4096, display_update},
@@ -67,15 +39,15 @@ static CycleEvent cycle_events[] = {
 };
 
 static TimerEvent timer_events[] = {
-    {0,  1000000 / 20 /*BPS_TO_TIMER(20)*/,     FALSE, gui_update     },
-    { 0, 1000000 /*BPS_TO_TIMER(1)*/,           FALSE, true_speed_proc},
-#ifdef TRUE_TIMER2
-    { 0, 1000000 / 8192 /*BPS_TO_TIMER(8192)*/, FALSE, timer2_update  },
+    {0,  1000000 / 20 /*BPS_TO_TIMER(20)*/,     false, gui_update     },
+    { 0, 1000000 /*BPS_TO_TIMER(1)*/,           false, true_speed_proc},
+#ifdef true_TIMER2
+    { 0, 1000000 / 8192 /*BPS_TO_TIMER(8192)*/, false, timer2_update  },
 #endif
-    { 0, 0,                                     FALSE, NULL           }
+    { 0, 0,                                     false, NULL           }
 };
 
-volatile boolean please_exit = FALSE;
+volatile boolean please_exit = false;
 dword emulator_speed = 4000000;
 static int emulator_state = EMULATOR_RUN; // EMULATOR_STOP;
 
@@ -99,7 +71,7 @@ static void start_timer_proc( void ( *proc )( void ) )
     }
     if ( ptr->proc && !ptr->running ) {
         ptr->value = 0;
-        ptr->running = TRUE;
+        ptr->running = true;
 
         // printf("ptr->speed = %d\n", ptr->speed);
         // install_param_int_ex(timer_event_proc, (void *)ptr, ptr->speed);
@@ -115,7 +87,7 @@ static void stop_timer_proc( void ( *proc )( void ) )
     }
     if ( ptr->proc && ptr->running ) {
         ptr->value = 0;
-        ptr->running = FALSE;
+        ptr->running = false;
 
         // remove_param_int(timer_event_proc, (void *)ptr);
     }
@@ -124,7 +96,7 @@ static void stop_timer_proc( void ( *proc )( void ) )
 void emulator_set_state( int state )
 {
     printf( "emulator_set_state\n" );
-#ifdef TRUE_TIMER2
+#ifdef true_TIMER2
     if ( state != EMULATOR_STOP ) {
         start_timer_proc( timer2_update );
     } else {
@@ -139,7 +111,7 @@ int emulator_get_state( void ) { return emulator_state; }
 
 void emulator_init( void )
 {
-    static boolean locked = FALSE;
+    static boolean locked = false;
 
     bus_init();
     display_init();
@@ -147,7 +119,7 @@ void emulator_init( void )
     if ( !locked ) {
         //	LOCK_VARIABLE(timer_events);
         //	LOCK_FUNCTION(timer_event_proc);
-        locked = TRUE;
+        locked = true;
     }
 }
 
@@ -163,15 +135,15 @@ boolean emulator_run( void )
     TimerEvent* tep;
     dword delta;
 
-    static boolean first_run = FALSE;
-    if ( first_run == FALSE && emulator_state == EMULATOR_RUN ) {
-        first_run = TRUE;
+    static boolean first_run = false;
+    if ( first_run == false && emulator_state == EMULATOR_RUN ) {
+        first_run = true;
         start_timer_proc( gui_update );
         start_timer_proc( true_speed_proc );
     }
 
     if ( please_exit ) {
-        return FALSE;
+        return false;
     }
 
     // while (!please_exit)
@@ -221,15 +193,15 @@ boolean emulator_run( void )
     }
 
     //
-    // #ifdef TRUE_TIMER2
+    // #ifdef true_TIMER2
     //    if (emulator_state != EMULATOR_STOP) {
     //		stop_timer_proc(timer2_update);
     //    }
     // #endif
     //
 
-    if ( first_run == TRUE && emulator_state == EMULATOR_STOP ) {
-#ifdef TRUE_TIMER2
+    if ( first_run == true && emulator_state == EMULATOR_STOP ) {
+#ifdef true_TIMER2
         stop_timer_proc( timer2_update ); //
 #endif
 
@@ -237,5 +209,5 @@ boolean emulator_run( void )
         stop_timer_proc( gui_update );
     }
 
-    return TRUE;
+    return true;
 }

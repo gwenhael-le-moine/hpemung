@@ -1,30 +1,3 @@
-/*
- *     /
- *    /__  ___  ___  ____
- *   /  / /  / /__/ / / / /  /
- *  /  / /__/ /__  /   / /__/
- *      /
- *     /    version 0.9.0
- *
- * Copyright 2002 Daniel Nilsson
- *
- * This file is part of hpemu.
- *
- * Hpemu is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Hpemu is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with hpemu; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-
 #include "types.h"
 #include "cpu.h"
 #include "keyboard.h"
@@ -72,17 +45,17 @@ void kbd_key_pressed( int row, int col )
     kbd_row[ row ] |= 1 << col;
     update_in();
     if ( cpu.shutdown && no_key && ( cpu.in[ 0 ] || cpu.in[ 1 ] || cpu.in[ 3 ] ) ) {
-        cpu.shutdown = FALSE;
+        cpu.shutdown = false;
     }
     if ( cpu.keyscan && no_key && ( cpu.in[ 0 ] || cpu.in[ 1 ] || cpu.in[ 3 ] ) ) {
         if ( cpu.inte ) {
-            cpu.keyintp = FALSE;
+            cpu.keyintp = false;
             cpu_interrupt();
         } else {
-            cpu.keyintp = TRUE;
+            cpu.keyintp = true;
         }
     } else if ( !cpu.in[ 0 ] && !cpu.in[ 1 ] && !cpu.in[ 3 ] ) {
-        cpu.keyintp = FALSE;
+        cpu.keyintp = false;
     }
 }
 
@@ -91,17 +64,17 @@ void kbd_key_released( int row, int col )
     kbd_row[ row ] &= ~( 1 << col );
     update_in();
     if ( !cpu.in[ 0 ] && !cpu.in[ 1 ] && !cpu.in[ 3 ] ) {
-        cpu.keyintp = FALSE;
+        cpu.keyintp = false;
     }
 }
 
 void kbd_on_pressed( void )
 {
     boolean no_key = !cpu.in[ 3 ];
-    kbd_on = TRUE;
+    kbd_on = true;
     cpu.in[ 3 ] |= 8;
     if ( cpu.shutdown && no_key ) {
-        cpu.shutdown = FALSE;
+        cpu.shutdown = false;
     }
     if ( cpu.inte && no_key ) {
         cpu_interrupt();
@@ -110,6 +83,6 @@ void kbd_on_pressed( void )
 
 void kbd_on_released( void )
 {
-    kbd_on = FALSE;
+    kbd_on = false;
     cpu.in[ 3 ] &= ~8;
 }

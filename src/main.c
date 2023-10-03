@@ -1,30 +1,3 @@
-/*
- *     /
- *    /__  ___  ___  ____
- *   /  / /  / /__/ / / / /  /
- *  /  / /__/ /__  /   / /__/
- *      /
- *     /    version 0.9.0
- *
- * Copyright 2002 Daniel Nilsson
- *
- * This file is part of hpemu.
- *
- * Hpemu is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Hpemu is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with hpemu; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-
 #include <stdlib.h>
 #include <stdio.h>
 #include "types.h"
@@ -61,7 +34,7 @@ SDL_TimerID my_timer2_id;
 SDL_TimerID my_timer3_id;
 SDL_TimerID my_timer4_id;
 
-boolean SDL_ready = FALSE;
+boolean SDL_ready = false;
 
 unsigned int framecount = 0;
 unsigned int emuframecount = 0;
@@ -74,15 +47,15 @@ unsigned int lastTime_timer_emu = 0;
 /*
 
  { 0,    16,	    timer1_update },
-#ifndef TRUE_TIMER2
+#ifndef true_TIMER2
  { 0,    8192,   timer2_update },
 #endif
  { 0,    4096,   display_update },
 
 static TimerEvent timer_events[] = {
- { 0,    1000000/20 ,	FALSE,  gui_update }, // BPS_TO_TIMER(20)
- { 0,    1000000,	FALSE,  true_speed_proc }, // BPS_TO_TIMER(1)
- { 0,    1000000/8192 ,	FALSE,  timer2_update }, // BPS_TO_TIMER(8192)
+ { 0,    1000000/20 ,	false,  gui_update }, // BPS_TO_TIMER(20)
+ { 0,    1000000,	false,  true_speed_proc }, // BPS_TO_TIMER(1)
+ { 0,    1000000/8192 ,	false,  timer2_update }, // BPS_TO_TIMER(8192)
  */
 
 // display_update
@@ -185,7 +158,7 @@ unsigned int delay_timer5 = 60; // 60 fps
 /*     return ( interval ); */
 /* } */
 
-static int fullscreen = FALSE;
+static int fullscreen = false;
 
 static void parse_args( int argc, char* argv[] )
 {
@@ -194,10 +167,10 @@ static void parse_args( int argc, char* argv[] )
         if ( argv[ 0 ][ 0 ] == '-' ) {
             switch ( argv[ 0 ][ 1 ] ) {
                 case 'f':
-                    fullscreen = TRUE;
+                    fullscreen = true;
                     break;
                 case 'w':
-                    fullscreen = FALSE;
+                    fullscreen = false;
                     break;
             }
         }
@@ -256,7 +229,7 @@ static void program_init( void )
 
     color_init();
 
-    SDL_ready = TRUE;
+    SDL_ready = true;
 }
 
 void start_timers()
@@ -587,22 +560,22 @@ boolean refreshSDL()
 
             case SDL_QUIT:
                 {
-                    please_exit = TRUE;
+                    please_exit = true;
                     // emulator_state = EMULATOR_STOP;
-                    return FALSE;
+                    return false;
                 }
         }
     }
-    return TRUE;
+    return true;
 }
 
 void mainloop()
 {
-    if ( please_exit == TRUE ) {
+    if ( please_exit == true ) {
         printf( "please exit\n" );
         return;
     }
-    if ( SDL_ready == TRUE ) {
+    if ( SDL_ready == true ) {
 
         currentTime = SDL_GetTicks();
 
@@ -660,7 +633,7 @@ void mainloop()
         }
 #endif
 
-        if ( refreshSDL() == FALSE ) {
+        if ( refreshSDL() == false ) {
             return;
         }
     }
@@ -677,12 +650,12 @@ int main( int argc, char* argv[] )
     // start_timers();
 
     printf( "NO emscripten_set_main_loop\n" );
-    while ( please_exit == FALSE )
+    while ( please_exit == false )
         mainloop();
 
     /*
     printf("NO emscripten_set_main_loop\n");
-    while(please_exit == FALSE) mainloop();
+    while(please_exit == false) mainloop();
 */
     gui_exit();
     emulator_exit();

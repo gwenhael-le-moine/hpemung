@@ -1,30 +1,3 @@
-/*
- *     /
- *    /__  ___  ___  ____
- *   /  / /  / /__/ / / / /  /
- *  /  / /__/ /__  /   / /__/
- *      /
- *     /    version 0.9.0
- *
- * Copyright 2002 Daniel Nilsson
- *
- * This file is part of hpemu.
- *
- * Hpemu is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Hpemu is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with hpemu; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-
 #include "types.h"
 #include "bus.h"
 #include "ports.h"
@@ -99,7 +72,7 @@ void hdw_write_nibble( byte data, address adr )
 
         case 0x00:
             display_offset = data & 7;
-            display_enable = ( data & 8 ) ? TRUE : FALSE;
+            display_enable = ( data & 8 ) ? true : false;
             break;
 
         case 0x04:
@@ -167,7 +140,7 @@ void hdw_write_nibble( byte data, address adr )
             display_height |= ( data & 3 ) << 4;
             hdw_ram[ 0x29 ] = data & 0x4;
             tmp = bus_info.da19;
-            bus_info.da19 = ( data & 0x8 ) ? TRUE : FALSE;
+            bus_info.da19 = ( data & 0x8 ) ? true : false;
             if ( tmp != bus_info.da19 ) {
                 bus_remap();
             }
