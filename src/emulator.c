@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <sys/time.h>
 
-#include <SDL2/SDL.h>
+#include <SDL2/SDL.h>           /* SDL_Delay() */
 
 #include "types.h"
 #include "cpu.h"
