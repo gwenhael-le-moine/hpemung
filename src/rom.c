@@ -5,23 +5,9 @@
 #include "bus.h"
 #include "rom.h"
 
-#if defined( _WIN32 )
-#  include <windows.h> // memset()
-#  include <shlwapi.h> // PathRemoveFileSpecA
-#endif
-
-#if defined( __APPLE__ )
-#  import <CoreFoundation/CoreFoundation.h>
-#  include <string.h> // memset()
-#  include <ctype.h>  // isalpha
-#  include <unistd.h> // getcwd
-#endif
-
-#if defined( __linux__ )
-#  include <libgen.h>       // dirname
-#  include <unistd.h>       // readlink
-#  include <linux/limits.h> // PATH_MAX
-#endif
+#include <libgen.h>       // dirname
+#include <unistd.h>       // readlink
+#include <linux/limits.h> // PATH_MAX
 
 static char WorkingPath[ 512 ];
 
@@ -32,39 +18,8 @@ static void getExePath()
     memset( programPath, 0, sizeof( programPath ) );
     memset( temp, 0, sizeof( temp ) );
 
-#if defined( __APPLE__ )
-    CFBundleRef mainBundle = CFBundleGetMainBundle();
-    CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL( mainBundle );
-    if ( !CFURLGetFileSystemRepresentation( resourcesURL, true, ( UInt8* )programPath,
-                                            PATH_MAX ) ) // Error: expected unqualified-id before 'if'
-    {
-        // error!
-    }
-    CFRelease( resourcesURL ); // error: expected constructor, destructor or
-                               // type conversion before '(' token
-
-    chdir( programPath ); // error: expected constructor, destructor or type
-                          // conversion before '(' token
-    // std::cout << "Current Path: " << path << std::endl; // error: expected
-    // constructor, destructor or type conversion before '<<' token
-#endif
-
-#if defined( _WIN32 )
-    GetModuleFileNameA( NULL, temp, sizeof( temp ) );
-    PathRemoveFileSpecA( temp );
-
-    // recopy path and duplicate "\"
-    int j = 0;
-    for ( int i = 0; i < ( int )( strlen( temp ) + 1 ); i++ ) {
-        programPath[ j ] = temp[ i ];
-        if ( temp[ i ] == '\\' )
-            programPath[ j ] = '/'; // '\\';
-        j++;
-    }
-#endif
-
     // setWorkingPath(programPath);
-#if defined( __linux__ )
+
     char result[ PATH_MAX ];
     ssize_t count = readlink( "/proc/self/exe", result, PATH_MAX );
     const char* path;
@@ -72,7 +27,6 @@ static void getExePath()
         path = dirname( result );
         strcpy( programPath, path );
     }
-#endif
 
     memset( WorkingPath, 0, sizeof( WorkingPath ) );
     strcpy( WorkingPath, programPath );
