@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "types.h"
 #include "opcodes.h"
+#include "opinline.h"
 #include "disasm.h"
 
 static const char hex_tab[ 16 ] = "0123456789ABCDEF";
@@ -30,21 +31,6 @@ static const char* f_tab[ 8 ] = { "P", "WP", "XS", "X", "S", "M", "B", "W" };
             ( x ) += *( s )++ - '0';                                                                                                       \
         }                                                                                                                                  \
     } while ( 0 )
-
-static __inline int nib_to_signed( byte* nib, int len )
-{
-    int x;
-
-    len--;
-    x = nib[ len ];
-    if ( x & 8 )
-        x -= 16;
-    while ( len-- ) {
-        x <<= 4;
-        x |= nib[ len ];
-    }
-    return x;
-}
 
 static void expand( char* dest, char* src, byte* ptr )
 {

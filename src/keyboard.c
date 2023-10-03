@@ -44,28 +44,26 @@ void kbd_key_pressed( int row, int col )
     bool no_key = !cpu.in[ 0 ] && !cpu.in[ 1 ] && !cpu.in[ 3 ];
     kbd_row[ row ] |= 1 << col;
     update_in();
-    if ( cpu.shutdown && no_key && ( cpu.in[ 0 ] || cpu.in[ 1 ] || cpu.in[ 3 ] ) ) {
+    if ( cpu.shutdown && no_key && ( cpu.in[ 0 ] || cpu.in[ 1 ] || cpu.in[ 3 ] ) )
         cpu.shutdown = false;
-    }
+
     if ( cpu.keyscan && no_key && ( cpu.in[ 0 ] || cpu.in[ 1 ] || cpu.in[ 3 ] ) ) {
         if ( cpu.inte ) {
             cpu.keyintp = false;
             cpu_interrupt();
-        } else {
+        } else
             cpu.keyintp = true;
-        }
-    } else if ( !cpu.in[ 0 ] && !cpu.in[ 1 ] && !cpu.in[ 3 ] ) {
+
+    } else if ( !cpu.in[ 0 ] && !cpu.in[ 1 ] && !cpu.in[ 3 ] )
         cpu.keyintp = false;
-    }
 }
 
 void kbd_key_released( int row, int col )
 {
     kbd_row[ row ] &= ~( 1 << col );
     update_in();
-    if ( !cpu.in[ 0 ] && !cpu.in[ 1 ] && !cpu.in[ 3 ] ) {
+    if ( !cpu.in[ 0 ] && !cpu.in[ 1 ] && !cpu.in[ 3 ] )
         cpu.keyintp = false;
-    }
 }
 
 void kbd_on_pressed( void )
@@ -73,12 +71,11 @@ void kbd_on_pressed( void )
     bool no_key = !cpu.in[ 3 ];
     kbd_on = true;
     cpu.in[ 3 ] |= 8;
-    if ( cpu.shutdown && no_key ) {
+    if ( cpu.shutdown && no_key )
         cpu.shutdown = false;
-    }
-    if ( cpu.inte && no_key ) {
+
+    if ( cpu.inte && no_key )
         cpu_interrupt();
-    }
 }
 
 void kbd_on_released( void )

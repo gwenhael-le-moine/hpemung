@@ -10,20 +10,9 @@
 #include <unistd.h>       // readlink
 #include <linux/limits.h> // PATH_MAX
 
-// static void load_up(bool action);
+char WorkingPath[ 512 ];
 
-/*
-static Button files_buttons[] = {
-    { 0,	0,    0,	79, 20,	BUTTON_B1RELEASE,   "Load", NULL,
-load_up
-}, { 1,	0,    0,	0,  0,	0,          NULL,   NULL,   NULL }
-};
-*/
-// static BITMAP *files_bmp;
-
-static char WorkingPath[ 512 ];
-
-static void getExePath()
+void getExePath()
 {
     char programPath[ 1024 ];
     char temp[ 1024 ];
@@ -43,7 +32,7 @@ static void getExePath()
     strcpy( WorkingPath, programPath );
 }
 
-static int file_size( char* name )
+int file_size( char* name )
 {
     memset( WorkingPath, 0, sizeof( WorkingPath ) );
     getExePath();
@@ -64,27 +53,8 @@ static int file_size( char* name )
     return size;
 }
 
-/*
-static int file_size(char *name)
-{
-    FILE *f;
-    f = fopen(name, "r");
-    if(!f) {
-        return NULL;
-    }
-    fseek(f, 0, SEEK_END); // seek to end of file
-    int size = ftell(f); // get current file pointer
-    fseek(f, 0, SEEK_SET); // seek back to beginning of file
-    // proceed with allocating memory and reading the file
-    fclose(f);
-    return size;
-}
-*/
-
-// static
 void load_file( char* name )
 {
-    // PACKFILE *f;
     FILE* f;
     byte* buf;
     byte* obj;
@@ -140,46 +110,4 @@ void load_file( char* name )
     }
     rpl_push_object( obj, size );
     free( obj );
-}
-
-#define PATH_SIZE 1024
-
-// /Users/admin/Documents/GIT/jsEmu48/jsEmu48/emutest2/emutest2/arkalite
-
-// static
-void load_up( bool action )
-{
-    /* static char path[ PATH_SIZE ] = ""; */
-
-    /* if ( action ) { */
-    /*     //		if (file_select_ex("Load Object", path, NULL, PATH_SIZE, */
-    /*     // 0, 0)) { */
-    /*     //          load_file(path); */
-    /*     //		} */
-    /* } */
-}
-
-/*
-void pfiles_show(BITMAP *bmp)
-{
-    files_bmp = bmp;
-
-    clear_to_color(files_bmp, color[C_PANEL_BACK]);
-    button_draw_all(files_bmp, files_buttons);
-}
-*/
-
-void pfiles_hide( void )
-{
-    // files_bmp = NULL;
-}
-
-void pfiles_down( int mx, int my, int mb )
-{
-    // button_mouse_down(files_bmp, files_buttons, mx, my, mb);
-}
-
-void pfiles_up( int mx, int my, int mb )
-{
-    // button_mouse_up(files_bmp, files_buttons, mx, my, mb);
 }

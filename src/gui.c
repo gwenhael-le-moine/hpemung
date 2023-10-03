@@ -1,16 +1,13 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include "color.h"
-#include "pmenu.h"
-#include "pcalc.h"
-#include "pdebug.h"
-#include "pfiles.h"
-#include "pabout.h"
-#include "gui.h"
-
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+
+#include <stdlib.h>
+#include <stdio.h>
+#include "color.h"
+#include "pcalc.h"
+#include "pfiles.h"
+#include "gui.h"
 
 extern SDL_Renderer* renderer;
 extern SDL_Texture* faceplateTexture;
@@ -30,30 +27,6 @@ SDL_Surface* surfD[ 49 ];
 SDL_Texture* textD[ 49 ];
 
 #define PANEL_FLAG_VISIBLE 0x01
-
-typedef struct GuiPanel {
-    int x, y;
-    int w, h;
-    int flags;
-    // BITMAP *bmp;
-    // void (*show)(BITMAP *bmp);
-    void ( *hide )( void );
-    void ( *mouse_down )( int mx, int my, int mb );
-    void ( *mouse_up )( int mx, int my, int mb );
-} GuiPanel;
-
-static GuiPanel panels[ PANEL_COUNT ] = {
-    /*
-{ 10,   10,	    620,    20,	    0,	NULL,	pmenu_show, pmenu_hide,
-pmenu_down,	pmenu_up }, { 360,  40,	    270,    430,    0,	NULL,
-pcalc_show,	pcalc_hide,	pcalc_down,	pcalc_up }, { 10,   40, 340,
-430,    0,	NULL,	pdebug_show,	pdebug_hide,
-pdebug_down,	pdebug_up }, { 10,   40,	    340,    430,    0,	NULL,
-pfiles_show,	pfiles_hide,	pfiles_down,	pfiles_up }, { 10,   40,
-340,    430,    0,	NULL,	pabout_show,	pabout_hide, pabout_down,
-pabout_up },
-     */
-};
 
 void drawText( int index, int x, int y, int btn_w, int btn_h )
 {
@@ -183,85 +156,84 @@ void gui_initKeyboard( Button* calcbuttons )
     }
 }
 
-void gui_init( void ) {}
+/* void gui_exit( void ) */
+/* { */
+/*     /\* int i; *\/ */
 
-void gui_exit( void )
-{
-    int i;
+/*     /\* for ( i = 0; i < PANEL_COUNT; i++ ) { *\/ */
+/*     /\*     gui_hide_panel( i ); *\/ */
+/*     /\* } *\/ */
+/* } */
 
-    for ( i = 0; i < PANEL_COUNT; i++ ) {
-        gui_hide_panel( i );
-    }
-}
+/* static inline int panel_at( int x, int y ) */
+/* { */
+/*     int i; */
 
-static __inline int panel_at( int x, int y )
-{
-    int i;
+/*     for ( i = PANEL_COUNT; i >= 0; i-- ) { */
+/*         if ( panels[ i ].flags & PANEL_FLAG_VISIBLE && x >= panels[ i ].x && x < panels[ i ].x + panels[ i ].w && y >= panels[ i ].y &&
+ */
+/*              y < panels[ i ].y + panels[ i ].h ) { */
+/*             break; */
+/*         } */
+/*     } */
+/*     return i; */
+/* } */
 
-    for ( i = PANEL_COUNT; i >= 0; i-- ) {
-        if ( panels[ i ].flags & PANEL_FLAG_VISIBLE && x >= panels[ i ].x && x < panels[ i ].x + panels[ i ].w && y >= panels[ i ].y &&
-             y < panels[ i ].y + panels[ i ].h ) {
-            break;
-        }
-    }
-    return i;
-}
+/* void gui_update( void ) */
+/* { */
+/*     /\* */
+/* static int down_panel = -1; */
+/* static int down_mb = 0; */
+/* int mx, my, mb; */
 
-void gui_update( void )
-{
-    /*
-static int down_panel = -1;
-static int down_mb = 0;
-int mx, my, mb;
+/* mx = mouse_x; */
+/* my = mouse_y; */
+/* mb = mouse_b; */
 
-mx = mouse_x;
-my = mouse_y;
-mb = mouse_b;
+/* if (!down_mb && (mb & 1)) { */
+/*     down_panel = panel_at(mx, my); */
+/*     if (down_panel >= 0) { */
+/*         down_mb = 1; */
+/*         panels[down_panel].mouse_down(mx - panels[down_panel].x, my - */
+/* panels[down_panel].y, down_mb); */
+/*     } */
+/* } else if (!down_mb && (mb & 2)) { */
+/*     down_panel = panel_at(mx, my); */
+/*     if (down_panel >= 0) { */
+/*         down_mb = 2; */
+/*         panels[down_panel].mouse_down(mx - panels[down_panel].x, my - */
+/* panels[down_panel].y, down_mb); */
+/*     } */
+/* } else if (down_mb && !(mb & 3)) { */
+/*     panels[down_panel].mouse_up(mx - panels[down_panel].x, my - */
+/* panels[down_panel].y, down_mb); down_mb = 0; down_panel = -1; */
+/* } */
+/*      *\/ */
+/* } */
 
-if (!down_mb && (mb & 1)) {
-    down_panel = panel_at(mx, my);
-    if (down_panel >= 0) {
-        down_mb = 1;
-        panels[down_panel].mouse_down(mx - panels[down_panel].x, my -
-panels[down_panel].y, down_mb);
-    }
-} else if (!down_mb && (mb & 2)) {
-    down_panel = panel_at(mx, my);
-    if (down_panel >= 0) {
-        down_mb = 2;
-        panels[down_panel].mouse_down(mx - panels[down_panel].x, my -
-panels[down_panel].y, down_mb);
-    }
-} else if (down_mb && !(mb & 3)) {
-    panels[down_panel].mouse_up(mx - panels[down_panel].x, my -
-panels[down_panel].y, down_mb); down_mb = 0; down_panel = -1;
-}
-     */
-}
+/* void gui_show_panel( int i ) */
+/* { */
+/*     /\* */
+/* if (!(panels[i].flags & PANEL_FLAG_VISIBLE)) { */
+/*     panels[i].flags |= PANEL_FLAG_VISIBLE; */
+/*     panels[i].bmp = create_sub_bitmap(screen, panels[i].x, panels[i].y, */
+/* panels[i].w, panels[i].h); acquire_screen(); scare_mouse(); rect(screen, */
+/* panels[i].x-1, panels[i].y-1, panels[i].x+panels[i].w, panels[i].y+panels[i].h, */
+/* color[C_PANEL_BORDER]); panels[i].show(panels[i].bmp); unscare_mouse(); */
+/*     release_screen(); */
+/* }*\/ */
+/* } */
 
-void gui_show_panel( int i )
-{
-    /*
-if (!(panels[i].flags & PANEL_FLAG_VISIBLE)) {
-    panels[i].flags |= PANEL_FLAG_VISIBLE;
-    panels[i].bmp = create_sub_bitmap(screen, panels[i].x, panels[i].y,
-panels[i].w, panels[i].h); acquire_screen(); scare_mouse(); rect(screen,
-panels[i].x-1, panels[i].y-1, panels[i].x+panels[i].w, panels[i].y+panels[i].h,
-color[C_PANEL_BORDER]); panels[i].show(panels[i].bmp); unscare_mouse();
-    release_screen();
-}*/
-}
-
-void gui_hide_panel( int i )
-{
-    /*
-if (panels[i].flags & PANEL_FLAG_VISIBLE) {
-    panels[i].flags &= ~PANEL_FLAG_VISIBLE;
-    panels[i].hide();
-    destroy_bitmap(panels[i].bmp);
-    panels[i].bmp = NULL;
-}*/
-}
+/* void gui_hide_panel( int i ) */
+/* { */
+/*     /\* */
+/* if (panels[i].flags & PANEL_FLAG_VISIBLE) { */
+/*     panels[i].flags &= ~PANEL_FLAG_VISIBLE; */
+/*     panels[i].hide(); */
+/*     destroy_bitmap(panels[i].bmp); */
+/*     panels[i].bmp = NULL; */
+/* }*\/ */
+/* } */
 
 void button_draw( Button* b )
 {
@@ -307,7 +279,7 @@ void button_draw_all( Button* buttons )
     }
 }
 
-static __inline Button* find_button( Button* b, int x, int y )
+static inline Button* find_button( Button* b, int x, int y )
 {
     while ( b->text ) {
         // if (x >= b->x && x < b->x+b->w && y >= b->y && y < b->y+b->h) {

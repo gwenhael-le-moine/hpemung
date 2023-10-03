@@ -15,13 +15,11 @@ void ports_init( void )
     bus_info.ce1_r_o = true;
     bus_info.ce1_bs = true;
 
-#define PORT1_SIZE ( 256 * 1024 ) /* 128Kio in nibbles */
     // ce2 = port1 (plugged)
     bus_info.ce2_data = malloc( PORT1_SIZE );
     bus_info.ce2_mask = PORT1_SIZE - 1;
     bus_info.ce2_r_o = false;
 
-#define PORT2_SIZE ( 256 * 1024 ) /* 128Kio in nibbles */
     // nce3 = port2 (plugged)
     port2 = malloc( PORT2_SIZE );
     port2mask = PORT2_SIZE - 1;

@@ -3,10 +3,10 @@
 
 #include "types.h"
 
-void load_up( bool action );
-void load_file( char* name );
-void pfiles_hide( void );
-void pfiles_down( int mx, int my, int mb );
-void pfiles_up( int mx, int my, int mb );
+extern char WorkingPath[ 512 ];
+
+extern void getExePath();
+extern int file_size( char* name );
+extern void load_file( char* name );
 
 #endif

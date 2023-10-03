@@ -17,11 +17,8 @@ dist/hpemu: src/bus.o \
 	src/keyboard.o \
 	src/main.o \
 	src/opcodes.o \
-	src/pabout.o \
 	src/pcalc.o \
-	src/pdebug.o \
 	src/pfiles.o \
-	src/pmenu.o \
 	src/ports.o \
 	src/ram.o \
 	src/rom.o \

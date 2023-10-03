@@ -42,7 +42,7 @@ void bus_exit( void )
     ports_exit();
 }
 
-static __inline void update_crc( byte nibble ) { crc = ( crc >> 4 ) ^ ( ( ( crc ^ nibble ) & 0xF ) * 0x1081 ); }
+static inline void update_crc( byte nibble ) { crc = ( crc >> 4 ) ^ ( ( ( crc ^ nibble ) & 0xF ) * 0x1081 ); }
 
 void bus_read( byte* buf, address adr, address len )
 {

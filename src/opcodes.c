@@ -27,7 +27,7 @@ static const int regv[ 16 ] = { B, C, A, C, A, B, C, D, A, B, C, D, B, C, A, C }
 #define REGuF( i, f ) ( REGu( i ) + fs[ f ] )
 #define REGvF( i, f ) ( REGv( i ) + fs[ f ] )
 
-static __inline void update_fields( void )
+static inline void update_fields( void )
 {
     fs[ 0 ] = fs[ 8 ] = cpu.p;
     fl[ 1 ] = fl[ 9 ] = cpu.p + 1;

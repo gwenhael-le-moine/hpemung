@@ -5,7 +5,7 @@
 #include "emulator.h"
 #include "cpu.h"
 
-static __inline void load( byte* reg, byte* data, int start, int len )
+inline void load( byte* reg, byte* data, int start, int len )
 {
     if ( start + len <= 16 ) {
         memcpy( reg + start, data, len );
@@ -15,7 +15,7 @@ static __inline void load( byte* reg, byte* data, int start, int len )
     }
 }
 
-static __inline unsigned int nib_to_unsigned( byte* nib, int len )
+inline unsigned int nib_to_unsigned( byte* nib, int len )
 {
     int x = 0;
 
@@ -26,7 +26,7 @@ static __inline unsigned int nib_to_unsigned( byte* nib, int len )
     return x;
 }
 
-static __inline int nib_to_signed( byte* nib, int len )
+inline int nib_to_signed( byte* nib, int len )
 {
     int x;
 
@@ -41,7 +41,7 @@ static __inline int nib_to_signed( byte* nib, int len )
     return x;
 }
 
-static __inline void unsigned_to_nib( byte* nib, int x, int len )
+inline void unsigned_to_nib( byte* nib, int x, int len )
 {
     while ( len-- ) {
         *nib++ = x & 0xF;
@@ -49,7 +49,7 @@ static __inline void unsigned_to_nib( byte* nib, int x, int len )
     }
 }
 
-static __inline address rstk_pop( void )
+inline address rstk_pop( void )
 {
     address adr = cpu.rstk[ cpu.rstk_ptr ];
     cpu.rstk[ cpu.rstk_ptr ] = 0x00000;
@@ -57,13 +57,13 @@ static __inline address rstk_pop( void )
     return adr;
 }
 
-static __inline void rstk_push( address adr )
+inline void rstk_push( address adr )
 {
     cpu.rstk_ptr = ( cpu.rstk_ptr - 1 ) & 7;
     cpu.rstk[ cpu.rstk_ptr ] = adr & 0xFFFFF;
 }
 
-static __inline void goyes( byte* opc, int offset )
+inline void goyes( byte* opc, int offset )
 {
     if ( cpu.carry ) {
         address rel = nib_to_signed( opc + offset, 2 );
@@ -78,9 +78,9 @@ static __inline void goyes( byte* opc, int offset )
     }
 }
 
-static __inline void reg_zero( byte* reg, int len ) { memset( reg, 0, len ); }
+inline void reg_zero( byte* reg, int len ) { memset( reg, 0, len ); }
 
-static __inline void reg_bit( byte* reg, int bit, int value )
+inline void reg_bit( byte* reg, int bit, int value )
 {
     if ( value ) {
         reg[ bit >> 2 ] |= 1 << ( bit & 3 );
@@ -89,20 +89,20 @@ static __inline void reg_bit( byte* reg, int bit, int value )
     }
 }
 
-static __inline void reg_cpy( byte* dest, byte* src, int len ) { memcpy( dest, src, len ); }
+inline void reg_cpy( byte* dest, byte* src, int len ) { memcpy( dest, src, len ); }
 
-static __inline void reg_ex( byte* reg1, byte* reg2, int len )
+inline void reg_ex( byte* reg1, byte* reg2, int len )
 {
-    static byte tmp[ 16 ];
+    byte tmp[ 16 ];
 
     memcpy( tmp, reg1, len );
     memcpy( reg1, reg2, len );
     memcpy( reg2, tmp, len );
 }
 
-static __inline void comp_bit_zero( byte* reg, int bit ) { cpu.carry = ( reg[ bit >> 2 ] & ( 1 << ( bit & 3 ) ) ) ? false : true; }
+inline void comp_bit_zero( byte* reg, int bit ) { cpu.carry = ( reg[ bit >> 2 ] & ( 1 << ( bit & 3 ) ) ) ? false : true; }
 
-static __inline void comp_zero( byte* reg, int len )
+inline void comp_zero( byte* reg, int len )
 {
     while ( len-- ) {
         if ( *reg++ ) {
@@ -113,7 +113,7 @@ static __inline void comp_zero( byte* reg, int len )
     cpu.carry = true;
 }
 
-static __inline void comp_eq( byte* reg1, byte* reg2, int len )
+inline void comp_eq( byte* reg1, byte* reg2, int len )
 {
     while ( len-- ) {
         if ( *reg1++ != *reg2++ ) {
@@ -124,14 +124,14 @@ static __inline void comp_eq( byte* reg1, byte* reg2, int len )
     cpu.carry = true;
 }
 
-static __inline void comp_gt( byte* reg1, byte* reg2, int len )
+inline void comp_gt( byte* reg1, byte* reg2, int len )
 {
     while ( --len && reg1[ len ] == reg2[ len ] )
         ;
     cpu.carry = ( reg1[ len ] > reg2[ len ] ) ? true : false;
 }
 
-static __inline void alu_add( byte* dest, byte* src, int len )
+inline void alu_add( byte* dest, byte* src, int len )
 {
     byte c = 0;
     byte base = cpu.dec ? 10 : 16;
@@ -152,7 +152,7 @@ static __inline void alu_add( byte* dest, byte* src, int len )
     cpu.carry = c ? true : false;
 }
 
-static __inline void alu_sub( byte* dest, byte* src, int len )
+inline void alu_sub( byte* dest, byte* src, int len )
 {
     byte c = 0;
     byte base = cpu.dec ? 10 : 16;
@@ -171,7 +171,7 @@ static __inline void alu_sub( byte* dest, byte* src, int len )
     cpu.carry = c ? true : false;
 }
 
-static __inline void alu_sub2( byte* dest, byte* src, int len )
+inline void alu_sub2( byte* dest, byte* src, int len )
 {
     byte c = 0;
     byte base = cpu.dec ? 10 : 16;
@@ -190,7 +190,7 @@ static __inline void alu_sub2( byte* dest, byte* src, int len )
     cpu.carry = c ? true : false;
 }
 
-static __inline void alu_add_con( byte* reg, byte con, int i, int len )
+inline void alu_add_con( byte* reg, byte con, int i, int len )
 {
     reg[ i ] += con;
     while ( len-- ) {
@@ -205,7 +205,7 @@ static __inline void alu_add_con( byte* reg, byte con, int i, int len )
     cpu.carry = true;
 }
 
-static __inline void alu_sub_con( byte* reg, byte con, int i, int len )
+inline void alu_sub_con( byte* reg, byte con, int i, int len )
 {
     reg[ i ] -= con;
     while ( len-- ) {
@@ -220,7 +220,7 @@ static __inline void alu_sub_con( byte* reg, byte con, int i, int len )
     cpu.carry = true;
 }
 
-static __inline void alu_inc( byte* reg, int len )
+inline void alu_inc( byte* reg, int len )
 {
     if ( cpu.dec ) {
         byte c = 1;
@@ -251,7 +251,7 @@ static __inline void alu_inc( byte* reg, int len )
     }
 }
 
-static __inline void alu_dec( byte* reg, int len )
+inline void alu_dec( byte* reg, int len )
 {
     byte base = cpu.dec ? 10 : 16;
 
@@ -267,7 +267,7 @@ static __inline void alu_dec( byte* reg, int len )
     cpu.carry = true;
 }
 
-static __inline void alu_neg( byte* reg, int len )
+inline void alu_neg( byte* reg, int len )
 {
     byte base = cpu.dec ? 10 : 16;
 
@@ -292,7 +292,7 @@ static __inline void alu_neg( byte* reg, int len )
     }
 }
 
-static __inline void alu_not( byte* reg, int len )
+inline void alu_not( byte* reg, int len )
 {
     byte base = cpu.dec ? 9 : 15;
 
@@ -305,21 +305,21 @@ static __inline void alu_not( byte* reg, int len )
     cpu.carry = false;
 }
 
-static __inline void alu_and( byte* dest, byte* src, int len )
+inline void alu_and( byte* dest, byte* src, int len )
 {
     while ( len-- ) {
         *dest++ &= *src++;
     }
 }
 
-static __inline void alu_or( byte* dest, byte* src, int len )
+inline void alu_or( byte* dest, byte* src, int len )
 {
     while ( len-- ) {
         *dest++ |= *src++;
     }
 }
 
-static __inline void alu_sl( byte* reg, int len )
+inline void alu_sl( byte* reg, int len )
 {
     while ( --len ) {
         reg[ len ] = reg[ len - 1 ];
@@ -327,7 +327,7 @@ static __inline void alu_sl( byte* reg, int len )
     reg[ 0 ] = 0;
 }
 
-static __inline void alu_slc( byte* reg, int len )
+inline void alu_slc( byte* reg, int len )
 {
     byte tmp = reg[ len - 1 ];
 
@@ -337,7 +337,7 @@ static __inline void alu_slc( byte* reg, int len )
     reg[ 0 ] = tmp;
 }
 
-static __inline void alu_sr( byte* reg, int len )
+inline void alu_sr( byte* reg, int len )
 {
     if ( reg[ 0 ] )
         cpu.hst |= HST_SB;
@@ -349,7 +349,7 @@ static __inline void alu_sr( byte* reg, int len )
     reg[ 0 ] = 0;
 }
 
-static __inline void alu_src( byte* reg, int len )
+inline void alu_src( byte* reg, int len )
 {
     byte tmp = reg[ 0 ];
 
@@ -360,7 +360,7 @@ static __inline void alu_src( byte* reg, int len )
     reg[ 0 ] = tmp;
 }
 
-static __inline void alu_srb( byte* reg, int len )
+inline void alu_srb( byte* reg, int len )
 {
     if ( *reg & 1 )
         cpu.hst |= HST_SB;

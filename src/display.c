@@ -40,65 +40,32 @@ extern SDL_Texture* faceplateTexture;
 
 void clearLCD()
 {
-    //	SDL_SetRenderDrawColor(renderer, 0x44, 0x44, 0x66, 0xFF);
-    //	SDL_SetRenderDrawColor(renderer, 119, 172, 130, 0xFF); // vert clair
     SDL_SetRenderDrawColor( renderer, 48, 68, 90, 0xFF ); // bleu foncé
     SDL_RenderClear( renderer );
 
     if ( faceplateTexture ) {
-        // SDL_Rect r3 = {-10,0,534,1100};
         SDL_Rect r3 = { 8, 0, 504, 1124 };
         SDL_RenderCopy( renderer, faceplateTexture, NULL, &r3 );
     }
-    // SDL_SetRenderTarget(renderer, texTarget);
 }
 
 void endLCD()
 {
-    // Reset render target
-    //	SDL_SetRenderTarget( renderer, NULL );
-
-    // Show rendered to texture
-    // gTargetTexture.render( 0, 0, NULL, angle, &screenCenter );
     SDL_Rect r1 = { 0, 0, 131, 64 };
-    //	SDL_Rect r2 = {LCD_X,LCD_Y,262,128};
     SDL_Rect r2 = { LCD_X, LCD_Y, 524, 256 };
-    //	SDL_Rect r2 = {LCD_X,LCD_Y,436,214};
-    //	SDL_Rect r2 = {LCD_X,LCD_Y,393,192};
     SDL_RenderCopyEx( renderer, texTarget, &r1, &r2, 0, NULL, SDL_FLIP_NONE );
 
     pcalc_show();
 }
 
-void renderLCD()
-{
-    // SDL_RenderPresent( renderer );
-}
-
-/* static void fade_lcd_line( int y ) { */
-/*     /\* */
-/* byte *lcd_line0 = (byte *)lcd->line[y*2]; */
-/* byte *lcd_line1 = (byte *)lcd->line[y*2+1]; */
-/* int x = 0; */
-
-/* while (x < 131) { */
-/*     lcd_line0[x*2] = lcd_line0[x*2+1] = lcd_line1[x*2] = lcd_line1[x*2+1] =
- */
-/* (lcd_line0[x*2] >> 1); x++; */
-/* } */
-/*     *\/ */
-/* } */
+void renderLCD() {}
 
 static address draw_lcd_line( address adr, int y )
 {
-    //	printf("draw_lcd_line %d ", y);
-
     int x = 0;
     int bit = 0;
     byte data = 0; // Initialized to remove warning
     byte* ptr;
-    // byte *lcd_line0 = (byte *)lcd->line[y*2];
-    // byte *lcd_line1 = (byte *)lcd->line[y*2+1];
 
     ptr = bus_fast_peek( NULL, adr, NULL );
 
@@ -119,22 +86,18 @@ static address draw_lcd_line( address adr, int y )
             bit = 4;
         }
 
-        byte pixel = ( ( data & 1 ) << 6 ); // (lcd_line0[x*2] >> 1) | ((data & 1) << 6);
-        if ( pixel != '\0' ) {
+        byte pixel = ( ( data & 1 ) << 6 );
+        if ( pixel != '\0' )
             pixel = '\3';
-            // printf("%c ", pixel);
-        }
 
         byte pixelGS = lcdScreenGS[ x + y * 131 ];
 
-        // prev3_lcdScreen[x+y*131] = prev2_lcdScreen[x+y*131];
         prev2_lcdScreen[ x + y * 131 ] = prev_lcdScreen[ x + y * 131 ];
         prev_lcdScreen[ x + y * 131 ] = lcdScreen[ x + y * 131 ];
         lcdScreen[ x + y * 131 ] = pixel;
 
         byte prev_pixel = prev_lcdScreen[ x + y * 131 ];
         byte prev2_pixel = prev2_lcdScreen[ x + y * 131 ];
-        // byte prev3_pixel = prev3_lcdScreen[x+y*131];
 
         if ( drawGS == true ) {
             if ( prev2_pixel == '\0' && prev_pixel == '\0' && pixel == '\0' ) {
@@ -172,9 +135,6 @@ static address draw_lcd_line( address adr, int y )
             lcdScreenGS[ x + y * 131 ] = pixelGS;
         }
 
-        // lcd_line0[x*2] = lcd_line0[x*2+1] = lcd_line1[x*2] = lcd_line1[x*2+1]
-        // = (lcd_line0[x*2] >> 1) | ((data & 1) << 6);
-
         data >>= 1;
         bit--;
         x++;
@@ -183,17 +143,9 @@ static address draw_lcd_line( address adr, int y )
     return ( adr + 0x22 + ( !in_menu && ( display_offset & 4 ) ? 2 : 0 ) ) & 0xFFFFF;
 }
 
-void display_init( void )
-{
-    // lcd = create_bitmap_ex(8, 131*2, 64*2);
-    // clear_to_color(lcd, 0);
-}
+void display_init( void ) {}
 
-void display_exit( void )
-{
-    // destroy_bitmap (lcd);
-    // lcd = NULL;
-}
+void display_exit( void ) {}
 
 void display_show()
 {
@@ -201,7 +153,6 @@ void display_show()
     SDL_RenderClear( renderer );
 
     if ( faceplateTexture ) {
-        // SDL_Rect r3 = {-10,0,534,1100};
         SDL_Rect r3 = { 8, 0, 504, 1124 };
         SDL_RenderCopy( renderer, faceplateTexture, NULL, &r3 );
     }
@@ -231,9 +182,7 @@ void display_show()
                 int G = 0;
                 int B = 0;
 
-                // byte hp48pixel = lcdScreen[x+y*131];
                 byte hp48pixel = lcdScreenGS[ x + y * 131 ];
-                //	printf("%d ", hp48pixel);
 
                 if ( hp48pixel == '\0' ) {
                     R = 119;
@@ -297,12 +246,6 @@ void display_update( void )
 
         cur_adr = draw_lcd_line( cur_adr, display_line_count );
 
-        //	acquire_screen();
-        //	scare_mouse_area(LCD_X, LCD_Y+display_line_count*2, 131*2, 2);
-        //	blit(lcd, screen, 0, display_line_count*2, LCD_X,
-        // LCD_Y+display_line_count*2, 131*2, 2);        unscare_mouse();
-        //	release_screen();
-
         if ( !in_menu ) {
             cur_adr += display_line_offset;
         }
@@ -334,31 +277,6 @@ void display_update( void )
         }
 
     } else if ( off_cnt <= 7 ) { /* Display is off and still fading */
-
-        off_cnt = 8; // julien
-
-        /*
-        fade_lcd_line(off_cur_line);
-
-//	acquire_screen();
-//	scare_mouse_area(LCD_X, LCD_Y+off_cur_line*2, 131*2, 2);
-//	blit(lcd, screen, 0, off_cur_line*2, LCD_X, LCD_Y+off_cur_line*2, 131*2,
-2);
-//	unscare_mouse();
-//	release_screen();
-
-        off_cur_line++;
-        if (off_cur_line == 64) {
-                off_cur_line = 0;
-        }
-        if (off_cur_line == off_line) {
-                off_cnt++;
-        }*/
-    }
-
-    if ( shouldRender == true ) {
-        // shouldRender = false;
-        // shouldClear = true;
-        // endLCD();
+        off_cnt = 8;
     }
 }

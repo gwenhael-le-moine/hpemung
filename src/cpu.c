@@ -11,7 +11,6 @@ Cpu cpu;
 
 void cpu_interrupt( void )
 {
-    /* printf( "cpu_interrupt\n" ); */
     if ( !cpu.inte )
         return;
 
@@ -52,9 +51,8 @@ void execute_instruction( void )
         adr = cpu.pc;
         ptr = bus_fast_peek( buffer, adr, &len );
         old_map_cnt = bus_info.map_cnt;
-        if ( ptr == buffer ) { // Not direct memory access
-            old_map_cnt--;     // Force new peek next time
-        }
+        if ( ptr == buffer ) // Not direct memory access
+            old_map_cnt--;   // Force new peek next time
     }
     decode( ptr + cpu.pc - adr );
 }

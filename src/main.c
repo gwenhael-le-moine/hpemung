@@ -28,135 +28,17 @@ SDL_Texture* faceplateTexture = NULL;
 TTF_Font* ttffont = NULL;
 TTF_Font* ttffont2 = NULL;
 
-SDL_TimerID my_timer0_id;
-SDL_TimerID my_timer1_id;
-SDL_TimerID my_timer2_id;
-SDL_TimerID my_timer3_id;
-SDL_TimerID my_timer4_id;
-
 bool SDL_ready = false;
 
-unsigned int framecount = 0;
-unsigned int emuframecount = 0;
-
 unsigned int currentTime;
-unsigned int currentTime_emu;
-unsigned int lastTime_timer_fps = 0;
-unsigned int lastTime_timer_emu = 0;
-
-/*
-
- { 0,    16,	    timer1_update },
-#ifndef true_TIMER2
- { 0,    8192,   timer2_update },
-#endif
- { 0,    4096,   display_update },
-
-static TimerEvent timer_events[] = {
- { 0,    1000000/20 ,	false,  gui_update }, // BPS_TO_TIMER(20)
- { 0,    1000000,	false,  true_speed_proc }, // BPS_TO_TIMER(1)
- { 0,    1000000/8192 ,	false,  timer2_update }, // BPS_TO_TIMER(8192)
- */
 
 // display_update
 unsigned int lastTime_timer1 = 0;
 unsigned int delay_timer1 = 4096; // 4096;
 
-// true_speed_proc
-unsigned int lastTime_timer2 = 0;
-unsigned int delay_timer2 = 60; // 1000;
-
-// timer1
-unsigned int lastTime_timer3 = 0;
-unsigned int delay_timer3 = 60;
-
-// timer2
-unsigned int lastTime_timer4 = 0;
-unsigned int delay_timer4 = 8192; // 8192;
-
 // display show
 unsigned int lastTime_timer5 = 0;
 unsigned int delay_timer5 = 60; // 60 fps
-
-/* Uint32 my_callbackfunc0( Uint32 interval, void* param ) { */
-/*     SDL_Event event; */
-/*     SDL_UserEvent userevent; */
-
-/*     userevent.type = SDL_USEREVENT; */
-/*     userevent.code = 1; */
-/*     userevent.data1 = &gui_update; */
-/*     userevent.data2 = NULL; // param; */
-
-/*     event.type = SDL_USEREVENT; */
-/*     event.user = userevent; */
-
-/*     SDL_PushEvent( &event ); */
-/*     return ( interval ); */
-/* } */
-
-/* Uint32 my_callbackfunc1( Uint32 interval, void* param ) { */
-/*     SDL_Event event; */
-/*     SDL_UserEvent userevent; */
-
-/*     userevent.type = SDL_USEREVENT; */
-/*     userevent.code = 1; */
-/*     userevent.data1 = NULL; //&display_update; */
-/*     userevent.data2 = NULL; // param; */
-
-/*     event.type = SDL_USEREVENT; */
-/*     event.user = userevent; */
-
-/*     SDL_PushEvent( &event ); */
-/*     return ( interval ); */
-/* } */
-
-/* Uint32 my_callbackfunc2( Uint32 interval, void* param ) { */
-/*     SDL_Event event; */
-/*     SDL_UserEvent userevent; */
-
-/*     userevent.type = SDL_USEREVENT; */
-/*     userevent.code = 2; */
-/*     userevent.data1 = &true_speed_proc; */
-/*     userevent.data2 = NULL; // param; */
-
-/*     event.type = SDL_USEREVENT; */
-/*     event.user = userevent; */
-
-/*     SDL_PushEvent( &event ); */
-/*     return ( interval ); */
-/* } */
-
-/* Uint32 my_callbackfunc3( Uint32 interval, void* param ) { */
-/*     SDL_Event event; */
-/*     SDL_UserEvent userevent; */
-
-/*     userevent.type = SDL_USEREVENT; */
-/*     userevent.code = 3; */
-/*     userevent.data1 = &timer1_update; */
-/*     userevent.data2 = NULL; // param; */
-
-/*     event.type = SDL_USEREVENT; */
-/*     event.user = userevent; */
-
-/*     SDL_PushEvent( &event ); */
-/*     return ( interval ); */
-/* } */
-
-/* Uint32 my_callbackfunc4( Uint32 interval, void* param ) { */
-/*     SDL_Event event; */
-/*     SDL_UserEvent userevent; */
-
-/*     userevent.type = SDL_USEREVENT; */
-/*     userevent.code = 4; */
-/*     userevent.data1 = &display_show; //  timer2_update; */
-/*     userevent.data2 = NULL;          // param; */
-
-/*     event.type = SDL_USEREVENT; */
-/*     event.user = userevent; */
-
-/*     SDL_PushEvent( &event ); */
-/*     return ( interval ); */
-/* } */
 
 static int fullscreen = false;
 
@@ -207,20 +89,6 @@ static void program_init( void )
     tex2Target = SDL_CreateTexture( renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 504, 1124 );
     texTarget = SDL_CreateTexture( renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, 504, 1124 );
 
-    /*
-    SDL_Surface * faceplate = IMG_Load("48face5.png");
-    if(faceplate) {
-            //printf("init text2 %s\n", buttons->text);
-
-            faceplateTexture = SDL_CreateTextureFromSurface( renderer, faceplate
-    );
-    }*/
-
-    //	SDL_SetRenderTarget(renderer, texTarget);
-    //	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-    //	SDL_RenderClear(renderer);
-    //	SDL_SetRenderTarget(renderer, NULL);
-
     SDL_UpdateWindowSurface( window );
 
     pcalc_init();
@@ -232,26 +100,8 @@ static void program_init( void )
     SDL_ready = true;
 }
 
-void start_timers()
-{
-    printf( "start_timers\n" );
-    // my_timer0_id = SDL_AddTimer(100, my_callbackfunc0, NULL); // gui_update
-    //	my_timer1_id = SDL_AddTimer(50, my_callbackfunc1, NULL); // display
-    //	my_timer2_id = SDL_AddTimer(1000, my_callbackfunc2, NULL); // cpu real
-    // speed	my_timer3_id = SDL_AddTimer(62, my_callbackfunc3, NULL); //
-    // timer1   my_timer4_id = SDL_AddTimer(500, my_callbackfunc4, NULL); //
-    // timer2
-}
-
 static void program_exit( void )
 {
-    /*
-    //SDL_RemoveTimer(my_timer0_id);
-    SDL_RemoveTimer(my_timer1_id);
-    SDL_RemoveTimer(my_timer2_id);
-    SDL_RemoveTimer(my_timer3_id);
-    SDL_RemoveTimer(my_timer4_id);
-    */
     TTF_CloseFont( ttffont );
     TTF_CloseFont( ttffont2 );
     TTF_Quit();
@@ -264,10 +114,8 @@ static void program_exit( void )
 bool refreshSDL()
 {
     SDL_Event event;
-    // SDL_WaitEvent(&event);
-    while ( SDL_PollEvent( &event ) )
-    // if(SDL_PollEvent(&event))
-    {
+
+    while ( SDL_PollEvent( &event ) ) {
         switch ( event.type ) {
             case SDL_MOUSEBUTTONUP:
                 {
@@ -286,8 +134,6 @@ bool refreshSDL()
                 break;
 
             case SDL_KEYDOWN:
-                /* printf( "%d %d\n", event.key.keysym.sym, event.key.keysym.scancode ); */
-
                 pcalc_kb_down( event.key.keysym.scancode );
 
                 switch ( event.key.keysym.scancode ) {
@@ -527,41 +373,14 @@ bool refreshSDL()
                     default:
                         break;
                 }
-
-                /*
-
-                case SDLK_LEFT:
-
-                        break;
-                case SDLK_RIGHT:
-                        kbd_key_released  (1, 3);
-                        break;
-                case SDLK_UP:
-
-                        break;
-                case SDLK_DOWN:
-
-                        break;
-                case SDLK_ESCAPE:
-
-                        break;
-        */
                 break;
 
             case SDL_USEREVENT:
-                {
-                    printf( "SDL_USEREVENT\n" );
-                    // if(event.user.code == 1)
-
-                    // void (*p) (void*) = event.user.data1;
-                    // p(event.user.data2);
-                }
                 break;
 
             case SDL_QUIT:
                 {
                     please_exit = true;
-                    // emulator_state = EMULATOR_STOP;
                     return false;
                 }
         }
@@ -569,72 +388,29 @@ bool refreshSDL()
     return true;
 }
 
-void mainloop()
+static inline void mainloop()
 {
-    if ( please_exit == true ) {
-        printf( "please exit\n" );
+    if ( please_exit || !SDL_ready )
         return;
+
+    currentTime = SDL_GetTicks();
+
+    emulator_run();
+
+    // display_update
+    if ( currentTime > lastTime_timer1 + delay_timer1 ) {
+        lastTime_timer1 = currentTime;
+        display_update();
     }
-    if ( SDL_ready == true ) {
 
-        currentTime = SDL_GetTicks();
-
-        emulator_run();
-
-        /*
-        framecount++;
-
-        if (currentTime >= lastTime_timer_fps + 1000) {
-                //printf("Report(2) %dmsec: %d\n", delay_timer2, currentTime -
-        lastTime_timer2); lastTime_timer_fps = currentTime; printf("FPS = %d\n",
-        framecount); framecount = 0;
-        }
-        */
-
-        // printf("mainloop() currentTime = %d\n", currentTime);
-
-        // true_speed_proc
-        if ( currentTime > lastTime_timer2 + delay_timer2 ) {
-            // printf("Report(2) %dmsec: %d\n", delay_timer2, currentTime -
-            // lastTime_timer2);
-            lastTime_timer2 = currentTime;
-            true_speed_proc();
-        }
-
-        // display_update
-        if ( currentTime > lastTime_timer1 + delay_timer1 ) {
-            // printf("Report(1) %dmsec: %d\n", delay_timer1, currentTime -
-            // lastTime_timer1);
-            lastTime_timer1 = currentTime;
-            display_update();
-        }
-
-        // timer1
-        if ( currentTime > lastTime_timer3 + delay_timer3 ) {
-            // printf("Report(3) %dmsec: %d\n", delay_timer3, currentTime -
-            // lastTime_timer3);
-            lastTime_timer3 = currentTime;
-            timer1_update();
-        }
-
-        // timer2
-        if ( currentTime > lastTime_timer4 + delay_timer4 ) {
-            // printf("Report(4) %dmsec: %d\n", delay_timer4, currentTime -
-            // lastTime_timer4);
-            lastTime_timer4 = currentTime;
-            timer2_update();
-        }
-
-        // display show
-        if ( currentTime > lastTime_timer5 + delay_timer5 ) {
-            lastTime_timer5 = currentTime;
-            display_show();
-        }
-
-        if ( refreshSDL() == false ) {
-            return;
-        }
+    // display show
+    if ( currentTime > lastTime_timer5 + delay_timer5 ) {
+        lastTime_timer5 = currentTime;
+        display_show();
     }
+
+    if ( !refreshSDL() )
+        return;
 }
 
 int main( int argc, char* argv[] )
@@ -643,14 +419,10 @@ int main( int argc, char* argv[] )
 
     program_init();
     emulator_init();
-    // gui_init();
-
-    // start_timers();
 
     while ( please_exit == false )
         mainloop();
 
-    gui_exit();
     emulator_exit();
     program_exit();
 

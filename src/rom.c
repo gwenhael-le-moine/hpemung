@@ -1,59 +1,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "types.h"
-#include "bus.h"
-#include "rom.h"
-
 #include <libgen.h>       // dirname
 #include <unistd.h>       // readlink
 #include <linux/limits.h> // PATH_MAX
 
-static char WorkingPath[ 512 ];
-
-static void getExePath()
-{
-    char programPath[ 1024 ] = ".";
-    char temp[ 1024 ];
-    memset( programPath, 0, sizeof( programPath ) );
-    memset( temp, 0, sizeof( temp ) );
-
-    // setWorkingPath(programPath);
-
-    char result[ PATH_MAX ];
-    ssize_t count = readlink( "/proc/self/exe", result, PATH_MAX );
-    const char* path;
-    if ( count != -1 ) {
-        path = dirname( result );
-        strcpy( programPath, path );
-    }
-
-    memset( WorkingPath, 0, sizeof( WorkingPath ) );
-    strcpy( WorkingPath, programPath );
-
-    printf( "exec path = %s\n", WorkingPath );
-}
-
-static int file_size( char* name )
-{
-    memset( WorkingPath, 0, sizeof( WorkingPath ) );
-    getExePath();
-
-    FILE* f;
-    char fullpath[ 1024 ];
-    sprintf( fullpath, "%s/%s", WorkingPath, name );
-    printf( "%s\n", fullpath );
-    f = fopen( fullpath, "r" );
-    if ( !f ) {
-        return 0;
-    }
-    fseek( f, 0, SEEK_END );      // seek to end of file
-    int size = ( int )ftell( f ); // get current file pointer
-    fseek( f, 0, SEEK_SET );      // seek back to beginning of file
-    // proceed with allocating memory and reading the file
-    fclose( f );
-    return size;
-}
+#include "types.h"
+#include "bus.h"
+#include "rom.h"
+#include "pfiles.h"
 
 void rom_init( void )
 {
