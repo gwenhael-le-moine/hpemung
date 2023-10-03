@@ -13,8 +13,6 @@ extern byte display_height;
 extern byte display_offset;
 extern bool display_enable;
 
-extern void display_init( void );
-extern void display_exit( void );
 extern void display_update( void );
 extern void display_show( void );
 

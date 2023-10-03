@@ -46,19 +46,14 @@ void emulator_init( void )
     static bool locked = false;
 
     bus_init();
-    display_init();
 
     if ( !locked )
         locked = true;
 }
 
-void emulator_exit( void )
-{
-    display_exit();
-    bus_exit();
-}
+void emulator_exit( void ) { bus_exit(); }
 
-void throttle( bool is_needed )
+static inline void throttle( bool is_needed )
 {
     if ( !is_needed )
         return;

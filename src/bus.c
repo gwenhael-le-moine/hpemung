@@ -7,17 +7,23 @@
 #include "hdw.h"
 #include "bus.h"
 
+#define SEG_OF( adr ) ( ( adr ) >> 12 )
+#define OFFSET_OF( adr ) ( ( adr ) & 0xFFF )
+#define CAN_READ( adr ) ( read_map[ SEG_OF( adr ) ] != NULL )
+#define CAN_WRITE( adr ) ( write_map[ SEG_OF( adr ) ] != NULL )
+#define MAP_READ( adr ) ( read_map[ SEG_OF( adr ) ] + OFFSET_OF( adr ) )
+#define MAP_WRITE( adr ) ( write_map[ SEG_OF( adr ) ] + OFFSET_OF( adr ) )
+
 BusInfo bus_info = {
     //  hdw	    ram sz  ram	    ce1 sz  ce1	    ce2 sz  ce2	    nce3 sz nce3
-    0x00000, 0x00000, 0x00000, 0x00000, 0x00000, 0x00000, 0x00000, 0x00000,
-    0x00000,                                                       // base or size
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,                   // base or size
     false, false, false, false, false, false, false, false, false, // configured
     false, false, false,                                           // read only
     //  ce1_bs  da19    ben
     false, false, false,
     //  rom	    ram	    ce1	    ce2	    nce3
-    NULL, NULL, NULL, NULL, NULL,               // data
-    0x00000, 0x00000, 0x00000, 0x00000, 0x00000 // mask
+    NULL, NULL, NULL, NULL, NULL, // data
+    0x0, 0x0, 0x0, 0x0, 0x0, 0    // mask
 };
 
 static byte* read_map[ 256 ];
@@ -29,7 +35,6 @@ word crc;
 void bus_init( void )
 {
     rom_init();
-    hdw_init();
     ram_init();
     ports_init();
     bus_reset();
@@ -38,9 +43,7 @@ void bus_init( void )
 void bus_exit( void )
 {
     rom_exit();
-    hdw_exit();
     ram_exit();
-    ports_exit();
 }
 
 static inline void update_crc( byte nibble ) { crc = ( crc >> 4 ) ^ ( ( ( crc ^ nibble ) & 0xF ) * 0x1081 ); }

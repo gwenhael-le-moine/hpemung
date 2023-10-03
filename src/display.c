@@ -40,28 +40,6 @@ extern SDL_Texture* texTarget;
 extern SDL_Texture* tex2Target;
 extern SDL_Texture* faceplateTexture;
 
-void clearLCD()
-{
-    SDL_SetRenderDrawColor( renderer, 48, 68, 90, 0xFF ); // bleu foncé
-    SDL_RenderClear( renderer );
-
-    if ( faceplateTexture ) {
-        SDL_Rect r3 = { 8, 0, 504, 1124 };
-        SDL_RenderCopy( renderer, faceplateTexture, NULL, &r3 );
-    }
-}
-
-void endLCD()
-{
-    SDL_Rect r1 = { 0, 0, 131, 64 };
-    SDL_Rect r2 = { LCD_X, LCD_Y, 524, 256 };
-    SDL_RenderCopyEx( renderer, texTarget, &r1, &r2, 0, NULL, SDL_FLIP_NONE );
-
-    pcalc_show();
-}
-
-void renderLCD() {}
-
 static address draw_lcd_line( address adr, int y )
 {
     int x = 0;
@@ -73,9 +51,8 @@ static address draw_lcd_line( address adr, int y )
 
     // Horisontal pixel offset
     if ( !in_menu ) {
-        if ( display_offset > 3 ) {
+        if ( display_offset > 3 )
             ptr++;
-        }
 
         data = *ptr++;
         data >>= display_offset & 3;
@@ -102,37 +79,29 @@ static address draw_lcd_line( address adr, int y )
         byte prev2_pixel = prev2_lcdScreen[ x + y * 131 ];
 
         if ( drawGS == true ) {
-            if ( prev2_pixel == '\0' && prev_pixel == '\0' && pixel == '\0' ) {
+            if ( prev2_pixel == '\0' && prev_pixel == '\0' && pixel == '\0' )
                 pixelGS = '\0';
-            }
 
-            if ( prev2_pixel == '\3' && prev_pixel == '\3' && pixel == '\3' ) {
+            if ( prev2_pixel == '\3' && prev_pixel == '\3' && pixel == '\3' )
                 pixelGS = '\3';
-            }
 
-            if ( prev2_pixel == '\0' && prev_pixel == '\3' && pixel == '\3' ) {
+            if ( prev2_pixel == '\0' && prev_pixel == '\3' && pixel == '\3' )
                 pixelGS = '\2';
-            }
 
-            if ( prev2_pixel == '\3' && prev_pixel == '\0' && pixel == '\0' ) {
+            if ( prev2_pixel == '\3' && prev_pixel == '\0' && pixel == '\0' )
                 pixelGS = '\1';
-            }
 
-            if ( prev2_pixel == '\3' && prev_pixel == '\3' && pixel == '\0' ) {
+            if ( prev2_pixel == '\3' && prev_pixel == '\3' && pixel == '\0' )
                 pixelGS = '\2';
-            }
 
-            if ( prev2_pixel == '\3' && prev_pixel == '\0' && pixel == '\3' ) {
+            if ( prev2_pixel == '\3' && prev_pixel == '\0' && pixel == '\3' )
                 pixelGS = '\2';
-            }
 
-            if ( prev2_pixel == '\0' && prev_pixel == '\0' && pixel == '\3' ) {
+            if ( prev2_pixel == '\0' && prev_pixel == '\0' && pixel == '\3' )
                 pixelGS = '\1';
-            }
 
-            if ( prev2_pixel == '\0' && prev_pixel == '\3' && pixel == '\0' ) {
+            if ( prev2_pixel == '\0' && prev_pixel == '\3' && pixel == '\0' )
                 pixelGS = '\1';
-            }
 
             lcdScreenGS[ x + y * 131 ] = pixelGS;
         }
@@ -144,10 +113,6 @@ static address draw_lcd_line( address adr, int y )
 
     return ( adr + 0x22 + ( !in_menu && ( display_offset & 4 ) ? 2 : 0 ) ) & 0xFFFFF;
 }
-
-void display_init( void ) {}
-
-void display_exit( void ) {}
 
 void display_show()
 {
@@ -167,13 +132,11 @@ void display_show()
         int access;
         Uint32 format;
 
-        if ( SDL_QueryTexture( texTarget, &format, &access, &w, &h ) != 0 ) {
+        if ( SDL_QueryTexture( texTarget, &format, &access, &w, &h ) != 0 )
             printf( "error\n" );
-        }
 
-        if ( SDL_LockTexture( texTarget, NULL, ( void** )&pixels, &pitch ) != 0 ) {
+        if ( SDL_LockTexture( texTarget, NULL, ( void** )&pixels, &pitch ) != 0 )
             printf( "SDL_LockTexture: %s.\n", SDL_GetError() );
-        }
 
         SDL_PixelFormat* pixelFormat = SDL_AllocFormat( format );
 
@@ -245,12 +208,11 @@ void display_update( void )
     }
 
     if ( !off_cnt ) { /* Display is on */
-
         cur_adr = draw_lcd_line( cur_adr, display_line_count );
 
-        if ( !in_menu ) {
+        if ( !in_menu )
             cur_adr += display_line_offset;
-        }
+
         if ( display_line_count == display_height ) {
             in_menu = 1;
             cur_adr = menu_base;
@@ -266,19 +228,12 @@ void display_update( void )
             shouldRender = true;
 
             screen_draw_count++;
-            if ( screen_draw_count == 3 ) {
-
+            if ( screen_draw_count == 3 )
                 screen_draw_count = 0;
-            }
         }
 
-        if ( screen_draw_count == 0 ) {
-            drawGS = true;
-        } else {
-            drawGS = false;
-        }
+        drawGS = screen_draw_count == 0;
 
-    } else if ( off_cnt <= 7 ) { /* Display is off and still fading */
+    } else if ( off_cnt <= 7 ) /* Display is off and still fading */
         off_cnt = 8;
-    }
 }

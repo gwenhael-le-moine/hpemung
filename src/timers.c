@@ -19,52 +19,50 @@ dword timer2_value;
 
 void timer1_update( void )
 {
-    if ( timer2_control & TIMER_RUN ) {
-        timer1_value--;
-        timer1_value &= 0xF;
+    if ( !( timer2_control & TIMER_RUN ) )
+        return;
 
-        if ( timer1_value & 0x8 ) {
-            if ( timer1_control & TIMER1_WAKE ) {
-                timer1_control |= TIMER1_SRQ;
+    timer1_value--;
+    timer1_value &= 0xF;
 
-                if ( cpu.shutdown ) {
-                    cpu.shutdown = false;
-                    timer1_control &= ~TIMER1_WAKE;
-                }
+    if ( timer1_value & 0x8 ) {
+        if ( timer1_control & TIMER1_WAKE ) {
+            timer1_control |= TIMER1_SRQ;
+
+            if ( cpu.shutdown ) {
+                cpu.shutdown = false;
+                timer1_control &= ~TIMER1_WAKE;
             }
-            if ( timer1_control & TIMER1_INT ) {
-                timer1_control |= TIMER1_SRQ;
-
-                if ( !cpu.shutdown ) {
-                    cpu_interrupt();
-                }
-            }
-        } else {
-            timer1_control &= ~TIMER1_SRQ;
         }
-    }
+        if ( timer1_control & TIMER1_INT ) {
+            timer1_control |= TIMER1_SRQ;
+
+            if ( !cpu.shutdown )
+                cpu_interrupt();
+        }
+    } else
+        timer1_control &= ~TIMER1_SRQ;
 }
 
 void timer2_update( void )
 {
-    if ( timer2_control & TIMER_RUN ) {
-        timer2_value--;
-        if ( timer2_value & 0x80000000 ) {
-            if ( timer2_control & TIMER2_WAKE ) {
-                timer2_control |= TIMER2_SRQ;
-                if ( cpu.shutdown ) {
-                    cpu.shutdown = 0;
-                    timer2_control &= ~TIMER2_WAKE;
-                }
+    if ( !( timer2_control & TIMER_RUN ) )
+        return;
+
+    timer2_value--;
+    if ( timer2_value & 0x80000000 ) {
+        if ( timer2_control & TIMER2_WAKE ) {
+            timer2_control |= TIMER2_SRQ;
+            if ( cpu.shutdown ) {
+                cpu.shutdown = 0;
+                timer2_control &= ~TIMER2_WAKE;
             }
-            if ( timer2_control & TIMER2_INT ) {
-                timer2_control |= TIMER2_SRQ;
-                if ( !cpu.shutdown ) {
-                    cpu_interrupt();
-                }
-            }
-        } else {
-            timer2_control &= ~TIMER2_SRQ;
         }
-    }
+        if ( timer2_control & TIMER2_INT ) {
+            timer2_control |= TIMER2_SRQ;
+            if ( !cpu.shutdown )
+                cpu_interrupt();
+        }
+    } else
+        timer2_control &= ~TIMER2_SRQ;
 }

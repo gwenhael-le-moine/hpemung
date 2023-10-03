@@ -8,7 +8,7 @@
 typedef struct {
     SDL_Keycode SDL_event_id;
     void ( *down )( void );
-    void ( *up )( bool action );
+    void ( *up )( void );
 } KBMapping;
 
 extern void pcalc_init();

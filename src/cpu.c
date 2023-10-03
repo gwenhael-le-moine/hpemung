@@ -10,6 +10,24 @@ Cpu cpu;
 
 #define MAX_OPC_LEN 21
 
+static inline void decode( byte* ptr )
+{
+    Opcode* op = opcodes;
+    int i = 0;
+
+    while ( op[ ptr[ i ] ].next ) {
+        op = op[ ptr[ i ] ].next;
+        i++;
+    }
+
+    if ( op[ ptr[ i ] ].exec ) {
+        op[ ptr[ i ] ].exec( ptr );
+        cpu.pc &= 0xFFFFF;
+        cpu.inst_cnt++;
+    } else
+        emulator_set_state( EMULATOR_STOP );
+}
+
 void cpu_interrupt( void )
 {
     if ( !cpu.inte )
@@ -19,24 +37,6 @@ void cpu_interrupt( void )
     cpu.rstk_ptr = ( cpu.rstk_ptr - 1 ) & 7;
     cpu.rstk[ cpu.rstk_ptr ] = cpu.pc;
     cpu.pc = 0x0000F;
-}
-
-static void decode( byte* ptr )
-{
-    Opcode* op = opcodes;
-    int i = 0;
-
-    while ( op[ ptr[ i ] ].next ) {
-        op = op[ ptr[ i ] ].next;
-        i++;
-    }
-    if ( op[ ptr[ i ] ].exec ) {
-        op[ ptr[ i ] ].exec( ptr );
-        cpu.pc &= 0xFFFFF;
-        cpu.inst_cnt++;
-    } else {
-        emulator_set_state( EMULATOR_STOP );
-    }
 }
 
 void execute_instruction( void )

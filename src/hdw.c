@@ -7,14 +7,9 @@
 
 static byte hdw_ram[ 64 ];
 
-void hdw_init( void ) {}
-
-void hdw_exit( void ) {}
-
 byte hdw_read_nibble( address adr )
 {
     switch ( adr ) {
-
         case 0x00:
             return display_offset | ( display_enable ? 0x8 : 0x0 );
 
@@ -66,8 +61,6 @@ byte hdw_read_nibble( address adr )
 
 void hdw_write_nibble( byte data, address adr )
 {
-    int tmp;
-
     switch ( adr ) {
 
         case 0x00:
@@ -139,7 +132,7 @@ void hdw_write_nibble( byte data, address adr )
             display_height &= 0x0F;
             display_height |= ( data & 3 ) << 4;
             hdw_ram[ 0x29 ] = data & 0x4;
-            tmp = bus_info.da19;
+            int tmp = bus_info.da19;
             bus_info.da19 = ( data & 0x8 ) ? true : false;
             if ( tmp != bus_info.da19 ) {
                 bus_remap();

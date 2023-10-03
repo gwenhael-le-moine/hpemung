@@ -9,12 +9,10 @@ static address ram_size = 256 * 1024; // in nibbles, not bytes!
 
 void ram_init( void )
 {
-    byte* buf;
-
-    buf = malloc( ram_size );
-    if ( !buf ) {
+    byte* buf = malloc( ram_size );
+    if ( !buf )
         exit( 0x20 );
-    }
+
     memset( buf, 0, ram_size );
     bus_info.ram_data = buf;
     bus_info.ram_mask = ram_size - 1;

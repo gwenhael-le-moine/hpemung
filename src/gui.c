@@ -29,7 +29,7 @@ SDL_Texture* textD[ 49 ];
 
 #define PANEL_FLAG_VISIBLE 0x01
 
-void drawText( int index, int x, int y, int btn_w, int btn_h )
+static inline void drawText( int index, int x, int y, int btn_w, int btn_h )
 {
     SDL_Surface* letterSurface = surfA[ index ];
     SDL_Texture* letterTexture = textA[ index ];
@@ -157,86 +157,7 @@ void gui_initKeyboard( Button* calcbuttons )
     }
 }
 
-/* void gui_exit( void ) */
-/* { */
-/*     /\* int i; *\/ */
-
-/*     /\* for ( i = 0; i < PANEL_COUNT; i++ ) { *\/ */
-/*     /\*     gui_hide_panel( i ); *\/ */
-/*     /\* } *\/ */
-/* } */
-
-/* static inline int panel_at( int x, int y ) */
-/* { */
-/*     int i; */
-
-/*     for ( i = PANEL_COUNT; i >= 0; i-- ) { */
-/*         if ( panels[ i ].flags & PANEL_FLAG_VISIBLE && x >= panels[ i ].x && x < panels[ i ].x + panels[ i ].w && y >= panels[ i ].y &&
- */
-/*              y < panels[ i ].y + panels[ i ].h ) { */
-/*             break; */
-/*         } */
-/*     } */
-/*     return i; */
-/* } */
-
-/* void gui_update( void ) */
-/* { */
-/*     /\* */
-/* static int down_panel = -1; */
-/* static int down_mb = 0; */
-/* int mx, my, mb; */
-
-/* mx = mouse_x; */
-/* my = mouse_y; */
-/* mb = mouse_b; */
-
-/* if (!down_mb && (mb & 1)) { */
-/*     down_panel = panel_at(mx, my); */
-/*     if (down_panel >= 0) { */
-/*         down_mb = 1; */
-/*         panels[down_panel].mouse_down(mx - panels[down_panel].x, my - */
-/* panels[down_panel].y, down_mb); */
-/*     } */
-/* } else if (!down_mb && (mb & 2)) { */
-/*     down_panel = panel_at(mx, my); */
-/*     if (down_panel >= 0) { */
-/*         down_mb = 2; */
-/*         panels[down_panel].mouse_down(mx - panels[down_panel].x, my - */
-/* panels[down_panel].y, down_mb); */
-/*     } */
-/* } else if (down_mb && !(mb & 3)) { */
-/*     panels[down_panel].mouse_up(mx - panels[down_panel].x, my - */
-/* panels[down_panel].y, down_mb); down_mb = 0; down_panel = -1; */
-/* } */
-/*      *\/ */
-/* } */
-
-/* void gui_show_panel( int i ) */
-/* { */
-/*     /\* */
-/* if (!(panels[i].flags & PANEL_FLAG_VISIBLE)) { */
-/*     panels[i].flags |= PANEL_FLAG_VISIBLE; */
-/*     panels[i].bmp = create_sub_bitmap(screen, panels[i].x, panels[i].y, */
-/* panels[i].w, panels[i].h); acquire_screen(); scare_mouse(); rect(screen, */
-/* panels[i].x-1, panels[i].y-1, panels[i].x+panels[i].w, panels[i].y+panels[i].h, */
-/* color[C_PANEL_BORDER]); panels[i].show(panels[i].bmp); unscare_mouse(); */
-/*     release_screen(); */
-/* }*\/ */
-/* } */
-
-/* void gui_hide_panel( int i ) */
-/* { */
-/*     /\* */
-/* if (panels[i].flags & PANEL_FLAG_VISIBLE) { */
-/*     panels[i].flags &= ~PANEL_FLAG_VISIBLE; */
-/*     panels[i].hide(); */
-/*     destroy_bitmap(panels[i].bmp); */
-/*     panels[i].bmp = NULL; */
-/* }*\/ */
-/* } */
-
-void button_draw( Button* b )
+static inline void button_draw( Button* b )
 {
     SDL_Rect rectToDraw = { b->x * 2, b->y * 2, b->w * 2, b->h * 2 };
 
@@ -244,9 +165,6 @@ void button_draw( Button* b )
     SDL_RenderFillRect( renderer, &rectToDraw );
 
     drawText( b->index, b->x * 2, 10 + b->y * 2, b->w * 2, b->h * 2 );
-
-    /* int c = color[ ( b->flags & BUTTON_PUSHED ) ? C_BUTTON_PUSHED :
-     * C_BUTTON_BACK ]; */
 
     if ( b->flags & BUTTON_PUSHED ) {
         SDL_SetRenderDrawColor( renderer, 0xFF, 0x00, 0x00, 0xFF );
@@ -256,20 +174,6 @@ void button_draw( Button* b )
         SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
         SDL_RenderDrawRect( renderer, &rectToDraw );
     }
-
-    /*
-int c;
-
-c = color[(b->flags&BUTTON_PUSHED) ? C_BUTTON_PUSHED : C_BUTTON_BACK];
-text_mode(c);
-acquire_bitmap(bmp);
-scare_mouse();
-rect(bmp, b->x-1, b->y-1, b->x+b->w, b->y+b->h, color[C_BUTTON_BORDER]);
-rectfill(bmp, b->x, b->y, b->x+b->w-1, b->y+b->h-1, c);
-c = color[(b->flags&BUTTON_DISABLED) ? C_BUTTON_DISABLED : C_BUTTON_TEXT];
-textout_centre(bmp, font, b->text, b->x+b->w/2, b->y+(b->h-text_height
-(font))/2, c); unscare_mouse(); release_bitmap(bmp);
-     */
 }
 
 void button_draw_all( Button* buttons )
@@ -283,73 +187,70 @@ void button_draw_all( Button* buttons )
 static inline Button* find_button( Button* b, int x, int y )
 {
     while ( b->text ) {
-        // if (x >= b->x && x < b->x+b->w && y >= b->y && y < b->y+b->h) {
-        if ( x >= b->x * 2 && x < b->x * 2 + b->w * 2 && y >= b->y * 2 && y < b->y * 2 + b->h * 2 ) {
+        if ( x >= b->x * 2 && x < b->x * 2 + b->w * 2 && y >= b->y * 2 && y < b->y * 2 + b->h * 2 )
             return b;
-        }
+
         b++;
     }
+
     return NULL;
 }
 
 int button_mouse_down( Button* buttons, int mx, int my, int mb )
 {
     Button* b = find_button( buttons, mx, my );
-    if ( !b ) {
+    if ( !b )
         return 0;
-    }
-    printf( "Press %s\n", b->text );
 
     if ( !( b->flags & BUTTON_DISABLED ) ) {
         if ( ( mb == 2 && ( b->flags & BUTTON_B2TOGGLE ) ) || ( mb == 1 && ( b->flags & BUTTON_B1TOGGLE ) ) ) {
 
             if ( b->flags & BUTTON_PUSHED ) {
                 b->flags &= ~BUTTON_PUSHED;
-                // button_draw(bmp, b);
+
                 if ( b->up )
-                    b->up( true );
+                    b->up();
             } else {
                 b->flags |= BUTTON_PUSHED;
-                // button_draw(bmp, b);
+
                 if ( b->down )
                     b->down();
             }
         } else if ( mb == 1 && !( b->flags & BUTTON_PUSHED ) ) {
             b->flags |= BUTTON_PUSHED;
-            // button_draw(bmp, b);
+
             if ( b->down )
                 b->down();
         }
     }
+
     return 1;
 }
 
-int button_mouse_up( /*BITMAP *bmp,*/ Button* buttons, int mx, int my, int mb )
+int button_mouse_up( Button* buttons, int mx, int my, int mb )
 {
     Button* b = find_button( buttons, mx, my );
     int ret = ( b != NULL );
-    if ( b ) {
-        printf( "Release %s\n", b->text );
-    }
 
     if ( b && !( b->flags & BUTTON_DISABLED ) ) {
         if ( mb == 1 && ( b->flags & BUTTON_PUSHED ) && !( b->flags & BUTTON_B1TOGGLE ) ) {
             b->flags &= ~BUTTON_PUSHED;
-            // button_draw(bmp, b);
+
             if ( b->up )
-                b->up( true );
+                b->up();
         }
     }
     if ( mb == 1 ) {
         for ( b = buttons; b->text; b++ ) {
             if ( ( b->flags & ( BUTTON_B1RELEASE | BUTTON_PUSHED ) ) == ( BUTTON_B1RELEASE | BUTTON_PUSHED ) ) {
                 b->flags &= ~BUTTON_PUSHED;
-                // button_draw(bmp, b);
+
                 if ( b->up )
-                    b->up( false );
+                    b->up();
                 ret = 1;
             }
         }
     }
+
     return ret;
 }

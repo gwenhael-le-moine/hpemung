@@ -19,7 +19,6 @@ void getExePath()
     memset( programPath, 0, sizeof( programPath ) );
     memset( temp, 0, sizeof( temp ) );
 
-    // setWorkingPath(programPath);
     char result[ PATH_MAX ];
     ssize_t count = readlink( "/proc/self/exe", result, PATH_MAX );
     const char* path;
@@ -70,20 +69,17 @@ void load_file( char* name )
     if ( !buf )
         return;
 
-    // f = pack_fopen(name, "r");
     f = fopen( name, "r" );
     if ( !f ) {
         free( buf );
         return;
     }
     int res = ( int )fread( buf, sizeof( char ), fsize, f );
-    if ( res != fsize ) { // pack_fread
+    if ( res != fsize ) {
         free( buf );
-        // pack_fclose(f);
         fclose( f );
         return;
     }
-    // pack_fclose(f);
     fclose( f );
 
     if ( memcmp( buf, "HPHP48-", 7 ) ) {

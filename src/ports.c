@@ -4,6 +4,9 @@
 #include "bus.h"
 #include "ports.h"
 
+#define PORT1_SIZE ( 256 * 1024 ) /* 128Kio in nibbles */
+#define PORT2_SIZE ( 256 * 1024 ) /* 128Kio in nibbles */
+
 static byte current_bank;
 static byte* port2;
 static address port2mask;
@@ -32,8 +35,6 @@ void ports_init( void )
     current_bank = 0;
 }
 
-void ports_exit( void ) {}
-
 void ports_switch_bank( address adr )
 {
     bool need_remap = false;
@@ -42,20 +43,19 @@ void ports_switch_bank( address adr )
         current_bank = ( ( byte )adr >> 1 ) & 0x1F;
         if ( port2 ) {
             bus_info.nce3_data = port2 + ( ( current_bank << 18 ) & port2mask );
-            if ( bus_info.nce3_cfg ) {
+
+            if ( bus_info.nce3_cfg )
                 need_remap = true;
-            }
         }
     }
     if ( !bus_info.ben != !( adr & 0x40 ) ) {
         bus_info.ben = ( adr & 0x40 ) ? true : false;
-        if ( bus_info.nce3_cfg ) {
+
+        if ( bus_info.nce3_cfg )
             need_remap = true;
-        }
     }
-    if ( need_remap ) {
+    if ( need_remap )
         bus_remap();
-    }
 }
 
 byte ports_card_detect( void )
@@ -69,5 +69,6 @@ byte ports_card_detect( void )
         x |= 0x4;
     if ( !bus_info.ce2_r_o )
         x |= 0x8;
+
     return x;
 }
