@@ -1,5 +1,8 @@
-#include <SDL2/SDL.h>
 #include <stdlib.h>
+#include <sys/time.h>
+
+#include <SDL2/SDL.h>
+
 #include "types.h"
 #include "cpu.h"
 #include "bus.h"
@@ -129,6 +132,25 @@ void emulator_exit( void )
     bus_exit();
 }
 
+void throttle( bool is_needed )
+{
+    if ( !is_needed )
+        return;
+
+    struct timeval tv;
+    struct timeval tv2;
+    struct timezone tz;
+
+    /* Throttling speed */
+    gettimeofday( &tv, &tz );
+    gettimeofday( &tv2, &tz );
+    while ( ( tv.tv_sec == tv2.tv_sec ) && ( ( tv.tv_usec - tv2.tv_usec ) < 2 ) )
+        gettimeofday( &tv, &tz );
+
+    tv2.tv_usec = tv.tv_usec;
+    tv2.tv_sec = tv.tv_sec;
+}
+
 bool emulator_run( void )
 {
     CycleEvent* cep;
@@ -154,6 +176,8 @@ bool emulator_run( void )
 
             if ( !cpu.shutdown ) {
                 execute_instruction();
+
+                throttle( true );
 
                 if ( emulator_state == EMULATOR_STEP ) {
                     emulator_set_state( EMULATOR_STOP );
@@ -192,13 +216,11 @@ bool emulator_run( void )
         }
     }
 
-    //
-    // #ifdef true_TIMER2
-    //    if (emulator_state != EMULATOR_STOP) {
-    //		stop_timer_proc(timer2_update);
-    //    }
-    // #endif
-    //
+#ifdef true_TIMER2
+    if ( emulator_state != EMULATOR_STOP ) {
+        stop_timer_proc( timer2_update );
+    }
+#endif
 
     if ( first_run == true && emulator_state == EMULATOR_STOP ) {
 #ifdef true_TIMER2
