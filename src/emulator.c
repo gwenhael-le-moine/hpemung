@@ -1,7 +1,8 @@
+#include <time.h>
+#include <errno.h>
+
 #include <stdlib.h>
 #include <sys/time.h>
-
-#include <SDL2/SDL.h>           /* SDL_Delay() */
 
 #include "types.h"
 #include "cpu.h"
@@ -72,6 +73,26 @@ static inline void throttle( bool is_needed )
     tv2.tv_sec = tv.tv_sec;
 }
 
+int msleep( long msec )
+{
+    struct timespec ts;
+    int res;
+
+    if ( msec < 0 ) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    ts.tv_sec = msec / 1000;
+    ts.tv_nsec = ( msec % 1000 ) * 1000000;
+
+    do {
+        res = nanosleep( &ts, &ts );
+    } while ( res && errno == EINTR );
+
+    return res;
+}
+
 bool emulator_run( void )
 {
     CycleEvent* cep;
@@ -110,7 +131,7 @@ bool emulator_run( void )
     }
 
     if ( emulator_state == EMULATOR_STOP )
-        SDL_Delay( 10 );
+        msleep( 10 );
 
     return true;
 }
