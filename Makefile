@@ -25,6 +25,30 @@ dist/hpemu: src/bus.o \
 	src/timers.o
 	$(CC) $(CFLAGS) $(LIBS) -o $@ $+
 
+# Installing
+ROMs/sxrom-a:
+	curl "https://www.hpcalc.org/hp48/pc/emulators/sxrom-a.zip" --output - | funzip > "ROMs/sxrom-a"
+ROMs/sxrom-b:
+	curl "https://www.hpcalc.org/hp48/pc/emulators/sxrom-b.zip" --output - | funzip > "ROMs/sxrom-b"
+ROMs/sxrom-c:
+	curl "https://www.hpcalc.org/hp48/pc/emulators/sxrom-c.zip" --output - | funzip > "ROMs/sxrom-c"
+ROMs/sxrom-d:
+	curl "https://www.hpcalc.org/hp48/pc/emulators/sxrom-d.zip" --output - | funzip > "ROMs/sxrom-d"
+ROMs/sxrom-e:
+	curl "https://www.hpcalc.org/hp48/pc/emulators/sxrom-e.zip" --output - | funzip > "ROMs/sxrom-e"
+ROMs/sxrom-j:
+	curl "https://www.hpcalc.org/hp48/pc/emulators/sxrom-j.zip" --output - | funzip > "ROMs/sxrom-j"
+ROMs/gxrom-l:
+	curl "https://www.hpcalc.org/hp48/pc/emulators/gxrom-l.zip" --output - | funzip > "ROMs/gxrom-l"
+ROMs/gxrom-m:
+	curl "https://www.hpcalc.org/hp48/pc/emulators/gxrom-m.zip" --output - | funzip > "ROMs/gxrom-m"
+ROMs/gxrom-p:
+	curl "https://www.hpcalc.org/hp48/pc/emulators/gxrom-p.zip" --output - | funzip > "ROMs/gxrom-p"
+ROMs/gxrom-r:
+	curl "https://www.hpcalc.org/hp48/pc/emulators/gxrom-r.zip" --output - | funzip > "ROMs/gxrom-r"
+
+get-roms: ROMs/sxrom-a ROMs/sxrom-b ROMs/sxrom-c ROMs/sxrom-d ROMs/sxrom-e ROMs/sxrom-j ROMs/gxrom-l ROMs/gxrom-m ROMs/gxrom-p ROMs/gxrom-r
+
 # Cleaning
 clean:
 	-rm src/*.o

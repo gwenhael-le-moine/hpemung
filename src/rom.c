@@ -13,7 +13,7 @@
 void rom_init( void )
 {
     int size;
-    char* name = "hpemu.rom";
+    char* name = "rom";
     byte *buf, *ptr1, *ptr2;
     FILE* f;
 
