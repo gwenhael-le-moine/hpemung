@@ -364,7 +364,7 @@ static void op806( byte* opc ) // C=ID
     cpu.cycles += 11;
 }
 
-static void op807( byte* opc ) // SHUTND
+static void op807( byte* opc ) // SHUTDN
 {
     // TODO: Fix SHUTDN
     if ( !cpu.in[ 0 ] && !cpu.in[ 1 ] && !cpu.in[ 3 ] ) {
