@@ -82,26 +82,26 @@ static address draw_lcd_line( address adr, int y )
             if ( prev2_pixel == '\0' && prev_pixel == '\0' && pixel == '\0' )
                 pixelGS = '\0';
 
-            if ( prev2_pixel == '\3' && prev_pixel == '\3' && pixel == '\3' )
-                pixelGS = '\3';
-
-            if ( prev2_pixel == '\0' && prev_pixel == '\3' && pixel == '\3' )
-                pixelGS = '\2';
-
-            if ( prev2_pixel == '\3' && prev_pixel == '\0' && pixel == '\0' )
-                pixelGS = '\1';
-
-            if ( prev2_pixel == '\3' && prev_pixel == '\3' && pixel == '\0' )
-                pixelGS = '\2';
-
-            if ( prev2_pixel == '\3' && prev_pixel == '\0' && pixel == '\3' )
-                pixelGS = '\2';
-
             if ( prev2_pixel == '\0' && prev_pixel == '\0' && pixel == '\3' )
                 pixelGS = '\1';
 
             if ( prev2_pixel == '\0' && prev_pixel == '\3' && pixel == '\0' )
                 pixelGS = '\1';
+
+            if ( prev2_pixel == '\3' && prev_pixel == '\0' && pixel == '\0' )
+                pixelGS = '\1';
+
+            if ( prev2_pixel == '\0' && prev_pixel == '\3' && pixel == '\3' )
+                pixelGS = '\2';
+
+            if ( prev2_pixel == '\3' && prev_pixel == '\0' && pixel == '\3' )
+                pixelGS = '\2';
+
+            if ( prev2_pixel == '\3' && prev_pixel == '\3' && pixel == '\0' )
+                pixelGS = '\2';
+
+            if ( prev2_pixel == '\3' && prev_pixel == '\3' && pixel == '\3' )
+                pixelGS = '\3';
 
             lcdScreenGS[ x + y * 131 ] = pixelGS;
         }
