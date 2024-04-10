@@ -28,12 +28,12 @@ typedef struct {
 } TimerEvent;
 
 static CycleEvent cycle_events[] = {
-    {0,  16,   timer1_update },
+    {0, 16,   timer1_update },
 #ifndef true_TIMER2
-    { 0, 8192, timer2_update },
+    {0, 8192, timer2_update },
 #endif
-    { 0, 4096, display_update},
-    { 0, 0,    NULL          }
+    {0, 4096, display_update},
+    {0, 0,    NULL          }
 };
 
 volatile bool please_exit = false;
