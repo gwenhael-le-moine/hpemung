@@ -136,17 +136,17 @@ static KBMapping kb_sdl_mapping[] = {
 };
 
 static Button calc_buttons[] = {
-    {0,  pox + xstart + ( xspacing * 0 ),                  ystart + ( 0 * yspacing ) + poy,      pow1,    poh1, BUTTON_B1RELEASE | BUTTON_B2TOGGLE, "",      "",      "",       "A",
+    {0,  pox + xstart + ( xspacing * 0 ),                  ystart + ( 0 * yspacing ) + poy,      pow1,    poh1, BUTTON_B1RELEASE | BUTTON_B2TOGGLE, "█",   "",      "",       "A",
      dn14,                                                                                                                                                                                         up14},
-    {1,  pox + xstart + ( xspacing * 1 ),                  ystart + ( 0 * yspacing ) + poy,      pow1,    poh1, BUTTON_B1RELEASE | BUTTON_B2TOGGLE, "",      "",      "",       "B",
+    {1,  pox + xstart + ( xspacing * 1 ),                  ystart + ( 0 * yspacing ) + poy,      pow1,    poh1, BUTTON_B1RELEASE | BUTTON_B2TOGGLE, "█",   "",      "",       "B",
      dn84,                                                                                                                                                                                         up84},
-    {2,  pox + xstart + ( xspacing * 2 ),                  ystart + ( 0 * yspacing ) + poy,      pow1,    poh1, BUTTON_B1RELEASE | BUTTON_B2TOGGLE, "",      "",      "",       "C",
+    {2,  pox + xstart + ( xspacing * 2 ),                  ystart + ( 0 * yspacing ) + poy,      pow1,    poh1, BUTTON_B1RELEASE | BUTTON_B2TOGGLE, "█",   "",      "",       "C",
      dn83,                                                                                                                                                                                         up83},
-    {3,  pox + xstart + ( xspacing * 3 ),                  ystart + ( 0 * yspacing ) + poy,      pow1,    poh1, BUTTON_B1RELEASE | BUTTON_B2TOGGLE, "",      "",      "",       "D",
+    {3,  pox + xstart + ( xspacing * 3 ),                  ystart + ( 0 * yspacing ) + poy,      pow1,    poh1, BUTTON_B1RELEASE | BUTTON_B2TOGGLE, "█",   "",      "",       "D",
      dn82,                                                                                                                                                                                         up82},
-    {4,  pox + xstart + ( xspacing * 4 ),                  ystart + ( 0 * yspacing ) + poy,      pow1,    poh1, BUTTON_B1RELEASE | BUTTON_B2TOGGLE, "",      "",      "",       "E",
+    {4,  pox + xstart + ( xspacing * 4 ),                  ystart + ( 0 * yspacing ) + poy,      pow1,    poh1, BUTTON_B1RELEASE | BUTTON_B2TOGGLE, "█",   "",      "",       "E",
      dn81,                                                                                                                                                                                         up81},
-    {5,  pox + xstart + ( xspacing * 5 ),                  ystart + ( 0 * yspacing ) + poy,      pow1,    poh1, BUTTON_B1RELEASE | BUTTON_B2TOGGLE, "",      "",      "",       "F",
+    {5,  pox + xstart + ( xspacing * 5 ),                  ystart + ( 0 * yspacing ) + poy,      pow1,    poh1, BUTTON_B1RELEASE | BUTTON_B2TOGGLE, "█",   "",      "",       "F",
      dn80,                                                                                                                                                                                         up80},
 
     {6,  pox + xstart + ( xspacing * 0 ),                  ystart + ( 1 * yspacing ) + poy + 10, pow1,    poh2, BUTTON_B1RELEASE | BUTTON_B2TOGGLE, "MTH",
@@ -210,7 +210,7 @@ static Button calc_buttons[] = {
     {33, pox + xstart + ( xspacing2 * 4 ),                 ystart + ( 5 * yspacing ) + poy + 50, pow2,    poh2, BUTTON_B1RELEASE | BUTTON_B2TOGGLE, "/",
      "( )",                                                                                                                                                           "#",      "",       dn30,    up30},
 
-    {34, pox + xstart + ( xspacing * 0 ),                  ystart + ( 6 * yspacing ) + poy + 60, pow1,    poh2, BUTTON_B1RELEASE | BUTTON_B2TOGGLE, "",      "red",
+    {34, pox + xstart + ( xspacing * 0 ),                  ystart + ( 6 * yspacing ) + poy + 60, pow1,    poh2, BUTTON_B1RELEASE | BUTTON_B2TOGGLE, "⮢",   "red",
      "",                                                                                                                                                                        "",       dn25,    up25},
     {35, pox + xstart + ( xspacing2 * 1 ),                 ystart + ( 6 * yspacing ) + poy + 60, pow2,    poh2, BUTTON_B1RELEASE | BUTTON_B2TOGGLE, "4",     "",
      "TIME",                                                                                                                                                                    "",       dn23,    up23},
@@ -221,7 +221,7 @@ static Button calc_buttons[] = {
     {38, pox + xstart + ( xspacing2 * 4 ),                 ystart + ( 6 * yspacing ) + poy + 60, pow2,    poh2, BUTTON_B1RELEASE | BUTTON_B2TOGGLE, "X",
      "[ ]",                                                                                                                                                          "_",      "",       dn20,    up20},
 
-    {39, pox + xstart + ( xspacing * 0 ),                  ystart + ( 7 * yspacing ) + poy + 70, pow1,    poh2, BUTTON_B1RELEASE | BUTTON_B2TOGGLE, "",      "",
+    {39, pox + xstart + ( xspacing * 0 ),                  ystart + ( 7 * yspacing ) + poy + 70, pow1,    poh2, BUTTON_B1RELEASE | BUTTON_B2TOGGLE, "⮣",   "",
      "green",                                                                                                                                                                   "",       dn15,    up15},
     {40, pox + xstart + ( xspacing2 * 1 ),                 ystart + ( 7 * yspacing ) + poy + 70, pow2,    poh2, BUTTON_B1RELEASE | BUTTON_B2TOGGLE, "1",     "",
      "I/O",                                                                                                                                                                     "",       dn13,    up13},
