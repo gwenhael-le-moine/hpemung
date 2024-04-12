@@ -68,10 +68,10 @@ static void program_init( void )
         exit( EXIT_FAILURE );
     }
 
-    ttffont = TTF_OpenFont( FONT_FILENAME, 16 );
-    ttffont2 = TTF_OpenFont( FONT_FILENAME, 12 );
+    ttffont = TTF_OpenFont( FONT_FILENAME, 6 * UI_SCALE );
+    ttffont2 = TTF_OpenFont( FONT_FILENAME, 4 * UI_SCALE );
 
-    int window_width = LCD_WIDTH * LCD_SCALE + 2 * UI_PADDING;
+    int window_width = LCD_WIDTH * UI_SCALE + ( 2 * UI_PADDING );
     int window_height = ( UI_KB_OFFSET_Y + UI_KB_HEIGHT ) + 2 * UI_PADDING;
 
     window = SDL_CreateWindow( "hpemu", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, window_width, window_height, SDL_WINDOW_SHOWN );

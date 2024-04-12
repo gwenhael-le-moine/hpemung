@@ -184,7 +184,7 @@ void display_show()
 
     // Show rendered to texture
     SDL_Rect r1 = { 0, 0, LCD_WIDTH, LCD_HEIGHT };
-    SDL_Rect r2 = { LCD_X, LCD_Y, LCD_WIDTH * LCD_SCALE, LCD_HEIGHT * LCD_SCALE };
+    SDL_Rect r2 = { LCD_X * UI_SCALE, LCD_Y * UI_SCALE, LCD_WIDTH * UI_SCALE, LCD_HEIGHT * UI_SCALE };
     SDL_RenderCopyEx( renderer, texTarget, &r1, &r2, 0, NULL, SDL_FLIP_NONE );
 
     button_draw_all( calc_buttons );

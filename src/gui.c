@@ -161,12 +161,12 @@ void gui_initKeyboard( Button* calcbuttons )
 
 static inline void button_draw( Button* b )
 {
-    SDL_Rect rectToDraw = { b->x * KB_UI_SCALE, b->y * KB_UI_SCALE, b->w * KB_UI_SCALE, b->h * KB_UI_SCALE };
+    SDL_Rect rectToDraw = { b->x * UI_SCALE, b->y * UI_SCALE, b->w * UI_SCALE, b->h * UI_SCALE };
 
     SDL_SetRenderDrawColor( renderer, 0x00, 0x00, 0x00, 0x33 );
     SDL_RenderFillRect( renderer, &rectToDraw );
 
-    drawText( b->index, b->x * KB_UI_SCALE, 10 + b->y * KB_UI_SCALE, b->w * KB_UI_SCALE, b->h * KB_UI_SCALE );
+    drawText( b->index, b->x * UI_SCALE, 10 + b->y * UI_SCALE, b->w * UI_SCALE, b->h * UI_SCALE );
 
     if ( b->flags & BUTTON_PUSHED ) {
         SDL_SetRenderDrawColor( renderer, 0xFF, 0x00, 0x00, 0xFF );
@@ -189,8 +189,8 @@ void button_draw_all( Button* buttons )
 static inline Button* find_button( Button* b, int x, int y )
 {
     while ( b->label ) {
-        if ( x >= b->x * KB_UI_SCALE && x < b->x * KB_UI_SCALE + b->w * KB_UI_SCALE && y >= b->y * KB_UI_SCALE &&
-             y < b->y * KB_UI_SCALE + b->h * KB_UI_SCALE )
+        if ( x >= b->x * UI_SCALE && x < b->x * UI_SCALE + b->w * UI_SCALE && y >= b->y * UI_SCALE &&
+             y < b->y * UI_SCALE + b->h * UI_SCALE )
             return b;
 
         b++;

@@ -1,45 +1,41 @@
 #ifndef __GUI_H
 #define __GUI_H
 
-#define FONT_FILENAME "/usr/share/fonts/TTF/unifont.ttf"
-
 #include "types.h"
 
-#define UI_PADDING 16
+#define FONT_FILENAME "/usr/share/fonts/TTF/unifont.ttf"
+
+#define UI_SCALE 4
+
+#define UI_PADDING 4
+
 #define ANNUNC_X UI_PADDING
 #define ANNUNC_Y UI_PADDING
 #define ANNUNC_HEIGHT 32
 
 #define LCD_X UI_PADDING
-#define LCD_Y UI_PADDING + ANNUNC_HEIGHT
+#define LCD_Y ( UI_PADDING + ANNUNC_HEIGHT )
 #define LCD_WIDTH 131
 #define LCD_HEIGHT 64
-#define LCD_SCALE 4
 
-#define KB_UI_SCALE 2
+#define UI_K_WIDTH_1 ( LCD_WIDTH / 8 )
+#define UI_KB_GAP_X ( UI_K_WIDTH_1 / 2.66 )
+#define UI_K_HEIGHT_1 10
 
-#define UI_K_WIDTH_1 ( ( LCD_WIDTH * KB_UI_SCALE ) / 8 )
-#define UI_K_HEIGHT_1 18
+#define UI_K_WIDTH_2 ( UI_K_WIDTH_1 * 1.275 )
+#define UI_KB_GAP_X2 UI_KB_GAP_X
+#define UI_K_HEIGHT_2 12
 
-#define UI_K_WIDTH_2 ( ( ( LCD_WIDTH * KB_UI_SCALE ) - UI_KB_GAP_X ) / 6 )
-#define UI_K_HEIGHT_2 22
-
-#define UI_KB_OFFSET_X 10
-#define UI_KB_GAP_X ( UI_K_WIDTH_1 / 3 )
-#define UI_KB_GAP_X2 ( UI_K_WIDTH_2 / 4 )
-
-#define UI_KB_OFFSET_Y ( LCD_Y + ( LCD_HEIGHT * KB_UI_SCALE ) )
-#define UI_KB_GAP_Y 14
+#define UI_KB_OFFSET_Y ( LCD_Y + LCD_HEIGHT )
+#define UI_KB_GAP_Y 6
 
 #define UI_K_WIDTH_enter ( ( UI_K_WIDTH_1 * 2 ) + UI_KB_GAP_X )
 
 #define Y_LINE( i ) ( UI_KB_OFFSET_Y + ( i * ( UI_KB_GAP_Y + 10 ) ) )
-#define X_COL( i ) ( UI_KB_OFFSET_X + ( UI_K_WIDTH_1 * i ) + ( UI_KB_GAP_X * i ) )
-#define XE_COL( i ) ( UI_K_WIDTH_enter - UI_K_WIDTH_1 + X_COL( i ) )
-#define X2_COL( i ) ( UI_KB_OFFSET_X + ( UI_K_WIDTH_2 * i ) + ( UI_KB_GAP_X2 * ( i - 1 ) ) )
+#define X_COL( i ) ( UI_PADDING + ( ( UI_K_WIDTH_1 + UI_KB_GAP_X ) * i ) )
+#define X2_COL( i ) ( UI_PADDING + ( ( UI_K_WIDTH_2 + UI_KB_GAP_X2 ) * i ) )
 
-#define UI_KB_HEIGHT ( KB_UI_SCALE * ( Y_LINE( 9 ) + UI_K_HEIGHT_2 + UI_KB_GAP_Y ) )
-#define UI_KB_WIDTH ( KB_UI_SCALE * ( ( X_COL( 5 ) + UI_K_WIDTH_1 + UI_KB_OFFSET_X ) ) )
+#define UI_KB_HEIGHT ( UI_SCALE * ( Y_LINE( 9 ) + UI_K_HEIGHT_2 + UI_KB_GAP_Y ) )
 
 typedef struct {
     int index;

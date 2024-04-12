@@ -40,10 +40,10 @@ Button calc_buttons[] = {
 
     {24, X_COL( 0 ),      Y_LINE( 4 ), UI_K_WIDTH_enter, UI_K_HEIGHT_2, std_flags, "ENTER",     "EQUATION", "MATRIX",   "",       press_ENTER,
      release_ENTER                                                                                                                                                },
-    {25, XE_COL( 1 ),     Y_LINE( 4 ), UI_K_WIDTH_1,     UI_K_HEIGHT_2, std_flags, "±",        "EDIT",     "CMD",      "Y",      press_NEG,      release_NEG     },
-    {26, XE_COL( 2 ),     Y_LINE( 4 ), UI_K_WIDTH_1,     UI_K_HEIGHT_2, std_flags, "EEX",       "PURG",     "ARG",      "Z",      press_EEX,      release_EEX     },
-    {27, XE_COL( 3 ),     Y_LINE( 4 ), UI_K_WIDTH_1,     UI_K_HEIGHT_2, std_flags, "DEL",       "CLEAR",    "",         "",       press_DEL,      release_DEL     },
-    {28, XE_COL( 4 ),     Y_LINE( 4 ), UI_K_WIDTH_1,     UI_K_HEIGHT_2, std_flags, "←",       "DROP",     "",         "",       press_BKSP,     release_BKSP    },
+    {25, X_COL( 2 ),      Y_LINE( 4 ), UI_K_WIDTH_1,     UI_K_HEIGHT_2, std_flags, "±",        "EDIT",     "CMD",      "Y",      press_NEG,      release_NEG     },
+    {26, X_COL( 3 ),      Y_LINE( 4 ), UI_K_WIDTH_1,     UI_K_HEIGHT_2, std_flags, "EEX",       "PURG",     "ARG",      "Z",      press_EEX,      release_EEX     },
+    {27, X_COL( 4 ),      Y_LINE( 4 ), UI_K_WIDTH_1,     UI_K_HEIGHT_2, std_flags, "DEL",       "CLEAR",    "",         "",       press_DEL,      release_DEL     },
+    {28, X_COL( 5 ),      Y_LINE( 4 ), UI_K_WIDTH_1,     UI_K_HEIGHT_2, std_flags, "←",       "DROP",     "",         "",       press_BKSP,     release_BKSP    },
 
     {29, X_COL( 0 ),      Y_LINE( 5 ), UI_K_WIDTH_1,     UI_K_HEIGHT_2, std_flags, "α",        "USER",     "ENTRY",    "",       press_ALPHA,    release_ALPHA   },
     {30, X2_COL( 1 ),     Y_LINE( 5 ), UI_K_WIDTH_2,     UI_K_HEIGHT_2, std_flags, "7",         "",         "SOLVE",    "",       press_7,        release_7       },
@@ -69,7 +69,7 @@ Button calc_buttons[] = {
     {47, X2_COL( 3 ),     Y_LINE( 8 ), UI_K_WIDTH_2,     UI_K_HEIGHT_2, std_flags, "SPC",       "pi",       "rad",      "",       press_SPC,      release_SPC     },
     {48, X2_COL( 4 ) + 2, Y_LINE( 8 ), UI_K_WIDTH_2,     UI_K_HEIGHT_2, std_flags, "+",         "{}",       ": :",      "",       press_PLUS,     release_PLUS    },
 
-    {49, X_COL( 0 ),      Y_LINE( 9 ), 130,              UI_K_HEIGHT_2, std_flags, "load file", "",         "",         "",       press_LoadFile, release_LoadFile},
+    {49, X_COL( 0 ),      Y_LINE( 9 ), 40,               UI_K_HEIGHT_2, std_flags, "load file", "",         "",         "",       press_LoadFile, release_LoadFile},
 };
 
 void press_PLUS( void ) { kbd_key_pressed( 0, 0 ); }
