@@ -5,10 +5,8 @@
 
 #include "types.h"
 #include "bus.h"
-#include "pcalc.h"
-
-#define LCD_X 0 // 76
-#define LCD_Y 0 // 110 //150
+#include "gui_buttons.h"
+#include "display.h"
 
 address menu_base;
 address display_base;
@@ -18,11 +16,11 @@ byte display_height;
 byte display_offset;
 bool display_enable;
 
-byte lcdScreen[ 131 * 64 ];
-byte prev_lcdScreen[ 131 * 64 ];
-byte prev2_lcdScreen[ 131 * 64 ];
-// byte prev3_lcdScreen[131*64];
-byte lcdScreenGS[ 131 * 64 ];
+byte lcdScreen[ LCD_WIDTH * LCD_HEIGHT ];
+byte prev_lcdScreen[ LCD_WIDTH * LCD_HEIGHT ];
+byte prev2_lcdScreen[ LCD_WIDTH * LCD_HEIGHT ];
+// byte prev3_lcdScreen[LCD_WIDTH*LCD_HEIGHT];
+byte lcdScreenGS[ LCD_WIDTH * LCD_HEIGHT ];
 
 static address cur_adr;
 static bool in_menu;
@@ -59,7 +57,7 @@ static address draw_lcd_line( address adr, int y )
         bit = 4 - ( display_offset & 3 );
     }
 
-    while ( x < 131 ) {
+    while ( x < LCD_WIDTH ) {
         if ( bit == 0 ) {
             data = *ptr++;
             bit = 4;
@@ -69,14 +67,14 @@ static address draw_lcd_line( address adr, int y )
         if ( pixel != '\0' )
             pixel = '\3';
 
-        byte pixelGS = lcdScreenGS[ x + y * 131 ];
+        byte pixelGS = lcdScreenGS[ x + y * LCD_WIDTH ];
 
-        prev2_lcdScreen[ x + y * 131 ] = prev_lcdScreen[ x + y * 131 ];
-        prev_lcdScreen[ x + y * 131 ] = lcdScreen[ x + y * 131 ];
-        lcdScreen[ x + y * 131 ] = pixel;
+        prev2_lcdScreen[ x + y * LCD_WIDTH ] = prev_lcdScreen[ x + y * LCD_WIDTH ];
+        prev_lcdScreen[ x + y * LCD_WIDTH ] = lcdScreen[ x + y * LCD_WIDTH ];
+        lcdScreen[ x + y * LCD_WIDTH ] = pixel;
 
-        byte prev_pixel = prev_lcdScreen[ x + y * 131 ];
-        byte prev2_pixel = prev2_lcdScreen[ x + y * 131 ];
+        byte prev_pixel = prev_lcdScreen[ x + y * LCD_WIDTH ];
+        byte prev2_pixel = prev2_lcdScreen[ x + y * LCD_WIDTH ];
 
         if ( drawGS == true ) {
             if ( prev2_pixel == '\0' && prev_pixel == '\0' && pixel == '\0' )
@@ -103,7 +101,7 @@ static address draw_lcd_line( address adr, int y )
             if ( prev2_pixel == '\3' && prev_pixel == '\3' && pixel == '\3' )
                 pixelGS = '\3';
 
-            lcdScreenGS[ x + y * 131 ] = pixelGS;
+            lcdScreenGS[ x + y * LCD_WIDTH ] = pixelGS;
         }
 
         data >>= 1;
@@ -141,13 +139,13 @@ void display_show()
         SDL_PixelFormat* pixelFormat = SDL_AllocFormat( format );
 
         // do stuff
-        for ( int y = 0; y < 64; y++ ) {
-            for ( int x = 0; x < 131; x++ ) {
+        for ( int y = 0; y < LCD_HEIGHT; y++ ) {
+            for ( int x = 0; x < LCD_WIDTH; x++ ) {
                 int R = 0;
                 int G = 0;
                 int B = 0;
 
-                byte hp48pixel = lcdScreenGS[ x + y * 131 ];
+                byte hp48pixel = lcdScreenGS[ x + y * LCD_WIDTH ];
 
                 if ( hp48pixel == '\0' ) {
                     R = 119;
@@ -185,11 +183,11 @@ void display_show()
     }
 
     // Show rendered to texture
-    SDL_Rect r1 = { 0, 0, 131, 64 };
-    SDL_Rect r2 = { LCD_X, LCD_Y, 524, 256 };
+    SDL_Rect r1 = { 0, 0, LCD_WIDTH, LCD_HEIGHT };
+    SDL_Rect r2 = { LCD_X, LCD_Y, LCD_WIDTH * LCD_SCALE, LCD_HEIGHT * LCD_SCALE };
     SDL_RenderCopyEx( renderer, texTarget, &r1, &r2, 0, NULL, SDL_FLIP_NONE );
 
-    pcalc_show();
+    button_draw_all( calc_buttons );
 
     SDL_RenderPresent( renderer );
 }
@@ -220,7 +218,7 @@ void display_update( void )
 
         display_line_count++;
 
-        if ( display_line_count == 64 ) {
+        if ( display_line_count == LCD_HEIGHT ) {
             display_line_count = 0;
             in_menu = 0;
             cur_adr = display_base;

@@ -1,7 +1,11 @@
-#ifndef __PCALC_H
-#define __PCALC_H
+#ifndef __GUI_BUTTONS_H
+#define __GUI_BUTTONS_H
 
 #include <SDL2/SDL.h>
+
+#include "gui.h"
+
+extern Button calc_buttons[];
 
 extern void press_PLUS( void );
 extern void release_PLUS( void );
@@ -101,14 +105,7 @@ extern void press_B( void );
 extern void release_B( void );
 extern void press_ON( void );
 extern void release_ON( void );
-extern void press_Zelda( void );
-extern void release_Zelda( void );
-
-extern void pcalc_init();
-extern void pcalc_show();
-extern void pcalc_down( int mx, int my, int mb );
-extern void pcalc_up( int mx, int my, int mb );
-extern void pcalc_kb_down( SDL_Keycode sdl_event );
-extern void pcalc_kb_up( SDL_Keycode sdl_event );
+extern void press_LoadFile( void );
+extern void release_LoadFile( void );
 
 #endif

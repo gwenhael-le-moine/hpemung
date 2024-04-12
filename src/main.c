@@ -13,11 +13,8 @@
 #include "gui.h"
 #include "timers.h"
 #include "keyboard.h"
-#include "pcalc.h"
+#include "gui_buttons.h"
 #include "pfiles.h"
-
-const int SCREEN_WIDTH = 524;
-const int SCREEN_HEIGHT = 750;
 
 SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL;
@@ -74,7 +71,10 @@ static void program_init( void )
     ttffont = TTF_OpenFont( FONT_FILENAME, 16 );
     ttffont2 = TTF_OpenFont( FONT_FILENAME, 12 );
 
-    window = SDL_CreateWindow( "hpemu", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
+    int window_width = LCD_WIDTH * LCD_SCALE + 2 * UI_PADDING;
+    int window_height = ( UI_KB_OFFSET_Y + UI_KB_HEIGHT ) + 2 * UI_PADDING;
+
+    window = SDL_CreateWindow( "hpemu", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, window_width, window_height, SDL_WINDOW_SHOWN );
     if ( window == NULL ) {
         printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
         return;
@@ -91,7 +91,7 @@ static void program_init( void )
 
     SDL_UpdateWindowSurface( window );
 
-    pcalc_init();
+    gui_initKeyboard( calc_buttons );
 
     printf( "init done\n" );
 
@@ -118,11 +118,11 @@ bool refreshSDL()
     while ( SDL_PollEvent( &event ) ) {
         switch ( event.type ) {
             case SDL_MOUSEBUTTONUP:
-                pcalc_up( event.button.x, event.button.y, 1 );
+                button_mouse_up( calc_buttons, event.button.x, event.button.y, 1 );
                 break;
 
             case SDL_MOUSEBUTTONDOWN:
-                pcalc_down( event.button.x, event.button.y, 1 );
+                button_mouse_down( calc_buttons, event.button.x, event.button.y, 1 );
                 break;
 
             case SDL_KEYDOWN:
