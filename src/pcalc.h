@@ -3,8 +3,6 @@
 
 #include <SDL2/SDL.h>
 
-#include "types.h"
-
 typedef struct {
     SDL_Keycode SDL_event_id;
     void ( *down )( void );
