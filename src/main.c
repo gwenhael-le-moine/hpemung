@@ -71,10 +71,10 @@ static void program_init( void )
         exit( EXIT_FAILURE );
     }
 
-    ttffont = TTF_OpenFont( FONT_FILENAME, 14 );
-    ttffont2 = TTF_OpenFont( FONT_FILENAME, 10 );
+    ttffont = TTF_OpenFont( FONT_FILENAME, 16 );
+    ttffont2 = TTF_OpenFont( FONT_FILENAME, 12 );
 
-    window = SDL_CreateWindow( "jsEmu48", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
+    window = SDL_CreateWindow( "hpemu", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
     if ( window == NULL ) {
         printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
         return;
