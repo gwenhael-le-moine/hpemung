@@ -34,11 +34,11 @@ unsigned int currentTime;
 
 // display_update
 unsigned int lastTime_timer1 = 0;
-unsigned int delay_timer1 = 4096; // 4096;
+unsigned int delay_timer1 = 16384;
 
 // display show
 unsigned int lastTime_timer5 = 0;
-unsigned int delay_timer5 = 60; // 60 fps
+unsigned int delay_timer5 = 64; // fps
 
 static int fullscreen = false;
 
