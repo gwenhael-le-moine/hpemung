@@ -10,10 +10,10 @@ typedef struct {
     int x, y;
     int w, h;
     int flags;
-    char* text;
-    char* textB;
-    char* textC;
-    char* textD;
+    char* label;
+    char* label_Lshift;
+    char* label_Rshift;
+    char* label_below;
     void ( *down )( void );
     void ( *up )( void );
 } Button;

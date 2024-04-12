@@ -19,13 +19,13 @@ SDL_Surface* surfA[ 49 ];
 SDL_Texture* textA[ 49 ];
 
 SDL_Surface* surfB[ 49 ];
-SDL_Texture* textB[ 49 ];
+SDL_Texture* label_Lshift[ 49 ];
 
 SDL_Surface* surfC[ 49 ];
-SDL_Texture* textC[ 49 ];
+SDL_Texture* label_Rshift[ 49 ];
 
 SDL_Surface* surfD[ 49 ];
-SDL_Texture* textD[ 49 ];
+SDL_Texture* label_below[ 49 ];
 
 #define PANEL_FLAG_VISIBLE 0x01
 
@@ -41,7 +41,7 @@ static inline void drawText( int index, int x, int y, int btn_w, int btn_h )
     }
 
     SDL_Surface* letterSurface2 = surfB[ index ];
-    SDL_Texture* letterTexture2 = textB[ index ];
+    SDL_Texture* letterTexture2 = label_Lshift[ index ];
     if ( letterSurface2 != NULL && letterTexture2 != NULL ) {
         int texW = letterSurface2->w;
         int texH = letterSurface2->h;
@@ -52,7 +52,7 @@ static inline void drawText( int index, int x, int y, int btn_w, int btn_h )
     }
 
     SDL_Surface* letterSurface3 = surfC[ index ];
-    SDL_Texture* letterTexture3 = textC[ index ];
+    SDL_Texture* letterTexture3 = label_Rshift[ index ];
     if ( letterSurface3 != NULL && letterTexture3 != NULL ) {
         int texW = letterSurface3->w;
         int texH = letterSurface3->h;
@@ -63,7 +63,7 @@ static inline void drawText( int index, int x, int y, int btn_w, int btn_h )
     }
 
     SDL_Surface* letterSurface4 = surfD[ index ];
-    SDL_Texture* letterTexture4 = textD[ index ];
+    SDL_Texture* letterTexture4 = label_below[ index ];
     if ( letterSurface4 != NULL && letterTexture4 != NULL ) {
         int texW = letterSurface4->w;
         int texH = letterSurface4->h;
@@ -88,11 +88,11 @@ void gui_initKeyboard( Button* calcbuttons )
 
     int i = 0;
     Button* buttons = calcbuttons;
-    while ( buttons->text ) {
+    while ( buttons->label ) {
         SDL_Surface* s = NULL;
         SDL_Texture* t = NULL;
-        if ( buttons->text && strcmp( buttons->text, "" ) != 0 ) {
-            s = TTF_RenderUTF8_Blended( ttffont, buttons->text, couleurBlanche );
+        if ( buttons->label && strcmp( buttons->label, "" ) != 0 ) {
+            s = TTF_RenderUTF8_Blended( ttffont, buttons->label, couleurBlanche );
             if ( s ) {
                 t = SDL_CreateTextureFromSurface( renderer, s );
             }
@@ -107,51 +107,51 @@ void gui_initKeyboard( Button* calcbuttons )
 
     i = 0;
     buttons = calcbuttons;
-    while ( buttons->textB ) {
+    while ( buttons->label_Lshift ) {
         SDL_Surface* s = NULL;
         SDL_Texture* t = NULL;
-        if ( buttons->textB && strcmp( buttons->textB, "" ) != 0 ) {
-            s = TTF_RenderUTF8_Blended( ttffont2, buttons->textB, couleurPurple );
+        if ( buttons->label_Lshift && strcmp( buttons->label_Lshift, "" ) != 0 ) {
+            s = TTF_RenderUTF8_Blended( ttffont2, buttons->label_Lshift, couleurPurple );
             if ( s ) {
                 t = SDL_CreateTextureFromSurface( renderer, s );
             }
         }
         surfB[ i ] = s;
-        textB[ i ] = t;
+        label_Lshift[ i ] = t;
         i++;
         buttons++;
     }
 
     i = 0;
     buttons = calcbuttons;
-    while ( buttons->textC ) {
+    while ( buttons->label_Rshift ) {
         SDL_Surface* s = NULL;
         SDL_Texture* t = NULL;
-        if ( buttons->textC && strcmp( buttons->textC, "" ) != 0 ) {
-            s = TTF_RenderUTF8_Blended( ttffont2, buttons->textC, couleurGreen );
+        if ( buttons->label_Rshift && strcmp( buttons->label_Rshift, "" ) != 0 ) {
+            s = TTF_RenderUTF8_Blended( ttffont2, buttons->label_Rshift, couleurGreen );
             if ( s ) {
                 t = SDL_CreateTextureFromSurface( renderer, s );
             }
         }
         surfC[ i ] = s;
-        textC[ i ] = t;
+        label_Rshift[ i ] = t;
         i++;
         buttons++;
     }
 
     i = 0;
     buttons = calcbuttons;
-    while ( buttons->textC ) {
+    while ( buttons->label_Rshift ) {
         SDL_Surface* s = NULL;
         SDL_Texture* t = NULL;
-        if ( buttons->textD && strcmp( buttons->textD, "" ) != 0 ) {
-            s = TTF_RenderUTF8_Blended( ttffont2, buttons->textD, couleurYellow );
+        if ( buttons->label_below && strcmp( buttons->label_below, "" ) != 0 ) {
+            s = TTF_RenderUTF8_Blended( ttffont2, buttons->label_below, couleurYellow );
             if ( s ) {
                 t = SDL_CreateTextureFromSurface( renderer, s );
             }
         }
         surfD[ i ] = s;
-        textD[ i ] = t;
+        label_below[ i ] = t;
         i++;
         buttons++;
     }
@@ -178,7 +178,7 @@ static inline void button_draw( Button* b )
 
 void button_draw_all( Button* buttons )
 {
-    while ( buttons->text ) {
+    while ( buttons->label ) {
         button_draw( buttons );
         buttons++;
     }
@@ -186,7 +186,7 @@ void button_draw_all( Button* buttons )
 
 static inline Button* find_button( Button* b, int x, int y )
 {
-    while ( b->text ) {
+    while ( b->label ) {
         if ( x >= b->x * 2 && x < b->x * 2 + b->w * 2 && y >= b->y * 2 && y < b->y * 2 + b->h * 2 )
             return b;
 
@@ -241,7 +241,7 @@ int button_mouse_up( Button* buttons, int mx, int my, int mb )
         }
     }
     if ( mb == 1 ) {
-        for ( b = buttons; b->text; b++ ) {
+        for ( b = buttons; b->label; b++ ) {
             if ( ( b->flags & ( BUTTON_B1RELEASE | BUTTON_PUSHED ) ) == ( BUTTON_B1RELEASE | BUTTON_PUSHED ) ) {
                 b->flags &= ~BUTTON_PUSHED;
 

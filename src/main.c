@@ -118,136 +118,177 @@ bool refreshSDL()
     while ( SDL_PollEvent( &event ) ) {
         switch ( event.type ) {
             case SDL_MOUSEBUTTONUP:
-                {
-                    // printf("mouse up %d %d\n", event.button.x, event.button.y);
-
-                    pcalc_up( event.button.x, event.button.y, 1 );
-                }
+                pcalc_up( event.button.x, event.button.y, 1 );
                 break;
 
             case SDL_MOUSEBUTTONDOWN:
-                {
-                    // printf("mouse down %d %d\n", event.button.x, event.button.y);
-
-                    pcalc_down( event.button.x, event.button.y, 1 );
-                }
+                pcalc_down( event.button.x, event.button.y, 1 );
                 break;
 
             case SDL_KEYDOWN:
-                pcalc_kb_down( event.key.keysym.scancode );
-
                 switch ( event.key.keysym.scancode ) {
+                    case SDL_SCANCODE_KP_0:
+                        press_0();
+                        break;
+                    case SDL_SCANCODE_KP_1:
+                        press_1();
+                        break;
+                    case SDL_SCANCODE_KP_2:
+                        press_2();
+                        break;
+                    case SDL_SCANCODE_KP_3:
+                        press_3();
+                        break;
+                    case SDL_SCANCODE_KP_4:
+                        press_4();
+                        break;
+                    case SDL_SCANCODE_KP_5:
+                        press_5();
+                        break;
+                    case SDL_SCANCODE_KP_6:
+                        press_6();
+                        break;
+                    case SDL_SCANCODE_KP_7:
+                        press_7();
+                        break;
+                    case SDL_SCANCODE_KP_8:
+                        press_8();
+                        break;
+                    case SDL_SCANCODE_KP_9:
+                        press_9();
+                        break;
+                    case SDL_SCANCODE_KP_PERIOD:
+                        press_PERIOD();
+                        break;
+                    case SDL_SCANCODE_SPACE:
+                        press_SPC();
+                        break;
                     case SDL_SCANCODE_ESCAPE:
+                    case SDL_SCANCODE_F5:
                         kbd_on_pressed();
                         break;
                     case SDL_SCANCODE_RETURN:
                     case SDL_SCANCODE_KP_ENTER:
-                        kbd_key_pressed( 4, 4 );
+                    case SDL_SCANCODE_F1:
+                        press_ENTER();
                         break;
                     case SDL_SCANCODE_BACKSPACE:
-                        kbd_key_pressed( 4, 0 );
+                        press_BKSP();
                         break;
                     case SDL_SCANCODE_LEFT:
-                        kbd_key_pressed( 6, 2 );
+                        press_LEFT();
                         break;
                     case SDL_SCANCODE_RIGHT:
-                        kbd_key_pressed( 6, 0 );
+                        press_RIGHT();
                         break;
                     case SDL_SCANCODE_UP:
-                        kbd_key_pressed( 7, 1 );
+                        press_UP();
                         break;
                     case SDL_SCANCODE_DOWN:
-                        kbd_key_pressed( 6, 1 );
+                        press_DOWN();
                         break;
                     case SDL_SCANCODE_KP_PLUS:
-                        kbd_key_pressed( 0, 0 );
+                        press_PLUS();
                         break;
                     case SDL_SCANCODE_KP_MINUS:
-                        kbd_key_pressed( 1, 0 );
+                        press_MINUS();
                         break;
                     case SDL_SCANCODE_KP_MULTIPLY:
-                        kbd_key_pressed( 2, 0 );
+                        press_MULT();
                         break;
                     case SDL_SCANCODE_KP_DIVIDE:
-                        kbd_key_pressed( 3, 0 );
+                        press_DIV();
                         break;
                     case SDL_SCANCODE_A:
-                        kbd_key_pressed( 1, 4 );
+                        press_A();
                         break;
                     case SDL_SCANCODE_B:
-                        kbd_key_pressed( 8, 4 );
+                        press_B();
                         break;
                     case SDL_SCANCODE_C:
-                        kbd_key_pressed( 8, 3 );
+                        press_C();
                         break;
                     case SDL_SCANCODE_D:
-                        kbd_key_pressed( 8, 2 );
+                        press_D();
                         break;
                     case SDL_SCANCODE_E:
-                        kbd_key_pressed( 8, 1 );
+                        press_E();
                         break;
                     case SDL_SCANCODE_F:
-                        kbd_key_pressed( 8, 0 );
+                        press_F();
                         break;
                     case SDL_SCANCODE_G:
-                        kbd_key_pressed( 2, 4 );
+                        press_MTH();
                         break;
                     case SDL_SCANCODE_H:
-                        kbd_key_pressed( 7, 4 );
+                        press_PRG();
                         break;
                     case SDL_SCANCODE_I:
-                        kbd_key_pressed( 7, 3 );
+                        press_CST();
                         break;
                     case SDL_SCANCODE_J:
-                        kbd_key_pressed( 7, 2 );
+                        press_VAR();
                         break;
                     case SDL_SCANCODE_K:
-                        kbd_key_pressed( 7, 1 );
+                        press_UP();
                         break;
                     case SDL_SCANCODE_L:
-                        kbd_key_pressed( 7, 0 );
+                        press_NXT();
                         break;
                     case SDL_SCANCODE_M:
-                        kbd_key_pressed( 0, 4 );
+                        press_QUOTE();
                         break;
                     case SDL_SCANCODE_N:
-                        kbd_key_pressed( 6, 4 );
+                        press_STO();
                         break;
                     case SDL_SCANCODE_O:
-                        kbd_key_pressed( 6, 3 );
+                        press_EVAL();
                         break;
                     case SDL_SCANCODE_P:
-                        kbd_key_pressed( 6, 2 );
+                        press_LEFT();
                         break;
                     case SDL_SCANCODE_Q:
-                        kbd_key_pressed( 6, 1 );
+                        press_DOWN();
                         break;
                     case SDL_SCANCODE_R:
-                        kbd_key_pressed( 6, 0 );
+                        press_RIGHT();
                         break;
                     case SDL_SCANCODE_S:
-                        kbd_key_pressed( 3, 4 );
+                        press_SIN();
                         break;
                     case SDL_SCANCODE_T:
-                        kbd_key_pressed( 5, 4 );
+                        press_COS();
                         break;
                     case SDL_SCANCODE_U:
-                        kbd_key_pressed( 5, 3 );
+                        press_TAN();
                         break;
                     case SDL_SCANCODE_V:
-                        kbd_key_pressed( 5, 2 );
+                        press_SQRT();
                         break;
                     case SDL_SCANCODE_W:
-                        kbd_key_pressed( 5, 1 );
+                        press_POW();
                         break;
                     case SDL_SCANCODE_X:
-                        kbd_key_pressed( 5, 0 );
+                        press_INV();
                         break;
                     case SDL_SCANCODE_Y:
-                        kbd_key_pressed( 4, 3 );
+                        press_NEG();
                         break;
                     case SDL_SCANCODE_Z:
-                        kbd_key_pressed( 4, 2 );
+                        press_EEX();
+                        break;
+                    case SDL_SCANCODE_F2:
+                        press_LSHIFT();
+                        break;
+                    case SDL_SCANCODE_F3:
+                        press_RSHIFT();
+                        break;
+                    case SDL_SCANCODE_F4:
+                        press_ALPHA();
+                        break;
+                    case SDL_SCANCODE_F7:
+                        program_exit();
+                        exit( 0 );
                         break;
                     default:
                         break;
@@ -255,120 +296,165 @@ bool refreshSDL()
                 break;
 
             case SDL_KEYUP:
-                pcalc_kb_up( event.key.keysym.scancode );
-
                 switch ( event.key.keysym.scancode ) {
+                    case SDL_SCANCODE_KP_0:
+                        release_0();
+                        break;
+                    case SDL_SCANCODE_KP_1:
+                        release_1();
+                        break;
+                    case SDL_SCANCODE_KP_2:
+                        release_2();
+                        break;
+                    case SDL_SCANCODE_KP_3:
+                        release_3();
+                        break;
+                    case SDL_SCANCODE_KP_4:
+                        release_4();
+                        break;
+                    case SDL_SCANCODE_KP_5:
+                        release_5();
+                        break;
+                    case SDL_SCANCODE_KP_6:
+                        release_6();
+                        break;
+                    case SDL_SCANCODE_KP_7:
+                        release_7();
+                        break;
+                    case SDL_SCANCODE_KP_8:
+                        release_8();
+                        break;
+                    case SDL_SCANCODE_KP_9:
+                        release_9();
+                        break;
+                    case SDL_SCANCODE_KP_PERIOD:
+                        release_PERIOD();
+                        break;
+                    case SDL_SCANCODE_SPACE:
+                        release_SPC();
+                        break;
                     case SDL_SCANCODE_ESCAPE:
+                    case SDL_SCANCODE_F5:
                         kbd_on_released();
                         break;
                     case SDL_SCANCODE_RETURN:
                     case SDL_SCANCODE_KP_ENTER:
-                        kbd_key_released( 4, 4 );
+                    case SDL_SCANCODE_F1:
+                        release_ENTER();
                         break;
                     case SDL_SCANCODE_BACKSPACE:
-                        kbd_key_released( 4, 0 );
+                        release_BKSP();
                         break;
                     case SDL_SCANCODE_LEFT:
-                        kbd_key_released( 6, 2 );
+                        release_LEFT();
                         break;
                     case SDL_SCANCODE_RIGHT:
-                        kbd_key_released( 6, 0 );
+                        release_RIGHT();
                         break;
                     case SDL_SCANCODE_UP:
-                        kbd_key_released( 7, 1 );
+                        release_UP();
                         break;
                     case SDL_SCANCODE_DOWN:
-                        kbd_key_released( 6, 1 );
+                        release_DOWN();
                         break;
                     case SDL_SCANCODE_KP_PLUS:
-                        kbd_key_released( 0, 0 );
+                        release_PLUS();
                         break;
                     case SDL_SCANCODE_KP_MINUS:
-                        kbd_key_released( 1, 0 );
+                        release_MINUS();
                         break;
                     case SDL_SCANCODE_KP_MULTIPLY:
-                        kbd_key_released( 2, 0 );
+                        release_MULT();
                         break;
                     case SDL_SCANCODE_KP_DIVIDE:
-                        kbd_key_released( 3, 0 );
+                        release_DIV();
                         break;
                     case SDL_SCANCODE_A:
-                        kbd_key_released( 1, 4 );
+                        release_A();
                         break;
                     case SDL_SCANCODE_B:
-                        kbd_key_released( 8, 4 );
+                        release_B();
                         break;
                     case SDL_SCANCODE_C:
-                        kbd_key_released( 8, 3 );
+                        release_C();
                         break;
                     case SDL_SCANCODE_D:
-                        kbd_key_released( 8, 2 );
+                        release_D();
                         break;
                     case SDL_SCANCODE_E:
-                        kbd_key_released( 8, 1 );
+                        release_E();
                         break;
                     case SDL_SCANCODE_F:
-                        kbd_key_released( 8, 0 );
+                        release_F();
                         break;
                     case SDL_SCANCODE_G:
-                        kbd_key_released( 2, 4 );
+                        release_MTH();
                         break;
                     case SDL_SCANCODE_H:
-                        kbd_key_released( 7, 4 );
+                        release_PRG();
                         break;
                     case SDL_SCANCODE_I:
-                        kbd_key_released( 7, 3 );
+                        release_CST();
                         break;
                     case SDL_SCANCODE_J:
-                        kbd_key_released( 7, 2 );
+                        release_VAR();
                         break;
                     case SDL_SCANCODE_K:
-                        kbd_key_released( 7, 1 );
+                        release_UP();
                         break;
                     case SDL_SCANCODE_L:
-                        kbd_key_released( 7, 0 );
+                        release_NXT();
                         break;
                     case SDL_SCANCODE_M:
-                        kbd_key_released( 0, 4 );
+                        release_QUOTE();
                         break;
                     case SDL_SCANCODE_N:
-                        kbd_key_released( 6, 4 );
+                        release_STO();
                         break;
                     case SDL_SCANCODE_O:
-                        kbd_key_released( 6, 3 );
+                        release_EVAL();
                         break;
                     case SDL_SCANCODE_P:
-                        kbd_key_released( 6, 2 );
+                        release_LEFT();
                         break;
                     case SDL_SCANCODE_Q:
-                        kbd_key_released( 6, 1 );
+                        release_DOWN();
                         break;
                     case SDL_SCANCODE_R:
-                        kbd_key_released( 6, 0 );
+                        release_RIGHT();
                         break;
                     case SDL_SCANCODE_S:
-                        kbd_key_released( 3, 4 );
+                        release_SIN();
                         break;
                     case SDL_SCANCODE_T:
-                        kbd_key_released( 5, 4 );
+                        release_COS();
                         break;
                     case SDL_SCANCODE_U:
-                        kbd_key_released( 5, 3 );
+                        release_TAN();
                         break;
                     case SDL_SCANCODE_V:
-                        kbd_key_released( 5, 2 );
+                        release_SQRT();
                         break;
                     case SDL_SCANCODE_W:
-                        kbd_key_released( 5, 1 );
+                        release_POW();
                         break;
                     case SDL_SCANCODE_X:
-                        kbd_key_released( 5, 0 );
+                        release_INV();
                         break;
                     case SDL_SCANCODE_Y:
-                        kbd_key_released( 4, 3 );
+                        release_NEG();
                         break;
                     case SDL_SCANCODE_Z:
-                        kbd_key_released( 4, 2 );
+                        release_EEX();
+                        break;
+                    case SDL_SCANCODE_F2:
+                        release_LSHIFT();
+                        break;
+                    case SDL_SCANCODE_F3:
+                        release_RSHIFT();
+                        break;
+                    case SDL_SCANCODE_F4:
+                        release_ALPHA();
                         break;
                     default:
                         break;
@@ -420,7 +506,7 @@ int main( int argc, char* argv[] )
     program_init();
     emulator_init();
 
-    while ( please_exit == false )
+    while ( !please_exit )
         mainloop();
 
     emulator_exit();
