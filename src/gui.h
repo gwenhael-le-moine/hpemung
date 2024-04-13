@@ -49,6 +49,8 @@ typedef struct {
     void ( *up )( void );
 } Button;
 
+extern bool SDL_ready;
+
 /* Button flags:
  * Use BUTTON_B1RELEASE for normal buttons.
  * Use BUTTON_B1RELEASE | BUTTON_B2TOGGLE for calculator buttons.
@@ -65,10 +67,13 @@ typedef struct {
 // Releaseing mouse button 1 anywhere unpushes the button
 #define BUTTON_B1RELEASE 0x10
 
-extern void gui_initKeyboard( Button* calcbuttons );
+extern void SDL__gui_initKeyboard( Button* calcbuttons );
 
 extern void button_draw_all( /*BITMAP *bmp,*/ Button* buttons );
 extern int button_mouse_down( /*BITMAP *bmp,*/ Button* butons, int mx, int my, int mb );
 extern int button_mouse_up( /*BITMAP *bmp,*/ Button* buttons, int mx, int my, int mb );
 
+extern bool gui_refresh();
+extern void gui_init( void );
+extern void gui_exit( void );
 #endif

@@ -14,6 +14,6 @@ extern byte display_offset;
 extern bool display_enable;
 
 extern void display_update( void );
-extern void display_show( void );
+extern void SDL__display_show( void );
 
 #endif

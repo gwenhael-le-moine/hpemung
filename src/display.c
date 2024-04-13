@@ -19,15 +19,12 @@ bool display_enable;
 byte lcdScreen[ LCD_WIDTH * LCD_HEIGHT ];
 byte prev_lcdScreen[ LCD_WIDTH * LCD_HEIGHT ];
 byte prev2_lcdScreen[ LCD_WIDTH * LCD_HEIGHT ];
-// byte prev3_lcdScreen[LCD_WIDTH*LCD_HEIGHT];
 byte lcdScreenGS[ LCD_WIDTH * LCD_HEIGHT ];
 
 static address cur_adr;
 static bool in_menu;
-static byte off_cur_line;
 static byte off_line;
 static int off_cnt;
-/* static bool shouldClear = true; */
 static bool shouldRender = false;
 static int screen_draw_count = 0;
 static bool drawGS = false;
@@ -40,12 +37,9 @@ extern SDL_Texture* faceplateTexture;
 
 static address draw_lcd_line( address adr, int y )
 {
-    int x = 0;
     int bit = 0;
     byte data = 0; // Initialized to remove warning
-    byte* ptr;
-
-    ptr = bus_fast_peek( NULL, adr, NULL );
+    byte* ptr = bus_fast_peek( NULL, adr, NULL );
 
     // Horisontal pixel offset
     if ( !in_menu ) {
@@ -57,7 +51,7 @@ static address draw_lcd_line( address adr, int y )
         bit = 4 - ( display_offset & 3 );
     }
 
-    while ( x < LCD_WIDTH ) {
+    for ( int x = 0; x < LCD_WIDTH; ++x ) {
         if ( bit == 0 ) {
             data = *ptr++;
             bit = 4;
@@ -106,13 +100,56 @@ static address draw_lcd_line( address adr, int y )
 
         data >>= 1;
         bit--;
-        x++;
     }
 
     return ( adr + 0x22 + ( !in_menu && ( display_offset & 4 ) ? 2 : 0 ) ) & 0xFFFFF;
 }
 
-void display_show()
+void display_update( void )
+{
+    if ( !display_enable && !off_cnt ) { /* Turn off display */
+        off_cnt = 1;
+        off_line = display_line_count;
+        display_line_count = 0;
+    } else if ( display_enable && off_cnt ) { /* Turn on display */
+        off_cnt = 0;
+        display_line_count = 0;
+        in_menu = 0;
+        cur_adr = display_base;
+    }
+
+    if ( !off_cnt ) { /* Display is on */
+        cur_adr = draw_lcd_line( cur_adr, display_line_count );
+
+        if ( !in_menu )
+            cur_adr += display_line_offset;
+
+        if ( display_line_count == display_height ) {
+            in_menu = 1;
+            cur_adr = menu_base;
+        }
+
+        display_line_count++;
+
+        if ( display_line_count == LCD_HEIGHT ) {
+            display_line_count = 0;
+            in_menu = 0;
+            cur_adr = display_base;
+
+            shouldRender = true;
+
+            screen_draw_count++;
+            if ( screen_draw_count == 3 )
+                screen_draw_count = 0;
+        }
+
+        drawGS = screen_draw_count == 0;
+
+    } else if ( off_cnt <= 7 ) /* Display is off and still fading */
+        off_cnt = 8;
+}
+
+void SDL__display_show()
 {
     SDL_SetRenderDrawColor( renderer, 48, 68, 90, 0xFF ); // bleu foncé
     SDL_RenderClear( renderer );
@@ -168,7 +205,6 @@ void display_show()
                 // Now you want to format the color to a correct format that SDL
                 // can use. Basically we convert our RGB color to a hex-like BGR
                 // color.
-
                 Uint32 color = SDL_MapRGB( pixelFormat, R, G, B );
 
                 // Before setting the color, we need to know where we have to
@@ -190,48 +226,4 @@ void display_show()
     button_draw_all( calc_buttons );
 
     SDL_RenderPresent( renderer );
-}
-
-void display_update( void )
-{
-    if ( !display_enable && !off_cnt ) { /* Turn off display */
-        off_cnt = 1;
-        off_cur_line = off_line = display_line_count;
-        display_line_count = 0;
-    } else if ( display_enable && off_cnt ) { /* Turn on display */
-        off_cnt = 0;
-        display_line_count = 0;
-        in_menu = 0;
-        cur_adr = display_base;
-    }
-
-    if ( !off_cnt ) { /* Display is on */
-        cur_adr = draw_lcd_line( cur_adr, display_line_count );
-
-        if ( !in_menu )
-            cur_adr += display_line_offset;
-
-        if ( display_line_count == display_height ) {
-            in_menu = 1;
-            cur_adr = menu_base;
-        }
-
-        display_line_count++;
-
-        if ( display_line_count == LCD_HEIGHT ) {
-            display_line_count = 0;
-            in_menu = 0;
-            cur_adr = display_base;
-
-            shouldRender = true;
-
-            screen_draw_count++;
-            if ( screen_draw_count == 3 )
-                screen_draw_count = 0;
-        }
-
-        drawGS = screen_draw_count == 0;
-
-    } else if ( off_cnt <= 7 ) /* Display is off and still fading */
-        off_cnt = 8;
 }
