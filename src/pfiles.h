@@ -6,6 +6,6 @@
 extern char WorkingPath[ 512 ];
 
 extern int file_size( char* name );
-extern void load_file( char* name );
+extern void load_file_on_stack( char* name );
 
 #endif

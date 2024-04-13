@@ -172,4 +172,4 @@ void press_ON( void ) { kbd_on_pressed(); }
 void release_ON( void ) { kbd_on_released(); }
 
 void press_LoadFile( void ) {}
-void release_LoadFile( void ) { load_file( "zeldahp.dir" ); }
+void release_LoadFile( void ) { load_file_on_stack( "zeldahp.dir" ); }

@@ -41,9 +41,9 @@ int file_size( char* name )
     sprintf( fullpath, "%s/%s", WorkingPath, name );
     printf( "%s\n", fullpath );
     f = fopen( fullpath, "r" );
-    if ( !f ) {
+    if ( !f )
         return 0;
-    }
+
     fseek( f, 0, SEEK_END );      // seek to end of file
     int size = ( int )ftell( f ); // get current file pointer
     fseek( f, 0, SEEK_SET );      // seek back to beginning of file
@@ -52,7 +52,7 @@ int file_size( char* name )
     return size;
 }
 
-void load_file( char* name )
+void load_file_on_stack( char* name )
 {
     FILE* f;
     byte* buf;
