@@ -48,9 +48,9 @@ void emulator_init( void )
 {
     static bool locked = false;
 
-    rom_init();
-    ram_init();
-    ports_init();
+    rom_init( "./rom" );
+    ram_init( "./ram" );
+    ports_init( "./port1", "./port2" );
     bus_init();
 
     if ( !locked )
@@ -60,7 +60,8 @@ void emulator_init( void )
 void emulator_exit( void )
 {
     rom_exit();
-    ram_exit();
+    ram_exit( "./ram" );
+    ports_exit( "./port1", "./port2" );
     bus_exit();
 }
 
