@@ -18,22 +18,21 @@
 #define LCD_WIDTH 131
 #define LCD_HEIGHT 64
 
-#define UI_K_WIDTH_1 ( LCD_WIDTH / 7.75 )
-#define UI_KB_GAP_X ( UI_K_WIDTH_1 / 2.66 )
+#define UI_K_WIDTH_1 19
 #define UI_K_HEIGHT_1 10
-
-#define UI_K_WIDTH_2 ( UI_K_WIDTH_1 * 1.275 )
-#define UI_KB_GAP_X2 UI_KB_GAP_X
+#define UI_K_WIDTH_2 23
 #define UI_K_HEIGHT_2 12
+#define UI_KB_GAP_X 3
 
+#define UI_KB_OFFSET_X 1
 #define UI_KB_OFFSET_Y ( UI_PADDING + ANNUNC_HEIGHT + LCD_HEIGHT + UI_PADDING + UI_K_HEIGHT_2 )
-#define UI_KB_GAP_Y 6
+#define UI_KB_GAP_Y 10
 
 #define UI_K_WIDTH_enter ( ( UI_K_WIDTH_1 * 2 ) + UI_KB_GAP_X )
 
 #define Y_LINE( i ) ( UI_KB_OFFSET_Y + ( i * ( UI_KB_GAP_Y + 10 ) ) )
-#define X_COL( i ) ( UI_PADDING + ( ( UI_K_WIDTH_1 + UI_KB_GAP_X ) * i ) )
-#define X2_COL( i ) ( UI_PADDING + ( ( UI_K_WIDTH_2 + UI_KB_GAP_X2 ) * i ) )
+#define X_COL( i ) ( UI_PADDING + UI_KB_OFFSET_X + ( ( UI_K_WIDTH_1 + UI_KB_GAP_X ) * i ) )
+#define X2_COL( i ) ( UI_PADDING + UI_KB_OFFSET_X + ( ( UI_K_WIDTH_2 + UI_KB_GAP_X ) * i ) )
 
 #define UI_KB_HEIGHT ( UI_SCALE * ( Y_LINE( 9 ) + UI_K_HEIGHT_2 + UI_KB_GAP_Y ) )
 
