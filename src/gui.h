@@ -15,8 +15,6 @@
 
 #define LCD_X UI_PADDING
 #define LCD_Y ( UI_PADDING + ANNUNC_HEIGHT )
-#define LCD_WIDTH 131
-#define LCD_HEIGHT 64
 
 #define UI_K_WIDTH_1 19
 #define UI_K_HEIGHT_1 10

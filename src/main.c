@@ -6,6 +6,7 @@
 #include "emulator.h"
 #include "gui.h"
 #include "display.h"
+#include "gui_display.h"
 
 unsigned int currentTime;
 

@@ -10,6 +10,9 @@
 #include "files.h"
 #include "gui.h"
 #include "emulator.h"
+#include "display.h"
+
+#define PANEL_FLAG_VISIBLE 0x01
 
 extern SDL_Renderer* renderer;
 extern SDL_Texture* faceplateTexture;
@@ -27,8 +30,6 @@ SDL_Texture* label_Rshift[ 49 ];
 
 SDL_Surface* surfD[ 49 ];
 SDL_Texture* label_below[ 49 ];
-
-#define PANEL_FLAG_VISIBLE 0x01
 
 static inline void drawText( int index, int x, int y, int btn_w, int btn_h )
 {
