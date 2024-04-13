@@ -35,6 +35,8 @@ void ports_init( void )
     current_bank = 0;
 }
 
+void ports_exit( void ) {}
+
 void ports_switch_bank( address adr )
 {
     bool need_remap = false;
