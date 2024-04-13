@@ -447,8 +447,7 @@ bool gui_refresh()
                         press_ALPHA();
                         break;
                     case SDL_SCANCODE_F7:
-                        gui_exit();
-                        exit( 0 );
+                        please_exit = true;
                         break;
                     default:
                         break;
