@@ -11,6 +11,9 @@
 #include "display.h"
 #include "gui.h"
 #include "emulator.h"
+#include "rom.h"
+#include "ram.h"
+#include "ports.h"
 
 #define MAX_DELTA 4000
 
@@ -46,13 +49,21 @@ void emulator_init( void )
 {
     static bool locked = false;
 
+    rom_init();
+    ram_init();
+    ports_init();
     bus_init();
 
     if ( !locked )
         locked = true;
 }
 
-void emulator_exit( void ) { bus_exit(); }
+void emulator_exit( void )
+{
+    rom_exit();
+    ram_exit();
+    bus_exit();
+}
 
 static inline void throttle( bool is_needed )
 {

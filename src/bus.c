@@ -1,11 +1,9 @@
 #include <string.h>
 
 #include "types.h"
-#include "rom.h"
-#include "ram.h"
-#include "ports.h"
 #include "hdw.h"
 #include "bus.h"
+#include "ports.h"
 
 #define SEG_OF( adr ) ( ( adr ) >> 12 )
 #define OFFSET_OF( adr ) ( ( adr ) & 0xFFF )
@@ -32,19 +30,9 @@ static address hdw_seg;
 
 word crc;
 
-void bus_init( void )
-{
-    rom_init();
-    ram_init();
-    ports_init();
-    bus_reset();
-}
+void bus_init( void ) { bus_reset(); }
 
-void bus_exit( void )
-{
-    rom_exit();
-    ram_exit();
-}
+void bus_exit( void ) {}
 
 static inline void update_crc( byte nibble ) { crc = ( crc >> 4 ) ^ ( ( ( crc ^ nibble ) & 0xF ) * 0x1081 ); }
 
