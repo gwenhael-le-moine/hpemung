@@ -3,16 +3,9 @@
 
 #include <SDL2/SDL.h>
 
-#include "types.h"
 #include "emulator.h"
 #include "gui.h"
-#include "color.h"
 #include "display.h"
-#include "gui.h"
-#include "timers.h"
-#include "keyboard.h"
-#include "gui_buttons.h"
-#include "pfiles.h"
 
 unsigned int currentTime;
 

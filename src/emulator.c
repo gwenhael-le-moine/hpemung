@@ -11,8 +11,7 @@
 #include "display.h"
 #include "gui.h"
 #include "emulator.h"
-#include "rom.h"
-#include "ram.h"
+#include "files.h"
 #include "ports.h"
 
 #define MAX_DELTA 4000

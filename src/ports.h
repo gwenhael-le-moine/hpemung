@@ -3,8 +3,13 @@
 
 #include "types.h"
 
-extern void ports_init( void );
-extern void ports_exit( void );
+#define PORT1_SIZE ( 256 * 1024 ) /* 128Kio in nibbles */
+#define PORT2_SIZE ( 256 * 1024 ) /* 128Kio in nibbles */
+
+extern byte current_bank;
+extern byte* port2;
+extern address port2mask;
+
 extern void ports_switch_bank( address adr );
 extern byte ports_card_detect( void );
 

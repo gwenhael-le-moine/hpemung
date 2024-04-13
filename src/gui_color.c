@@ -1,6 +1,6 @@
 #include <stdlib.h>
 
-#include "color.h"
+#include "gui_color.h"
 
 #define RESERVED_LCD 128
 

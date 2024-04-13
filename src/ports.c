@@ -4,38 +4,9 @@
 #include "bus.h"
 #include "ports.h"
 
-#define PORT1_SIZE ( 256 * 1024 ) /* 128Kio in nibbles */
-#define PORT2_SIZE ( 256 * 1024 ) /* 128Kio in nibbles */
-
-static byte current_bank;
-static byte* port2;
-static address port2mask;
-
-void ports_init( void )
-{
-    // ce1 = bank switcher
-    bus_info.ce1_data = NULL;
-    bus_info.ce1_mask = 0x0007F;
-    bus_info.ce1_r_o = true;
-    bus_info.ce1_bs = true;
-
-    // ce2 = port1 (plugged)
-    bus_info.ce2_data = malloc( PORT1_SIZE );
-    bus_info.ce2_mask = PORT1_SIZE - 1;
-    bus_info.ce2_r_o = false;
-
-    // nce3 = port2 (plugged)
-    port2 = malloc( PORT2_SIZE );
-    port2mask = PORT2_SIZE - 1;
-    bus_info.nce3_data = port2;
-    bus_info.nce3_mask = port2mask & 0x3FFFF;
-    bus_info.nce3_r_o = false;
-
-    bus_info.ben = false;
-    current_bank = 0;
-}
-
-void ports_exit( void ) {}
+byte current_bank;
+byte* port2;
+address port2mask;
 
 void ports_switch_bank( address adr )
 {

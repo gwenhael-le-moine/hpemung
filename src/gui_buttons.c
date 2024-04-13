@@ -1,11 +1,11 @@
 #include <stdlib.h>
 
-#include "color.h"
+#include "gui_color.h"
 #include "display.h"
 #include "keyboard.h"
 #include "gui.h"
 #include "gui_buttons.h"
-#include "pfiles.h"
+#include "files.h"
 
 const int std_flags = BUTTON_B1RELEASE | BUTTON_B2TOGGLE;
 

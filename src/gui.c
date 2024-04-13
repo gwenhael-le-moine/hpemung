@@ -5,9 +5,9 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 
-#include "color.h"
+#include "gui_color.h"
 #include "gui_buttons.h"
-#include "pfiles.h"
+#include "files.h"
 #include "gui.h"
 #include "emulator.h"
 
