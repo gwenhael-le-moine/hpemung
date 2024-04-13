@@ -11,14 +11,14 @@
 
 #define ANNUNC_X UI_PADDING
 #define ANNUNC_Y UI_PADDING
-#define ANNUNC_HEIGHT 32
+#define ANNUNC_HEIGHT 8
 
 #define LCD_X UI_PADDING
 #define LCD_Y ( UI_PADDING + ANNUNC_HEIGHT )
 #define LCD_WIDTH 131
 #define LCD_HEIGHT 64
 
-#define UI_K_WIDTH_1 ( LCD_WIDTH / 8 )
+#define UI_K_WIDTH_1 ( LCD_WIDTH / 7.75 )
 #define UI_KB_GAP_X ( UI_K_WIDTH_1 / 2.66 )
 #define UI_K_HEIGHT_1 10
 
@@ -26,7 +26,7 @@
 #define UI_KB_GAP_X2 UI_KB_GAP_X
 #define UI_K_HEIGHT_2 12
 
-#define UI_KB_OFFSET_Y ( LCD_Y + LCD_HEIGHT )
+#define UI_KB_OFFSET_Y ( UI_PADDING + ANNUNC_HEIGHT + LCD_HEIGHT + UI_PADDING + UI_K_HEIGHT_2 )
 #define UI_KB_GAP_Y 6
 
 #define UI_K_WIDTH_enter ( ( UI_K_WIDTH_1 * 2 ) + UI_KB_GAP_X )
