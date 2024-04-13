@@ -1,2 +1,4 @@
 /src/*.o
 /dist/hpemu
+/dist/port*
+/dist/ram
