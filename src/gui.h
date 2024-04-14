@@ -90,7 +90,9 @@ extern bool SDL_ready;
 
 extern void button_draw_all( /*BITMAP *bmp,*/ Button* buttons );
 
-extern bool gui_refresh();
+extern void SDL__display_show( void );
+
+extern bool gui_events();
 extern void gui_init( void );
 extern void gui_exit( void );
 #endif

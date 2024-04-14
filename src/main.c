@@ -7,7 +7,6 @@
 #include "emulator.h"
 #include "gui.h"
 #include "display.h"
-#include "gui_display.h"
 
 unsigned int currentTime;
 
@@ -38,7 +37,7 @@ static inline void mainloop()
         SDL__display_show();
     }
 
-    if ( !gui_refresh() )
+    if ( !gui_events() )
         return;
 }
 
