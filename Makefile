@@ -15,7 +15,6 @@ dist/hpemu: src/bus.o \
 	src/keyboard.o \
 	src/main.o \
 	src/opcodes.o \
-	src/gui_buttons.o \
 	src/files.o \
 	src/ports.o \
 	src/rpl.o \
