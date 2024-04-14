@@ -7,7 +7,6 @@ CFLAGS = -Wall -Werror -O3 -Wno-error=unused-function -Wno-error=unused-variable
 all: dist/hpemu
 
 dist/hpemu: src/bus.o \
-	src/gui_color.o \
 	src/cpu.o \
 	src/display.o \
 	src/emulator.o \

@@ -7,21 +7,10 @@
 #include "gui.h"
 #include "gui_buttons.h"
 
-extern SDL_Renderer* renderer;
-extern SDL_Window* window;
-extern SDL_Texture* texTarget;
-extern SDL_Texture* tex2Target;
-extern SDL_Texture* faceplateTexture;
-
 void SDL__display_show()
 {
-    SDL_SetRenderDrawColor( renderer, 48, 68, 90, 0xFF ); // bleu foncé
+    SDL_SetRenderDrawColor( renderer, colors.faceplate.r, colors.faceplate.g, colors.faceplate.b, colors.faceplate.a );
     SDL_RenderClear( renderer );
-
-    if ( faceplateTexture ) {
-        SDL_Rect r3 = { 8, 0, 504, 1124 };
-        SDL_RenderCopy( renderer, faceplateTexture, NULL, &r3 );
-    }
 
     if ( shouldRender == true ) {
         shouldRender = false;
@@ -49,21 +38,21 @@ void SDL__display_show()
                 byte hp48pixel = lcdScreenGS[ x + y * LCD_WIDTH ];
 
                 if ( hp48pixel == '\0' ) {
-                    R = 119;
-                    G = 153;
-                    B = 136;
+                    R = colors.lcd_pixoff.r;
+                    G = colors.lcd_pixoff.g;
+                    B = colors.lcd_pixoff.b;
                 } else if ( hp48pixel == '\1' ) {
-                    R = 71;  // 200;
-                    G = 134; // 20;
-                    B = 145; // 20;
+                    R = colors.lcd_pixgray1.r;
+                    G = colors.lcd_pixgray1.g;
+                    B = colors.lcd_pixgray1.b;
                 } else if ( hp48pixel == '\2' ) {
-                    R = 13;  // 20;
-                    G = 108; // 200;
-                    B = 111; // 20;
+                    R = colors.lcd_pixgray2.r;
+                    G = colors.lcd_pixgray2.g;
+                    B = colors.lcd_pixgray2.b;
                 } else if ( hp48pixel == '\3' ) {
-                    R = 37;
-                    G = 61;
-                    B = 84;
+                    R = colors.lcd_pixon.r;
+                    G = colors.lcd_pixon.g;
+                    B = colors.lcd_pixon.b;
                 }
 
                 // Now you want to format the color to a correct format that SDL

@@ -5,6 +5,7 @@
 
 typedef struct {
     char* progname;
+    char* ui_font;
     bool real_speed;
     bool verbose;
 } Config;
