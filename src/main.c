@@ -18,29 +18,6 @@ unsigned int delay_timer1 = 16384;
 unsigned int lastTime_timer5 = 0;
 unsigned int delay_timer5 = 64; // fps
 
-static inline void mainloop()
-{
-    if ( please_exit || !SDL_ready )
-        return;
-
-    currentTime = SDL_GetTicks();
-
-    emulator_run();
-
-    if ( currentTime > lastTime_timer1 + delay_timer1 ) {
-        lastTime_timer1 = currentTime;
-        display_update();
-    }
-
-    if ( currentTime > lastTime_timer5 + delay_timer5 ) {
-        lastTime_timer5 = currentTime;
-        SDL__display_show();
-    }
-
-    if ( !gui_events() )
-        return;
-}
-
 int main( int argc, char* argv[] )
 {
     parse_args( argc, argv );
@@ -48,8 +25,27 @@ int main( int argc, char* argv[] )
     gui_init();
     emulator_init( "rom", "ram", "port1", "port2" );
 
-    while ( !please_exit )
-        mainloop();
+    while ( !please_exit ) {
+        if ( please_exit || !SDL_ready )
+            break;
+
+        currentTime = SDL_GetTicks();
+
+        emulator_run();
+
+        if ( currentTime > lastTime_timer1 + delay_timer1 ) {
+            lastTime_timer1 = currentTime;
+            display_update();
+        }
+
+        if ( currentTime > lastTime_timer5 + delay_timer5 ) {
+            lastTime_timer5 = currentTime;
+            SDL__display_show();
+        }
+
+        if ( !gui_events() )
+            break;
+    }
 
     emulator_exit( "rom", "ram", "port1", "port2" );
     gui_exit();
