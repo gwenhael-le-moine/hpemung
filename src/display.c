@@ -2,7 +2,6 @@
 
 #include "types.h"
 #include "bus.h"
-#include "gui_buttons.h"
 #include "display.h"
 
 address menu_base;
