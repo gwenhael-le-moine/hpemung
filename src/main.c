@@ -3,6 +3,7 @@
 
 #include <SDL2/SDL.h>
 
+#include "config.h"
 #include "emulator.h"
 #include "gui.h"
 #include "display.h"
@@ -17,25 +18,6 @@ unsigned int delay_timer1 = 16384;
 // display show
 unsigned int lastTime_timer5 = 0;
 unsigned int delay_timer5 = 64; // fps
-
-static int fullscreen = false;
-
-static void parse_args( int argc, char* argv[] )
-{
-    while ( --argc ) {
-        argv++;
-        if ( argv[ 0 ][ 0 ] == '-' ) {
-            switch ( argv[ 0 ][ 1 ] ) {
-                case 'f':
-                    fullscreen = true;
-                    break;
-                case 'w':
-                    fullscreen = false;
-                    break;
-            }
-        }
-    }
-}
 
 static inline void mainloop()
 {
@@ -65,12 +47,12 @@ int main( int argc, char* argv[] )
     parse_args( argc, argv );
 
     gui_init();
-    emulator_init();
+    emulator_init( "rom", "ram", "port1", "port2" );
 
     while ( !please_exit )
         mainloop();
 
-    emulator_exit();
+    emulator_exit( "rom", "ram", "port1", "port2" );
     gui_exit();
 
     return 0;

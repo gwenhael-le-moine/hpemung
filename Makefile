@@ -21,6 +21,7 @@ dist/hpemu: src/bus.o \
 	src/files.o \
 	src/ports.o \
 	src/rpl.o \
+	src/config.o \
 	src/timers.o
 	$(CC) $(CFLAGS) $(LIBS) -o $@ $+
 

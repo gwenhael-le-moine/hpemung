@@ -9,10 +9,10 @@
 #include "bus.h"
 #include "timers.h"
 #include "display.h"
-#include "gui.h"
 #include "emulator.h"
 #include "files.h"
 #include "ports.h"
+#include "config.h"
 
 #define MAX_DELTA 4000
 
@@ -44,24 +44,25 @@ static int emulator_state = EMULATOR_RUN;
 
 void emulator_set_state( int state ) { emulator_state = state; }
 
-void emulator_init( void )
+void emulator_init( char* fn_rom, char* fn_ram, char* fn_port1, char* fn_port2 )
 {
     static bool locked = false;
 
-    rom_init( "./rom" );
-    ram_init( "./ram" );
-    ports_init( "./port1", "./port2" );
+    get_absolute_working_dir_path( "hpemu" );
+    rom_init( fn_rom );
+    ram_init( fn_ram );
+    ports_init( fn_port1, fn_port2 );
     bus_init();
 
     if ( !locked )
         locked = true;
 }
 
-void emulator_exit( void )
+void emulator_exit( char* fn_rom, char* fn_ram, char* fn_port1, char* fn_port2 )
 {
     rom_exit();
-    ram_exit( "./ram" );
-    ports_exit( "./port1", "./port2" );
+    ram_exit( fn_ram );
+    ports_exit( fn_port1, fn_port2 );
     bus_exit();
 }
 
@@ -120,7 +121,7 @@ bool emulator_run( void )
         if ( !cpu.shutdown ) {
             execute_instruction();
 
-            throttle( true );
+            throttle( config.real_speed || cpu.keyintp );
 
             if ( emulator_state == EMULATOR_STEP ) {
                 emulator_set_state( EMULATOR_STOP );

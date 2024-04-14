@@ -3,13 +3,15 @@
 
 #include "types.h"
 
-extern char WorkingPath[ 512 ];
+#define MAX_LENGTH_FILENAME 2048
+
+extern void get_absolute_working_dir_path();
 
 extern int file_size( char* filename );
 extern void load_file_on_stack( char* filename );
 
 extern void rom_init( char* filename );
-extern void rom_exit( void );
+extern void rom_exit();
 
 extern void ram_init( char* filename );
 extern void ram_exit( char* filename );
