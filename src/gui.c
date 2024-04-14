@@ -334,33 +334,43 @@ bool gui_refresh()
             case SDL_KEYDOWN:
                 switch ( event.key.keysym.scancode ) {
                     case SDL_SCANCODE_KP_0:
+                    case SDL_SCANCODE_0:
                         press_0();
                         break;
                     case SDL_SCANCODE_KP_1:
+                    case SDL_SCANCODE_1:
                         press_1();
                         break;
                     case SDL_SCANCODE_KP_2:
+                    case SDL_SCANCODE_2:
                         press_2();
                         break;
                     case SDL_SCANCODE_KP_3:
+                    case SDL_SCANCODE_3:
                         press_3();
                         break;
                     case SDL_SCANCODE_KP_4:
+                    case SDL_SCANCODE_4:
                         press_4();
                         break;
                     case SDL_SCANCODE_KP_5:
+                    case SDL_SCANCODE_5:
                         press_5();
                         break;
                     case SDL_SCANCODE_KP_6:
+                    case SDL_SCANCODE_6:
                         press_6();
                         break;
                     case SDL_SCANCODE_KP_7:
+                    case SDL_SCANCODE_7:
                         press_7();
                         break;
                     case SDL_SCANCODE_KP_8:
+                    case SDL_SCANCODE_8:
                         press_8();
                         break;
                     case SDL_SCANCODE_KP_9:
+                    case SDL_SCANCODE_9:
                         press_9();
                         break;
                     case SDL_SCANCODE_KP_PERIOD:
@@ -380,18 +390,6 @@ bool gui_refresh()
                         break;
                     case SDL_SCANCODE_BACKSPACE:
                         press_BKSP();
-                        break;
-                    case SDL_SCANCODE_LEFT:
-                        press_LEFT();
-                        break;
-                    case SDL_SCANCODE_RIGHT:
-                        press_RIGHT();
-                        break;
-                    case SDL_SCANCODE_UP:
-                        press_UP();
-                        break;
-                    case SDL_SCANCODE_DOWN:
-                        press_DOWN();
                         break;
                     case SDL_SCANCODE_KP_PLUS:
                         press_PLUS();
@@ -436,6 +434,7 @@ bool gui_refresh()
                         press_VAR();
                         break;
                     case SDL_SCANCODE_K:
+                    case SDL_SCANCODE_UP:
                         press_UP();
                         break;
                     case SDL_SCANCODE_L:
@@ -451,12 +450,15 @@ bool gui_refresh()
                         press_EVAL();
                         break;
                     case SDL_SCANCODE_P:
+                    case SDL_SCANCODE_LEFT:
                         press_LEFT();
                         break;
                     case SDL_SCANCODE_Q:
+                    case SDL_SCANCODE_DOWN:
                         press_DOWN();
                         break;
                     case SDL_SCANCODE_R:
+                    case SDL_SCANCODE_RIGHT:
                         press_RIGHT();
                         break;
                     case SDL_SCANCODE_S:
@@ -503,33 +505,43 @@ bool gui_refresh()
             case SDL_KEYUP:
                 switch ( event.key.keysym.scancode ) {
                     case SDL_SCANCODE_KP_0:
+                    case SDL_SCANCODE_0:
                         release_0();
                         break;
                     case SDL_SCANCODE_KP_1:
+                    case SDL_SCANCODE_1:
                         release_1();
                         break;
                     case SDL_SCANCODE_KP_2:
+                    case SDL_SCANCODE_2:
                         release_2();
                         break;
                     case SDL_SCANCODE_KP_3:
+                    case SDL_SCANCODE_3:
                         release_3();
                         break;
                     case SDL_SCANCODE_KP_4:
+                    case SDL_SCANCODE_4:
                         release_4();
                         break;
                     case SDL_SCANCODE_KP_5:
+                    case SDL_SCANCODE_5:
                         release_5();
                         break;
                     case SDL_SCANCODE_KP_6:
+                    case SDL_SCANCODE_6:
                         release_6();
                         break;
                     case SDL_SCANCODE_KP_7:
+                    case SDL_SCANCODE_7:
                         release_7();
                         break;
                     case SDL_SCANCODE_KP_8:
+                    case SDL_SCANCODE_8:
                         release_8();
                         break;
                     case SDL_SCANCODE_KP_9:
+                    case SDL_SCANCODE_9:
                         release_9();
                         break;
                     case SDL_SCANCODE_KP_PERIOD:
@@ -549,18 +561,6 @@ bool gui_refresh()
                         break;
                     case SDL_SCANCODE_BACKSPACE:
                         release_BKSP();
-                        break;
-                    case SDL_SCANCODE_LEFT:
-                        release_LEFT();
-                        break;
-                    case SDL_SCANCODE_RIGHT:
-                        release_RIGHT();
-                        break;
-                    case SDL_SCANCODE_UP:
-                        release_UP();
-                        break;
-                    case SDL_SCANCODE_DOWN:
-                        release_DOWN();
                         break;
                     case SDL_SCANCODE_KP_PLUS:
                         release_PLUS();
@@ -604,7 +604,8 @@ bool gui_refresh()
                     case SDL_SCANCODE_J:
                         release_VAR();
                         break;
-                    case SDL_SCANCODE_K:
+                case SDL_SCANCODE_K:
+                case SDL_SCANCODE_UP:
                         release_UP();
                         break;
                     case SDL_SCANCODE_L:
@@ -620,12 +621,15 @@ bool gui_refresh()
                         release_EVAL();
                         break;
                     case SDL_SCANCODE_P:
+                case SDL_SCANCODE_LEFT:
                         release_LEFT();
                         break;
                     case SDL_SCANCODE_Q:
+                case SDL_SCANCODE_DOWN:
                         release_DOWN();
                         break;
                     case SDL_SCANCODE_R:
+                case SDL_SCANCODE_RIGHT:
                         release_RIGHT();
                         break;
                     case SDL_SCANCODE_S:
