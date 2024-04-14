@@ -54,8 +54,9 @@ typedef struct {
     SDL_Color lcd_pixgray2;
     SDL_Color lcd_pixon;
 
-    SDL_Color button;
+    SDL_Color button_bg;
     SDL_Color button_active;
+    SDL_Color button_inactive;
     SDL_Color label;
     SDL_Color Lshift;
     SDL_Color Rshift;

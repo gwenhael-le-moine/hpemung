@@ -49,8 +49,9 @@ colors_t colors = {
     .lcd_pixgray2 = {.r = 13,  .g = 108, .b = 111, .a = 255},
     .lcd_pixon = {.r = 37,  .g = 61,  .b = 84,  .a = 255},
 
-    .button = {.r = 16,  .g = 26,  .b = 39,  .a = 33 },
+    .button_bg = {.r = 16,  .g = 26,  .b = 39,  .a = 33 },
     .button_active = {255,      255,      39,       33      },
+    .button_inactive = {0,        0,        0,        255     },
     .label = {255,      255,      255,      255     },
     .Lshift = {191,      192,      236,      255     },
     .Rshift = {125,      215,      235,      255     },
@@ -215,13 +216,21 @@ static inline void _button_draw( Button* b )
     SDL_Rect rectToDraw = { ( b->x + ( UI_KEY_PADDING / 2 ) ) * UI_SCALE, ( b->y + ( UI_KEY_PADDING * 1.25 ) ) * UI_SCALE,
                             ( b->w - UI_KEY_PADDING ) * UI_SCALE, ( b->h - ( UI_KEY_PADDING * 2 ) ) * UI_SCALE };
 
-    SDL_SetRenderDrawColor( renderer, colors.button.r, colors.button.g, colors.button.g, colors.button.a );
+    if ( b->index < 6 )
+        SDL_SetRenderDrawColor( renderer, colors.label.r, colors.label.g, colors.label.g, colors.label.a );
+    else if ( b->index == 34 )
+        SDL_SetRenderDrawColor( renderer, colors.Lshift.r, colors.Lshift.g, colors.Lshift.g, colors.Lshift.a );
+    else if ( b->index == 39 )
+        SDL_SetRenderDrawColor( renderer, colors.Rshift.r, colors.Rshift.g, colors.Rshift.g, colors.Rshift.a );
+    else
+        SDL_SetRenderDrawColor( renderer, colors.button_bg.r, colors.button_bg.g, colors.button_bg.g, colors.button_bg.a );
     SDL_RenderFillRect( renderer, &rectToDraw );
 
     if ( b->flags & BUTTON_PUSHED )
         SDL_SetRenderDrawColor( renderer, colors.button_active.r, colors.button_active.g, colors.button_active.b, colors.button_active.a );
     else
-        SDL_SetRenderDrawColor( renderer, colors.button.r, colors.button.g, colors.button.b, colors.button.a );
+        SDL_SetRenderDrawColor( renderer, colors.button_inactive.r, colors.button_inactive.g, colors.button_inactive.b,
+                                colors.button_inactive.a );
 
     SDL_RenderDrawRect( renderer, &rectToDraw );
 

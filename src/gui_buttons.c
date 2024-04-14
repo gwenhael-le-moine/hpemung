@@ -9,12 +9,12 @@
 const int std_flags = BUTTON_B1RELEASE | BUTTON_B2TOGGLE;
 
 Button calc_buttons[] = {
-    {0,  X_COL( 0 ),      Y_LINE( 0 ), UI_K_WIDTH_1,     UI_K_HEIGHT_1, std_flags, "█",       "",         "",         "A", "",       press_A,        release_A       },
-    {1,  X_COL( 1 ),      Y_LINE( 0 ), UI_K_WIDTH_1,     UI_K_HEIGHT_1, std_flags, "█",       "",         "",         "B", "",       press_B,        release_B       },
-    {2,  X_COL( 2 ),      Y_LINE( 0 ), UI_K_WIDTH_1,     UI_K_HEIGHT_1, std_flags, "█",       "",         "",         "C", "",       press_C,        release_C       },
-    {3,  X_COL( 3 ),      Y_LINE( 0 ), UI_K_WIDTH_1,     UI_K_HEIGHT_1, std_flags, "█",       "",         "",         "D", "",       press_D,        release_D       },
-    {4,  X_COL( 4 ),      Y_LINE( 0 ), UI_K_WIDTH_1,     UI_K_HEIGHT_1, std_flags, "█",       "",         "",         "E", "",       press_E,        release_E       },
-    {5,  X_COL( 5 ),      Y_LINE( 0 ), UI_K_WIDTH_1,     UI_K_HEIGHT_1, std_flags, "█",       "",         "",         "F", "",       press_F,        release_F       },
+    {0,  X_COL( 0 ),      Y_LINE( 0 ), UI_K_WIDTH_1,     UI_K_HEIGHT_1, std_flags, "",          "",         "",         "A", "",       press_A,        release_A       },
+    {1,  X_COL( 1 ),      Y_LINE( 0 ), UI_K_WIDTH_1,     UI_K_HEIGHT_1, std_flags, "",          "",         "",         "B", "",       press_B,        release_B       },
+    {2,  X_COL( 2 ),      Y_LINE( 0 ), UI_K_WIDTH_1,     UI_K_HEIGHT_1, std_flags, "",          "",         "",         "C", "",       press_C,        release_C       },
+    {3,  X_COL( 3 ),      Y_LINE( 0 ), UI_K_WIDTH_1,     UI_K_HEIGHT_1, std_flags, "",          "",         "",         "D", "",       press_D,        release_D       },
+    {4,  X_COL( 4 ),      Y_LINE( 0 ), UI_K_WIDTH_1,     UI_K_HEIGHT_1, std_flags, "",          "",         "",         "E", "",       press_E,        release_E       },
+    {5,  X_COL( 5 ),      Y_LINE( 0 ), UI_K_WIDTH_1,     UI_K_HEIGHT_1, std_flags, "",          "",         "",         "F", "",       press_F,        release_F       },
 
     {6,  X_COL( 0 ),      Y_LINE( 1 ), UI_K_WIDTH_1,     UI_K_HEIGHT_2, std_flags, "MTH",       "RAD",      "POLAR",    "G", "",       press_MTH,      release_MTH     },
     {7,  X_COL( 1 ),      Y_LINE( 1 ), UI_K_WIDTH_1,     UI_K_HEIGHT_2, std_flags, "PRG",       "",         "CHARS",    "H", "",       press_PRG,      release_PRG     },
