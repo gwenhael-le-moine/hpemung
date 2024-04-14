@@ -6,11 +6,12 @@
 #include <SDL2/SDL_ttf.h>
 
 #include "config.h"
-#include "gui_buttons.h"
+#include "keyboard.h"
 #include "files.h"
 #include "gui.h"
 #include "emulator.h"
 #include "display.h"
+#include "gui_buttons.h"
 
 #define PANEL_FLAG_VISIBLE 0x01
 
