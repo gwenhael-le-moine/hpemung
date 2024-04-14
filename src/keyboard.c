@@ -1,7 +1,7 @@
 #include "types.h"
 #include "cpu.h"
-#include "keyboard.h"
 #include "files.h"
+
 bool kbd_on;
 
 static byte kbd_row[ 9 ];

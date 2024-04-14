@@ -3,7 +3,7 @@
 
 #include <string.h>
 
-#include "emulator.h"
+#include "types.h"
 #include "cpu.h"
 
 inline void load( byte* reg, byte* data, int start, int len )

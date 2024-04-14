@@ -1,8 +1,8 @@
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include "types.h"
 #include "bus.h"
-#include "ports.h"
 
 byte current_bank;
 byte* port2;

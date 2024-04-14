@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdbool.h>
 
 #include "types.h"
 #include "hdw.h"

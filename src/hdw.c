@@ -3,7 +3,6 @@
 #include "ports.h"
 #include "timers.h"
 #include "display.h"
-#include "hdw.h"
 
 static byte hdw_ram[ 64 ];
 

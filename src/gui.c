@@ -7,9 +7,8 @@
 
 #include "config.h"
 #include "keyboard.h"
-#include "files.h"
 #include "gui.h"
-#include "emulator.h"
+#include "emulator.h" /* for please_exit */
 #include "display.h"
 
 #define PANEL_FLAG_VISIBLE 0x01

@@ -1,5 +1,5 @@
-#ifndef __PFILES_H
-#define __PFILES_H
+#ifndef __FILES_H
+#define __FILES_H
 
 extern void get_absolute_working_dir_path();
 

@@ -8,12 +8,10 @@
 #include <sys/stat.h>
 #include <pwd.h>
 
-#include "gui.h"
 #include "rpl.h"
-#include "files.h"
 #include "bus.h"
-#include "ports.h"
 #include "config.h"
+#include "types.h"
 
 #define MAX_LENGTH_FILENAME 2048
 
@@ -21,7 +19,6 @@ extern byte current_bank;
 extern byte* port2;
 extern address port2mask;
 
-/* char WorkingPath[ MAX_LENGTH_FILENAME ]; */
 char absolute_working_dir_path[ MAX_LENGTH_FILENAME ];
 
 static address ram_size = 256 * 1024; // in nibbles, not bytes!

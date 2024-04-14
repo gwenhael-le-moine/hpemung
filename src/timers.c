@@ -1,6 +1,5 @@
 #include "types.h"
 #include "cpu.h"
-#include "timers.h"
 
 #define TIMER1_EXTRA 0x1
 #define TIMER1_INT 0x2

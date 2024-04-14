@@ -31,9 +31,7 @@ typedef struct {
 
 static CycleEvent cycle_events[] = {
     {0, 16,   timer1_update },
-#ifndef true_TIMER2
     {0, 8192, timer2_update },
-#endif
     {0, 4096, display_update},
     {0, 0,    NULL          }
 };
@@ -123,14 +121,14 @@ bool emulator_run( void )
 
             throttle( config.real_speed || cpu.keyintp );
 
-            if ( emulator_state == EMULATOR_STEP ) {
+            if ( emulator_state == EMULATOR_STEP )
                 emulator_set_state( EMULATOR_STOP );
-            }
+
         } else {
             delta = MAX_DELTA;
-            for ( cep = cycle_events; cep->proc; cep++ ) {
+            for ( cep = cycle_events; cep->proc; cep++ )
                 delta = MIN( delta, cep->next - cpu.cycles + 1 );
-            }
+
             cpu.cycles += delta;
         }
 

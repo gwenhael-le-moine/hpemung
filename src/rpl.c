@@ -3,7 +3,6 @@
 #include "types.h"
 #include "bus.h"
 #include "opinline.h"
-#include "rpl.h"
 
 #define TEMPOB 0x806E9
 #define TEMPTOP 0x806EE
