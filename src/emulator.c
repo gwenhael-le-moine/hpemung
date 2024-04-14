@@ -30,10 +30,9 @@ typedef struct {
 } TimerEvent;
 
 static CycleEvent cycle_events[] = {
-    {0, 16,   timer1_update },
-    {0, 8192, timer2_update },
-    {0, 4096, display_update},
-    {0, 0,    NULL          }
+    {.next = 0, .freq = 16,   .proc = timer1_update },
+    {.next = 0, .freq = 8192, .proc = timer2_update },
+    {.next = 0, .freq = 4096, .proc = display_update},
 };
 
 volatile bool please_exit = false;

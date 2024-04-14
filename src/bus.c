@@ -14,15 +14,41 @@
 #define MAP_WRITE( adr ) ( write_map[ SEG_OF( adr ) ] + OFFSET_OF( adr ) )
 
 BusInfo bus_info = {
-    //  hdw	    ram sz  ram	    ce1 sz  ce1	    ce2 sz  ce2	    nce3 sz nce3
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,                   // base or size
-    false, false, false, false, false, false, false, false, false, // configured
-    false, false, false,                                           // read only
-    //  ce1_bs  da19    ben
-    false, false, false,
-    //  rom	    ram	    ce1	    ce2	    nce3
-    NULL, NULL, NULL, NULL, NULL, // data
-    0x0, 0x0, 0x0, 0x0, 0x0, 0    // mask
+    .hdw_base = 0,
+    .ram_size = 0,
+    .ram_base = 0,
+    .ce1_size = 0,
+    .ce1_base = 0,
+    .ce2_size = 0,
+    .ce2_base = 0,
+    .nce3_size = 0,
+    .nce3_base = 0,
+    .hdw_cfg = false,
+    .ram_sz_cfg = false,
+    .ram_cfg = false,
+    .ce1_sz_cfg = false,
+    .ce1_cfg = false,
+    .ce2_sz_cfg = false,
+    .ce2_cfg = false,
+    .nce3_sz_cfg = false,
+    .nce3_cfg = false,
+    .ce1_r_o = false,
+    .ce2_r_o = false,
+    .nce3_r_o = false,
+    .ce1_bs = false,
+    .da19 = false,
+    .ben = false,
+    .rom_data = NULL,
+    .ram_data = NULL,
+    .ce1_data = NULL,
+    .ce2_data = NULL,
+    .nce3_data = NULL,
+    .rom_mask = 0,
+    .ram_mask = 0,
+    .ce1_mask = 0,
+    .ce2_mask = 0,
+    .nce3_mask = 0,
+    .map_cnt = 0,
 };
 
 static byte* read_map[ 256 ];
