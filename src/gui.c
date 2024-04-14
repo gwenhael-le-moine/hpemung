@@ -309,7 +309,7 @@ static inline int _button_mouse_up( Button* buttons, int mx, int my, int mb )
     return ret;
 }
 
-void button_draw_all( Button* buttons )
+static inline void button_draw_all( Button* buttons )
 {
     while ( buttons->label ) {
         _button_draw( buttons );

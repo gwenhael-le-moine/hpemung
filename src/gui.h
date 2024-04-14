@@ -88,8 +88,6 @@ extern bool SDL_ready;
 // Releaseing mouse button 1 anywhere unpushes the button
 #define BUTTON_B1RELEASE 0x10
 
-extern void button_draw_all( /*BITMAP *bmp,*/ Button* buttons );
-
 extern void SDL__display_show( void );
 
 extern bool gui_events();
