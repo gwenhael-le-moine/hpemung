@@ -1,8 +1,6 @@
 #ifndef __TYPES_H
 #define __TYPES_H
 
-#include <stdbool.h>
-
 #define MIN( a, b ) ( ( a ) < ( b ) ? ( a ) : ( b ) )
 
 typedef unsigned char nibble;

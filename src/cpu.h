@@ -1,6 +1,8 @@
 #ifndef __CPU_H
 #define __CPU_H
 
+#include <stdbool.h>
+
 #include "types.h"
 
 typedef struct {

@@ -1,10 +1,6 @@
 #ifndef __PFILES_H
 #define __PFILES_H
 
-#include "types.h"
-
-#define MAX_LENGTH_FILENAME 2048
-
 extern void get_absolute_working_dir_path();
 
 extern int file_size( char* filename );

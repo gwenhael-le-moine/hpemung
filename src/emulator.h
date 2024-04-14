@@ -1,6 +1,8 @@
 #ifndef __EMULATOR_H
 #define __EMULATOR_H
 
+#include <stdbool.h>
+
 #include "types.h"
 
 enum EmulatorStates { EMULATOR_STOP, EMULATOR_STEP, EMULATOR_RUN };

@@ -1,7 +1,7 @@
 #ifndef __KEYBOARD_H
 #define __KEYBOARD_H
 
-#include "types.h"
+#include <stdbool.h>
 
 extern bool kbd_on;
 

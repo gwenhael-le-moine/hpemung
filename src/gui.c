@@ -14,10 +14,83 @@
 
 #define PANEL_FLAG_VISIBLE 0x01
 
-extern SDL_Renderer* renderer;
+#define UI_SCALE 4
 
-TTF_Font* ttffont = NULL;
-TTF_Font* ttffont2 = NULL;
+#define UI_PADDING 4
+#define UI_KEY_PADDING 4
+
+#define ANNUNC_X UI_PADDING
+#define ANNUNC_Y UI_PADDING
+#define ANNUNC_HEIGHT 8
+
+#define LCD_X UI_PADDING
+#define LCD_Y ( UI_PADDING + ANNUNC_HEIGHT + UI_PADDING )
+
+#define UI_K_WIDTH_1 22
+#define UI_K_HEIGHT_1 ( UI_K_WIDTH_1 * 0.65 )
+#define UI_K_WIDTH_2 26
+#define UI_K_HEIGHT_2 ( UI_K_WIDTH_2 * 0.65 )
+
+#define UI_KB_OFFSET_Y ( UI_PADDING + ANNUNC_HEIGHT + LCD_HEIGHT + UI_PADDING )
+
+#define UI_K_WIDTH_enter ( UI_K_WIDTH_1 * 2 )
+
+#define Y_LINE( i ) ( UI_KB_OFFSET_Y + ( i * UI_K_HEIGHT_2 ) )
+#define X_COL( i ) ( UI_PADDING + ( UI_K_WIDTH_1 * i ) )
+#define X2_COL( i ) ( UI_PADDING + ( UI_K_WIDTH_2 * i ) )
+
+#define UI_KB_HEIGHT ( UI_SCALE * Y_LINE( 9 ) )
+
+/* Button flags:
+ * Use BUTTON_B1RELEASE for normal buttons.
+ * Use BUTTON_B1RELEASE | BUTTON_B2TOGGLE for calculator buttons.
+ * Use BUTTON_B1TOGGLE for toggle buttons
+ */
+// Set if button is pushed
+#define BUTTON_PUSHED 0x01
+// If set the button will be grayed out
+#define BUTTON_DISABLED 0x02
+// Mouse button 1 toggles this button
+#define BUTTON_B1TOGGLE 0x04
+// Mouse button 2 toggles this button
+#define BUTTON_B2TOGGLE 0x08
+// Releaseing mouse button 1 anywhere unpushes the button
+#define BUTTON_B1RELEASE 0x10
+
+typedef struct {
+    int index;
+    int x, y;
+    int w, h;
+    int flags;
+    char* label;
+    char* label_Lshift;
+    char* label_Rshift;
+    char* label_letter;
+    char* label_below;
+    void ( *down )( void );
+    void ( *up )( void );
+} Button;
+
+typedef struct {
+    SDL_Color faceplate;
+
+    SDL_Color lcd_pixoff;
+    SDL_Color lcd_pixgray1;
+    SDL_Color lcd_pixgray2;
+    SDL_Color lcd_pixon;
+
+    SDL_Color button_bg;
+    SDL_Color button_active;
+    SDL_Color button_inactive;
+    SDL_Color label;
+    SDL_Color Lshift;
+    SDL_Color Rshift;
+    SDL_Color letter;
+    SDL_Color below;
+} colors_t;
+
+static TTF_Font* ttffont = NULL;
+static TTF_Font* ttffont2 = NULL;
 
 bool SDL_ready = false;
 
@@ -41,9 +114,9 @@ SDL_Texture* textures_labels_below[ 49 ];
 SDL_Surface* surfaces_labels_letter[ 49 ];
 SDL_Texture* textures_labels_letter[ 49 ];
 
-const int std_flags = BUTTON_B1RELEASE | BUTTON_B2TOGGLE;
+static const int std_flags = BUTTON_B1RELEASE | BUTTON_B2TOGGLE;
 
-Button gui_buttons[] = {
+static Button gui_buttons[] = {
     {0,  X_COL( 0 ),      Y_LINE( 0 ), UI_K_WIDTH_1,     UI_K_HEIGHT_1, std_flags, "",          "",         "",         "A", "",       press_A,        release_A       },
     {1,  X_COL( 1 ),      Y_LINE( 0 ), UI_K_WIDTH_1,     UI_K_HEIGHT_1, std_flags, "",          "",         "",         "B", "",       press_B,        release_B       },
     {2,  X_COL( 2 ),      Y_LINE( 0 ), UI_K_WIDTH_1,     UI_K_HEIGHT_1, std_flags, "",          "",         "",         "C", "",       press_C,        release_C       },
@@ -106,7 +179,7 @@ Button gui_buttons[] = {
     {49, X_COL( 0 ),      Y_LINE( 9 ), 40,               UI_K_HEIGHT_2, std_flags, "load file", "",         "",         "",  "",       press_LoadFile, release_LoadFile},
 };
 
-colors_t colors = {
+static colors_t colors = {
     .faceplate = {.r = 48,  .g = 68,  .b = 90,  .a = 255},
 
     .lcd_pixoff = {.r = 119, .g = 153, .b = 136, .a = 255},

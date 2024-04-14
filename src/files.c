@@ -15,6 +15,8 @@
 #include "ports.h"
 #include "config.h"
 
+#define MAX_LENGTH_FILENAME 2048
+
 extern byte current_bank;
 extern byte* port2;
 extern address port2mask;
