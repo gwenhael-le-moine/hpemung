@@ -57,10 +57,6 @@ static address hdw_seg;
 
 word crc;
 
-void bus_init( void ) { bus_reset(); }
-
-void bus_exit( void ) {}
-
 static inline void update_crc( byte nibble ) { crc = ( crc >> 4 ) ^ ( ( ( crc ^ nibble ) & 0xF ) * 0x1081 ); }
 
 void bus_read( byte* buf, address adr, address len )

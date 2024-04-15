@@ -25,7 +25,7 @@ int main( int argc, char* argv[] )
     if ( !gui_init() )
         exit( EXIT_FAILURE );
 
-    emulator_init( "rom", "ram", "port1", "port2" );
+    emulator_init( "rom", "ram", "port1", "port2", "bus", "cpu" );
 
     while ( !please_exit ) {
         if ( please_exit )
@@ -49,7 +49,7 @@ int main( int argc, char* argv[] )
             break;
     }
 
-    emulator_exit( "rom", "ram", "port1", "port2" );
+    emulator_exit( "rom", "ram", "port1", "port2", "bus", "cpu" );
     gui_exit();
 
     return 0;

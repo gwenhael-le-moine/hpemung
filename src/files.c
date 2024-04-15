@@ -10,6 +10,7 @@
 
 #include "rpl.h"
 #include "bus.h"
+#include "cpu.h"
 #include "config.h"
 #include "types.h"
 
@@ -271,6 +272,9 @@ int write_mem_file( char* absolute_filename, nibble* mem, int size )
     return 1;
 }
 
+/********************/
+/* PUBLIC FUNCTIONS */
+/********************/
 void load_file_on_stack( char* filename )
 {
     FILE* f;
@@ -329,6 +333,97 @@ void load_file_on_stack( char* filename )
     }
     rpl_push_object( obj, size );
     free( obj );
+}
+
+void bus_init( char* filename )
+{
+    char fullpath[ MAX_LENGTH_FILENAME ];
+    get_absolute_working_dir_path();
+    sprintf( fullpath, "%s%s", absolute_working_dir_path, filename );
+    if ( config.verbose )
+        fprintf( stderr, "fullpath = %s\n", fullpath );
+
+    int filesize = file_size( fullpath );
+
+    /* if ( filesize ) { */
+    /*     FILE* fp; */
+
+    /*     if ( NULL == ( fp = fopen( fullpath, "w" ) ) ) { */
+    /*         if ( config.verbose ) */
+    /*             fprintf( stderr, "can\'t open %s\n", fullpath ); */
+    /*         return; */
+    /*     } */
+
+    /*     fwrite( &bus_info, sizeof( BusInfo ), 1, fp ); */
+
+    /*     fclose( fp ); */
+    /* } else */
+    bus_reset();
+}
+void bus_exit( char* filename )
+{
+    char fullpath[ MAX_LENGTH_FILENAME ];
+    get_absolute_working_dir_path();
+    sprintf( fullpath, "%s%s", absolute_working_dir_path, filename );
+    if ( config.verbose )
+        fprintf( stderr, "fullpath = %s\n", fullpath );
+
+    FILE* fp;
+
+    if ( NULL == ( fp = fopen( fullpath, "w" ) ) ) {
+        if ( config.verbose )
+            fprintf( stderr, "can\'t open %s\n", fullpath );
+        return;
+    }
+
+    fwrite( &bus_info, sizeof( BusInfo ), 1, fp );
+
+    fclose( fp );
+}
+
+void cpu_init( char* filename )
+{
+    char fullpath[ MAX_LENGTH_FILENAME ];
+    get_absolute_working_dir_path();
+    sprintf( fullpath, "%s%s", absolute_working_dir_path, filename );
+    if ( config.verbose )
+        fprintf( stderr, "fullpath = %s\n", fullpath );
+
+    int filesize = file_size( fullpath );
+
+    if ( filesize ) {
+        /* FILE* fp; */
+
+        /* if ( NULL == ( fp = fopen( fullpath, "w" ) ) ) { */
+        /*     if ( config.verbose ) */
+        /*         fprintf( stderr, "can\'t open %s\n", fullpath ); */
+        /*     return; */
+        /* } */
+
+        /* fwrite( &cpu, sizeof( Cpu ), 1, fp ); */
+
+        /* fclose( fp ); */
+    }
+}
+void cpu_exit( char* filename )
+{
+    char fullpath[ MAX_LENGTH_FILENAME ];
+    get_absolute_working_dir_path();
+    sprintf( fullpath, "%s%s", absolute_working_dir_path, filename );
+    if ( config.verbose )
+        fprintf( stderr, "fullpath = %s\n", fullpath );
+
+    FILE* fp;
+
+    if ( NULL == ( fp = fopen( fullpath, "w" ) ) ) {
+        if ( config.verbose )
+            fprintf( stderr, "can\'t open %s\n", fullpath );
+        return;
+    }
+
+    fwrite( &cpu, sizeof( Cpu ), 1, fp );
+
+    fclose( fp );
 }
 
 void rom_init( char* filename )
@@ -430,7 +525,6 @@ void ram_init( char* filename )
 
     bus_info.ram_mask = ram_size - 1;
 }
-
 void ram_exit( char* filename )
 {
     fprintf( stderr, "\n\nfilename = %s\n", filename );
@@ -492,7 +586,6 @@ void ports_init( char* filename1, char* filename2 )
     bus_info.ben = false;
     current_bank = 0;
 }
-
 void ports_exit( char* filename1, char* filename2 )
 {
     char fullpath1[ MAX_LENGTH_FILENAME ];
