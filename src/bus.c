@@ -66,36 +66,33 @@ void bus_read( byte* buf, address adr, address len )
     while ( true ) {
         if ( hdw_seg == SEG_OF( adr ) && ( ( bus_info.hdw_base ^ adr ) & 0xFFFC0 ) == 0 ) {
             n = MIN( len, 0x40 - ( adr & 0x3F ) );
-            for ( i = 0; i < n; i++ ) {
+            for ( i = 0; i < n; i++ )
                 buf[ i ] = hdw_read_nibble( ( adr & 0x3F ) + i );
-            }
-            if ( ( ( adr & 0x3F ) + n ) == 0x40 ) {
+
+            if ( ( ( adr & 0x3F ) + n ) == 0x40 )
                 update_crc( buf[ n - 1 ] );
-            }
         } else {
-            if ( hdw_seg == SEG_OF( adr ) && ( bus_info.hdw_base & 0xFFFC0 ) - adr > 0 ) {
+            if ( hdw_seg == SEG_OF( adr ) && ( bus_info.hdw_base & 0xFFFC0 ) - adr > 0 )
                 n = MIN( len, ( bus_info.hdw_base & 0xFFFC0 ) - adr );
-            } else {
+            else
                 n = MIN( len, 0x1000 - OFFSET_OF( adr ) );
-            }
-            if ( CAN_READ( adr ) ) {
+
+            if ( CAN_READ( adr ) )
                 memcpy( buf, MAP_READ( adr ), n );
-            } else {
-                for ( i = 0; i < n; i++ ) {
+            else {
+                for ( i = 0; i < n; i++ )
                     buf[ i ] = ( ( i + adr ) & 1 ) ? 0xE : 0xD;
-                }
-                if ( bus_info.ce1_bs && bus_info.ce1_cfg && ( ( bus_info.ce1_base ^ adr ) & bus_info.ce1_size ) ) {
+
+                if ( bus_info.ce1_bs && bus_info.ce1_cfg && ( ( bus_info.ce1_base ^ adr ) & bus_info.ce1_size ) )
                     ports_switch_bank( OFFSET_OF( adr + n ) );
-                }
             }
-            for ( i = 0; i < n; i++ ) {
+            for ( i = 0; i < n; i++ )
                 update_crc( buf[ i ] );
-            }
         }
         len -= n;
-        if ( !len ) {
+        if ( !len )
             break;
-        }
+
         buf += n;
         adr += n;
         adr &= 0xFFFFF;
@@ -109,33 +106,31 @@ void bus_write( byte* buf, address adr, address len )
     while ( true ) {
         if ( hdw_seg == SEG_OF( adr ) && ( ( bus_info.hdw_base ^ adr ) & 0xFFFC0 ) == 0 ) {
             n = MIN( len, 0x40 - ( adr & 0x3F ) );
-            for ( i = 0; i < n; i++ ) {
+            for ( i = 0; i < n; i++ )
                 hdw_write_nibble( buf[ i ], ( adr & 0x3F ) + i );
-            }
         } else {
-            if ( hdw_seg == SEG_OF( adr ) && ( bus_info.hdw_base & 0xFFFC0 ) - adr > 0 ) {
+            if ( hdw_seg == SEG_OF( adr ) && ( bus_info.hdw_base & 0xFFFC0 ) - adr > 0 )
                 n = MIN( len, ( bus_info.hdw_base & 0xFFFC0 ) - adr );
-            } else {
+            else
                 n = MIN( len, 0x1000 - OFFSET_OF( adr ) );
-            }
-            if ( CAN_WRITE( adr ) ) {
+
+            if ( CAN_WRITE( adr ) )
                 memcpy( MAP_WRITE( adr ), buf, n );
-            } else if ( bus_info.ce1_bs ) {
+            else if ( bus_info.ce1_bs ) {
                 if ( bus_info.ce1_cfg && ( ( bus_info.ce1_base ^ adr ) & bus_info.ce1_size ) ) {
-                    if ( !bus_info.nce3_r_o ) {
+                    if ( !bus_info.nce3_r_o )
                         ports_switch_bank( OFFSET_OF( adr + n - 1 ) );
-                    } else if ( ( adr + n ) & 1 ) {
+                    else if ( ( adr + n ) & 1 )
                         ports_switch_bank( OFFSET_OF( adr + n - 1 ) );
-                    } else if ( adr & 0x1 ) {
+                    else if ( adr & 0x1 )
                         ports_switch_bank( OFFSET_OF( adr ) );
-                    }
                 }
             }
         }
         len -= n;
-        if ( !len ) {
+        if ( !len )
             break;
-        }
+
         buf += n;
         adr += n;
         adr &= 0xFFFFF;
@@ -149,27 +144,25 @@ static void bus_peek( byte* buf, address adr, address len )
     while ( true ) {
         if ( hdw_seg == SEG_OF( adr ) && ( ( bus_info.hdw_base ^ adr ) & 0xFFFC0 ) == 0 ) {
             n = MIN( len, 0x40 - ( adr & 0x3F ) );
-            for ( i = 0; i < n; i++ ) {
+            for ( i = 0; i < n; i++ )
                 buf[ i ] = hdw_read_nibble( ( adr & 0x3F ) + i );
-            }
+
         } else {
-            if ( hdw_seg == SEG_OF( adr ) && ( bus_info.hdw_base & 0xFFFC0 ) - adr > 0 ) {
+            if ( hdw_seg == SEG_OF( adr ) && ( bus_info.hdw_base & 0xFFFC0 ) - adr > 0 )
                 n = MIN( len, ( bus_info.hdw_base & 0xFFFC0 ) - adr );
-            } else {
+            else
                 n = MIN( len, 0x1000 - OFFSET_OF( adr ) );
-            }
-            if ( CAN_READ( adr ) ) {
+
+            if ( CAN_READ( adr ) )
                 memcpy( buf, MAP_READ( adr ), n );
-            } else {
-                for ( i = 0; i < n; i++ ) {
+            else
+                for ( i = 0; i < n; i++ )
                     buf[ i ] = ( ( i + adr ) & 1 ) ? 0xE : 0xD;
-                }
-            }
         }
         len -= n;
-        if ( !len ) {
+        if ( !len )
             break;
-        }
+
         buf += n;
         adr += n;
         adr &= 0xFFFFF;
@@ -183,17 +176,16 @@ static void bus_peek_no_hdw( byte* buf, address adr, address len )
 
     while ( true ) {
         n = MIN( len, 0x1000 - OFFSET_OF( adr ) );
-        if ( CAN_READ( adr ) ) {
+        if ( CAN_READ( adr ) )
             memcpy( buf, MAP_READ( adr ), n );
-        } else {
-            for ( i = 0; i < n; i++ ) {
+        else
+            for ( i = 0; i < n; i++ )
                 buf[ i ] = ( ( i + adr ) & 1 ) ? 0xE : 0xD;
-            }
-        }
+
         len -= n;
-        if ( !len ) {
+        if ( !len )
             break;
-        }
+
         buf += n;
         adr += n;
         adr &= 0xFFFFF;
@@ -216,62 +208,60 @@ byte* bus_fast_peek( byte* buf, address adr, int* len )
     static int tmp_len;
     address adr2;
 
-    if ( !buf ) {
+    if ( !buf )
         buf = tmp_buf;
-    }
+
     if ( !len ) {
         tmp_len = FAST_PEEK_MAX;
         len = &tmp_len;
     }
-    if ( *len > FAST_PEEK_MAX ) {
+    if ( *len > FAST_PEEK_MAX )
         *len = FAST_PEEK_MAX;
-    }
 
     adr2 = adr + *len - 1;
 
     if ( ( SEG_OF( adr ) == hdw_seg || SEG_OF( adr2 ) == hdw_seg ) &&
          ( ( ( bus_info.hdw_base ^ adr ) & 0xFFFC0 ) == 0 || ( ( bus_info.hdw_base ^ adr2 ) & 0xFFFC0 ) == 0 ) ) {
         bus_peek( buf, adr, *len );
+
         return buf;
     } else if ( !CAN_READ( adr ) ) {
         bus_peek_no_hdw( buf, adr, *len );
         return buf;
     } else if ( SEG_OF( adr ) == SEG_OF( adr2 ) ) {
-        if ( hdw_seg == SEG_OF( adr ) && ( bus_info.hdw_base & 0xFFFC0 ) - adr > 0 ) {
+        if ( hdw_seg == SEG_OF( adr ) && ( bus_info.hdw_base & 0xFFFC0 ) - adr > 0 )
             *len = ( bus_info.hdw_base & 0xFFFC0 ) - adr;
-        } else {
+        else
             *len = 0x1000 - OFFSET_OF( adr );
-        }
+
         return MAP_READ( adr );
     } else if ( CAN_READ( adr2 ) && MAP_READ( adr ) + *len - 1 == MAP_READ( adr2 ) ) {
-        if ( hdw_seg == SEG_OF( adr2 ) ) {
+        if ( hdw_seg == SEG_OF( adr2 ) )
             *len = ( bus_info.hdw_base & 0xFFFC0 ) - adr;
-        } else {
+        else
             *len = 0x2000 - OFFSET_OF( adr );
-        }
+
         return MAP_READ( adr );
     } else {
         bus_peek_no_hdw( buf, adr, *len );
+
         return buf;
     }
 }
 
 void bus_remap( void )
 {
-    int adr;
-
-    for ( adr = 0; adr < 0x100000; adr += 0x01000 ) {
+    for ( int adr = 0; adr < 0x100000; adr += 0x01000 ) {
         if ( bus_info.ram_cfg && ( ( bus_info.ram_base ^ adr ) & bus_info.ram_size ) == 0 ) {
             read_map[ SEG_OF( adr ) ] = bus_info.ram_data + ( adr & bus_info.ram_mask );
             write_map[ SEG_OF( adr ) ] = bus_info.ram_data + ( adr & bus_info.ram_mask );
         } else if ( bus_info.ce2_cfg && ( ( bus_info.ce2_base ^ adr ) & bus_info.ce2_size ) == 0 ) {
             if ( bus_info.ce2_data ) {
                 read_map[ SEG_OF( adr ) ] = bus_info.ce2_data + ( adr & bus_info.ce2_mask );
-                if ( !bus_info.ce2_r_o ) {
+                if ( !bus_info.ce2_r_o )
                     write_map[ SEG_OF( adr ) ] = bus_info.ce2_data + ( adr & bus_info.ce2_mask );
-                } else {
+                else
                     write_map[ SEG_OF( adr ) ] = NULL;
-                }
             } else {
                 read_map[ SEG_OF( adr ) ] = NULL;
                 write_map[ SEG_OF( adr ) ] = NULL;
@@ -279,11 +269,10 @@ void bus_remap( void )
         } else if ( bus_info.ce1_cfg && ( ( bus_info.ce1_base ^ adr ) & bus_info.ce1_size ) == 0 ) {
             if ( bus_info.ce1_data ) {
                 read_map[ SEG_OF( adr ) ] = bus_info.ce1_data + ( adr & bus_info.ce1_mask );
-                if ( !bus_info.ce1_r_o ) {
+                if ( !bus_info.ce1_r_o )
                     write_map[ SEG_OF( adr ) ] = bus_info.ce1_data + ( adr & bus_info.ce1_mask );
-                } else {
+                else
                     write_map[ SEG_OF( adr ) ] = NULL;
-                }
             } else {
                 read_map[ SEG_OF( adr ) ] = NULL;
                 write_map[ SEG_OF( adr ) ] = NULL;
@@ -291,11 +280,10 @@ void bus_remap( void )
         } else if ( bus_info.nce3_cfg && ( ( bus_info.nce3_base ^ adr ) & bus_info.nce3_size ) == 0 ) {
             if ( bus_info.nce3_data && bus_info.ben && !bus_info.da19 ) {
                 read_map[ SEG_OF( adr ) ] = bus_info.nce3_data + ( adr & bus_info.nce3_mask );
-                if ( !bus_info.nce3_r_o ) {
+                if ( !bus_info.nce3_r_o )
                     write_map[ SEG_OF( adr ) ] = bus_info.nce3_data + ( adr & bus_info.nce3_mask );
-                } else {
+                else
                     write_map[ SEG_OF( adr ) ] = NULL;
-                }
             } else {
                 read_map[ SEG_OF( adr ) ] = NULL;
                 write_map[ SEG_OF( adr ) ] = NULL;
@@ -401,25 +389,24 @@ void bus_reset( void )
 
 address bus_get_id( void )
 {
-    if ( !bus_info.hdw_cfg ) {
+    if ( !bus_info.hdw_cfg )
         return bus_info.hdw_base | 0x00019;
-    } else if ( !bus_info.ram_sz_cfg ) {
+    else if ( !bus_info.ram_sz_cfg )
         return bus_info.ram_size | 0x00003;
-    } else if ( !bus_info.ram_cfg ) {
+    else if ( !bus_info.ram_cfg )
         return bus_info.ram_base | 0x000F4;
-    } else if ( !bus_info.ce1_sz_cfg ) {
+    else if ( !bus_info.ce1_sz_cfg )
         return bus_info.ce1_size | 0x00005;
-    } else if ( !bus_info.ce1_cfg ) {
+    else if ( !bus_info.ce1_cfg )
         return bus_info.ce1_base | 0x000F6;
-    } else if ( !bus_info.ce2_sz_cfg ) {
+    else if ( !bus_info.ce2_sz_cfg )
         return bus_info.ce2_size | 0x00007;
-    } else if ( !bus_info.ce2_cfg ) {
+    else if ( !bus_info.ce2_cfg )
         return bus_info.ce2_base | 0x000F8;
-    } else if ( !bus_info.nce3_sz_cfg ) {
+    else if ( !bus_info.nce3_sz_cfg )
         return bus_info.nce3_size | 0x00001;
-    } else if ( !bus_info.nce3_cfg ) {
+    else if ( !bus_info.nce3_cfg )
         return bus_info.nce3_base | 0x000F2;
-    } else {
+    else
         return 0x00000;
-    }
 }

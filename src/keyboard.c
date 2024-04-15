@@ -1,6 +1,6 @@
 #include "types.h"
 #include "cpu.h"
-#include "files.h"
+#include "persistence.h"
 
 bool kbd_on;
 

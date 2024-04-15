@@ -50,9 +50,6 @@ extern word crc;
 // FAST_PEEK_MAX must not be greater than the size of the hdw registers (64)
 #define FAST_PEEK_MAX 64
 
-/* extern void bus_init( void ); */
-/* extern void bus_exit( void ); */
-
 extern void bus_read( byte* buf, address adr, address len );
 extern void bus_write( byte* buf, address adr, address len );
 extern byte* bus_fast_peek( byte* buf, address adr, address* len );

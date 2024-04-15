@@ -18,7 +18,7 @@ dist/hpemung: src/bus.o \
 	src/keyboard.o \
 	src/main.o \
 	src/opcodes.o \
-	src/files.o \
+	src/persistence.o \
 	src/ports.o \
 	src/rpl.o \
 	src/config.o \

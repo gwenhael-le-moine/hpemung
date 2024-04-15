@@ -10,7 +10,7 @@
 #include "timers.h"
 #include "display.h"
 #include "emulator.h"
-#include "files.h"
+#include "persistence.h"
 #include "ports.h"
 #include "config.h"
 
