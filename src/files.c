@@ -367,8 +367,8 @@ void rom_init( char* filename )
         printf( "ERROR: can't read ROM file\n" );
         exit( 0x14 );
     }
-    // pack_fclose(f);
     fclose( f );
+
     if ( buf[ 0 ] & 0xF0 || buf[ 1 ] & 0xF0 ) {
         if ( size == 1024 * 1024 ) {
             printf( "ERROR: wrong ROM\n" );

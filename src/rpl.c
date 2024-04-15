@@ -14,10 +14,8 @@
 int rpl_object_size( byte* obj )
 {
     int size;
-    int prologue;
     int n;
-
-    prologue = nib_to_unsigned( obj, 5 );
+    int prologue = nib_to_unsigned( obj, 5 );
 
     switch ( prologue ) {
 
@@ -85,9 +83,9 @@ int rpl_object_size( byte* obj )
 
         case 0x02A96: // Directory
             n = nib_to_unsigned( obj + 8, 5 );
-            if ( n == 0 ) {
+            if ( n == 0 )
                 size = 13;
-            } else {
+            else {
                 size = 8 + n;
                 size += 4 + 2 * nib_to_unsigned( obj + size, 2 );
                 size += rpl_object_size( obj + size );
@@ -103,9 +101,8 @@ int rpl_object_size( byte* obj )
 static address read_address( address adr )
 {
     byte buf[ 5 ];
-    word ocrc;
+    word ocrc = crc;
 
-    ocrc = crc;
     bus_read( buf, adr, 5 );
     crc = ocrc;
 
@@ -123,12 +120,11 @@ static void write_address( address adr, address val )
 static int moveup( address src, address dst, address cnt )
 {
     byte* buf = malloc( cnt * sizeof( byte ) );
-    word ocrc;
 
     if ( !buf )
         return -1;
 
-    ocrc = crc;
+    word ocrc = crc;
     bus_read( buf, src, cnt );
     bus_write( buf, dst, cnt );
     crc = ocrc;
@@ -139,13 +135,11 @@ static int moveup( address src, address dst, address cnt )
 
 address rpl_make_temp( address size )
 {
-    address temptop, rsktop, dsktop;
+    address temptop = read_address( TEMPTOP );
+    address rsktop = read_address( RSKTOP );
+    address dsktop = read_address( DSKTOP );
 
     size += 6;
-
-    temptop = read_address( TEMPTOP );
-    rsktop = read_address( RSKTOP );
-    dsktop = read_address( DSKTOP );
 
     if ( rsktop + size > dsktop )
         return 0;
@@ -163,24 +157,23 @@ address rpl_make_temp( address size )
 
 void rpl_push( address adr )
 {
-    address dsktop, avmem;
+    address avmem = read_address( AVMEM );
 
-    avmem = read_address( AVMEM );
     if ( !avmem )
         return;
     write_address( AVMEM, avmem - 1 );
 
-    dsktop = read_address( DSKTOP );
+    address dsktop = read_address( DSKTOP );
     dsktop -= 5;
+
     write_address( dsktop, adr );
     write_address( DSKTOP, dsktop );
 }
 
 int rpl_push_object( byte* obj, address size )
 {
-    address adr;
+    address adr = rpl_make_temp( size );
 
-    adr = rpl_make_temp( size );
     if ( !adr )
         return -1;
 
