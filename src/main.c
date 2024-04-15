@@ -22,11 +22,13 @@ int main( int argc, char* argv[] )
 {
     parse_args( argc, argv );
 
-    gui_init();
+    if ( !gui_init() )
+        exit( EXIT_FAILURE );
+
     emulator_init( "rom", "ram", "port1", "port2" );
 
     while ( !please_exit ) {
-        if ( please_exit || !SDL_ready )
+        if ( please_exit )
             break;
 
         currentTime = SDL_GetTicks();

@@ -91,8 +91,6 @@ typedef struct {
 static TTF_Font* ttffont = NULL;
 static TTF_Font* ttffont2 = NULL;
 
-bool SDL_ready = false;
-
 SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL;
 SDL_Texture* texTarget = NULL;
@@ -1493,16 +1491,16 @@ bool gui_events()
     return true;
 }
 
-void gui_init( void )
+bool gui_init( void )
 {
     if ( SDL_Init( SDL_INIT_VIDEO | IMG_INIT_PNG | SDL_INIT_TIMER ) < 0 ) {
         printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
-        return;
+        return false;
     }
 
     if ( TTF_Init() == -1 ) {
         fprintf( stderr, "Erreur d'initialisation de TTF_Init : %s\n", TTF_GetError() );
-        exit( EXIT_FAILURE );
+        return false;
     }
 
     ttffont = TTF_OpenFont( config.ui_font, 7 * UI_SCALE );
@@ -1514,17 +1512,17 @@ void gui_init( void )
     window = SDL_CreateWindow( "hpemu", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, window_width, window_height, SDL_WINDOW_SHOWN );
     if ( window == NULL ) {
         printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
-        return;
+        return false;
     }
 
     renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
     if ( renderer == NULL ) {
         printf( "Erreur lors de la creation d'un renderer : %s", SDL_GetError() );
-        return;
+        return false;
     }
 
-    tex2Target = SDL_CreateTexture( renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 504, 1124 );
-    texTarget = SDL_CreateTexture( renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, 504, 1124 );
+    tex2Target = SDL_CreateTexture( renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, window_width, window_height );
+    texTarget = SDL_CreateTexture( renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, window_width, window_height );
 
     SDL_UpdateWindowSurface( window );
 
@@ -1532,10 +1530,10 @@ void gui_init( void )
 
     printf( "init done\n" );
 
-    SDL_ready = true;
+    return true;
 }
 
-void gui_exit( void )
+bool gui_exit( void )
 {
     TTF_CloseFont( ttffont );
     TTF_CloseFont( ttffont2 );
@@ -1544,4 +1542,6 @@ void gui_exit( void )
     SDL_DestroyRenderer( renderer );
     SDL_DestroyWindow( window );
     SDL_Quit();
+
+    return true;
 }
