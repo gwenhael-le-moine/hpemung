@@ -45,7 +45,7 @@ void emulator_init( char* fn_rom, char* fn_ram, char* fn_port1, char* fn_port2 )
 {
     static bool locked = false;
 
-    get_absolute_working_dir_path( "hpemu" );
+    get_absolute_working_dir_path( "hpemung" );
     rom_init( fn_rom );
     ram_init( fn_ram );
     ports_init( fn_port1, fn_port2 );

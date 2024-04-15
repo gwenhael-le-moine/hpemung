@@ -1509,7 +1509,7 @@ bool gui_init( void )
     int window_width = ( LCD_WIDTH + ( 2 * UI_PADDING ) ) * UI_SCALE;
     int window_height = ( UI_KB_OFFSET_Y + UI_KB_HEIGHT ) + 2 * UI_PADDING;
 
-    window = SDL_CreateWindow( "hpemu", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, window_width, window_height, SDL_WINDOW_SHOWN );
+    window = SDL_CreateWindow( "hpemung", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, window_width, window_height, SDL_WINDOW_SHOWN );
     if ( window == NULL ) {
         printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
         return false;

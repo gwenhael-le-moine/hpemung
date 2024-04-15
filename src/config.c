@@ -1,7 +1,7 @@
 #include "config.h"
 
 Config config = {
-    .progname = "hpemu",
+    .progname = "hpemung",
     .ui_font = "/usr/share/fonts/TTF/unifont.ttf",
     .real_speed = true,
     .verbose = true,
