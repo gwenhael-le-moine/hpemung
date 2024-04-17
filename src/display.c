@@ -11,21 +11,22 @@ byte display_line_count;
 byte display_height;
 byte display_offset;
 bool display_enable;
+bool shouldRender = false;
 
-byte lcdScreen[ LCD_WIDTH * LCD_HEIGHT ];
-byte prev_lcdScreen[ LCD_WIDTH * LCD_HEIGHT ];
-byte prev2_lcdScreen[ LCD_WIDTH * LCD_HEIGHT ];
 byte lcdScreenGS[ LCD_WIDTH * LCD_HEIGHT ];
+
+static byte lcdScreen[ LCD_WIDTH * LCD_HEIGHT ];
+static byte prev_lcdScreen[ LCD_WIDTH * LCD_HEIGHT ];
+static byte prev2_lcdScreen[ LCD_WIDTH * LCD_HEIGHT ];
 
 static address cur_adr;
 static bool in_menu;
 static byte off_line;
 static int off_cnt;
-bool shouldRender = false;
 static int screen_draw_count = 0;
 static bool drawGS = false;
 
-static address draw_lcd_line( address adr, int y )
+static inline address draw_lcd_line( address adr, int y )
 {
     int bit = 0;
     byte data = 0; // Initialized to remove warning
