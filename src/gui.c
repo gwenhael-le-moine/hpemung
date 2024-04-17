@@ -1043,12 +1043,10 @@ static inline int _button_mouse_up( Button* buttons, int mx, int my, int mb )
     return ret;
 }
 
-static inline void button_draw_all( Button* buttons )
+static inline void button_draw_all(  )
 {
-    while ( buttons->label ) {
-        _button_draw( buttons );
-        buttons++;
-    }
+    for ( int i = 0; i < sizeof( gui_buttons ) / sizeof( gui_buttons[ 0 ] ); ++i )
+        _button_draw( &( gui_buttons[ i ] ) );
 }
 
 void SDL__display_show()
@@ -1120,7 +1118,7 @@ void SDL__display_show()
     SDL_Rect r2 = { LCD_X * config.ui_scale, LCD_Y * config.ui_scale, LCD_WIDTH * config.ui_scale, LCD_HEIGHT * config.ui_scale };
     SDL_RenderCopyEx( renderer, texTarget, &r1, &r2, 0, NULL, SDL_FLIP_NONE );
 
-    button_draw_all( gui_buttons );
+    button_draw_all();
 
     SDL_RenderPresent( renderer );
 }
