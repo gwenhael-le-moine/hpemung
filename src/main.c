@@ -42,7 +42,7 @@ int main( int argc, char* argv[] )
 
         if ( currentTime > lastTime_timer5 + delay_timer5 ) {
             lastTime_timer5 = currentTime;
-            SDL__display_show();
+            gui_refresh();
         }
 
         if ( !gui_events() )

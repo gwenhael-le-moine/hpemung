@@ -38,6 +38,8 @@
 
 #define UI_KB_HEIGHT ( config.ui_scale * Y_LINE( 9 ) )
 
+#define NB_KEYS 50
+
 /* Button flags:
  * Use BUTTON_B1RELEASE for normal buttons.
  * Use BUTTON_B1RELEASE | BUTTON_B2TOGGLE for calculator buttons.
@@ -91,27 +93,26 @@ static TTF_Font* ttffont2 = NULL;
 
 SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL;
-SDL_Texture* texTarget = NULL;
-SDL_Texture* tex2Target = NULL;
+SDL_Texture* window_texture = NULL;
 
-SDL_Surface* surfaces_labels[ 49 ];
-SDL_Texture* textures_labels[ 49 ];
+SDL_Surface* surfaces_labels[ NB_KEYS ];
+SDL_Texture* textures_labels[ NB_KEYS ];
 
-SDL_Surface* surfaces_labels_Lshift[ 49 ];
-SDL_Texture* textures_labels_Lshift[ 49 ];
+SDL_Surface* surfaces_labels_Lshift[ NB_KEYS ];
+SDL_Texture* textures_labels_Lshift[ NB_KEYS ];
 
-SDL_Surface* surfaces_labels_Rshift[ 49 ];
-SDL_Texture* textures_labels_Rshift[ 49 ];
+SDL_Surface* surfaces_labels_Rshift[ NB_KEYS ];
+SDL_Texture* textures_labels_Rshift[ NB_KEYS ];
 
-SDL_Surface* surfaces_labels_below[ 49 ];
-SDL_Texture* textures_labels_below[ 49 ];
+SDL_Surface* surfaces_labels_below[ NB_KEYS ];
+SDL_Texture* textures_labels_below[ NB_KEYS ];
 
-SDL_Surface* surfaces_labels_letter[ 49 ];
-SDL_Texture* textures_labels_letter[ 49 ];
+SDL_Surface* surfaces_labels_letter[ NB_KEYS ];
+SDL_Texture* textures_labels_letter[ NB_KEYS ];
 
 static const int std_flags = BUTTON_B1RELEASE | BUTTON_B2TOGGLE;
 
-static Button gui_buttons[] = {
+static Button gui_buttons[ NB_KEYS ] = {
     {.index = 0,
      .x = X_COL( 0 ),
      .y = Y_LINE( 0 ),
@@ -791,176 +792,146 @@ static colors_t colors = {
     .below = {.r = 128, .g = 108, .b = 29,  .a = 255},
 };
 
-static inline bool _init_keyboard_textures( Button* calcbuttons )
+static inline bool _init_keyboard_textures()
 {
-    printf( "init texts\n" );
+    SDL_Surface* s = NULL;
+    SDL_Texture* t = NULL;
+
     if ( ttffont == NULL ) {
         printf( "init texts error Font NULL\n" );
         return false;
     }
-    SDL_Surface* s = NULL;
-    SDL_Texture* t = NULL;
 
-    int i = 0;
-    Button* buttons = calcbuttons;
-    while ( buttons->label ) {
+    for ( int i = 0; i < NB_KEYS; ++i ) {
         s = NULL;
         t = NULL;
-        if ( buttons->label && strcmp( buttons->label, "" ) != 0 ) {
-            s = TTF_RenderUTF8_Blended( ttffont, buttons->label, colors.label );
-            if ( s ) {
+        if ( gui_buttons[ i ].label && strcmp( gui_buttons[ i ].label, "" ) != 0 ) {
+            s = TTF_RenderUTF8_Blended( ttffont, gui_buttons[ i ].label, colors.label );
+            if ( s )
                 t = SDL_CreateTextureFromSurface( renderer, s );
-            }
         }
-
         surfaces_labels[ i ] = s;
         textures_labels[ i ] = t;
 
-        i++;
-        buttons++;
-    }
-
-    i = 0;
-    buttons = calcbuttons;
-    while ( buttons->label_Lshift ) {
         s = NULL;
         t = NULL;
-        if ( buttons->label_Lshift && strcmp( buttons->label_Lshift, "" ) != 0 ) {
-            s = TTF_RenderUTF8_Blended( ttffont2, buttons->label_Lshift, colors.Lshift );
-            if ( s ) {
+        if ( gui_buttons[ i ].label_Lshift && strcmp( gui_buttons[ i ].label_Lshift, "" ) != 0 ) {
+            s = TTF_RenderUTF8_Blended( ttffont2, gui_buttons[ i ].label_Lshift, colors.Lshift );
+            if ( s )
                 t = SDL_CreateTextureFromSurface( renderer, s );
-            }
         }
         surfaces_labels_Lshift[ i ] = s;
         textures_labels_Lshift[ i ] = t;
-        i++;
-        buttons++;
-    }
 
-    i = 0;
-    buttons = calcbuttons;
-    while ( buttons->label_Rshift ) {
         s = NULL;
         t = NULL;
-        if ( buttons->label_Rshift && strcmp( buttons->label_Rshift, "" ) != 0 ) {
-            s = TTF_RenderUTF8_Blended( ttffont2, buttons->label_Rshift, colors.Rshift );
-            if ( s ) {
+        if ( gui_buttons[ i ].label_Rshift && strcmp( gui_buttons[ i ].label_Rshift, "" ) != 0 ) {
+            s = TTF_RenderUTF8_Blended( ttffont2, gui_buttons[ i ].label_Rshift, colors.Rshift );
+            if ( s )
                 t = SDL_CreateTextureFromSurface( renderer, s );
-            }
         }
         surfaces_labels_Rshift[ i ] = s;
         textures_labels_Rshift[ i ] = t;
-        i++;
-        buttons++;
-    }
 
-    i = 0;
-    buttons = calcbuttons;
-    while ( buttons->label_below ) {
         s = NULL;
         t = NULL;
-        if ( buttons->label_below && strcmp( buttons->label_below, "" ) != 0 ) {
-            s = TTF_RenderUTF8_Blended( ttffont2, buttons->label_below, colors.below );
-            if ( s ) {
+        if ( gui_buttons[ i ].label_below && strcmp( gui_buttons[ i ].label_below, "" ) != 0 ) {
+            s = TTF_RenderUTF8_Blended( ttffont2, gui_buttons[ i ].label_below, colors.below );
+            if ( s )
                 t = SDL_CreateTextureFromSurface( renderer, s );
-            }
         }
         surfaces_labels_below[ i ] = s;
         textures_labels_below[ i ] = t;
-        i++;
-        buttons++;
-    }
 
-    i = 0;
-    buttons = calcbuttons;
-    while ( buttons->label_letter ) {
         s = NULL;
         t = NULL;
-        if ( buttons->label_letter && strcmp( buttons->label_letter, "" ) != 0 ) {
-            s = TTF_RenderUTF8_Blended( ttffont2, buttons->label_letter, colors.letter );
-            if ( s ) {
+        if ( gui_buttons[ i ].label_letter && strcmp( gui_buttons[ i ].label_letter, "" ) != 0 ) {
+            s = TTF_RenderUTF8_Blended( ttffont2, gui_buttons[ i ].label_letter, colors.letter );
+            if ( s )
                 t = SDL_CreateTextureFromSurface( renderer, s );
-            }
         }
         surfaces_labels_letter[ i ] = s;
         textures_labels_letter[ i ] = t;
-        i++;
-        buttons++;
     }
 
     return true;
 }
 
-static inline void _draw_button_labels( int index, int x, int y, int btn_w, int btn_h )
+static inline void _draw_button_labels( Button b )
 {
     int texW;
     int texH;
     int h_padding = 3;
 
-    SDL_Surface* surface_label = surfaces_labels[ index ];
-    SDL_Texture* texture_label = textures_labels[ index ];
+    SDL_Surface* surface_label = surfaces_labels[ b.index ];
+    SDL_Texture* texture_label = textures_labels[ b.index ];
     if ( surface_label != NULL && texture_label != NULL ) {
-        texW = surface_label->w;
-        texH = surface_label->h;
-        SDL_Rect destRect = { x + ( btn_w - texW ) / 2, y + ( btn_h / 3 ), texW, texH };
+        texW = surface_label->w / config.ui_scale;
+        texH = surface_label->h / config.ui_scale;
+        SDL_Rect destRect = { config.ui_scale * ( b.x + ( b.w - texW ) / 2 ), config.ui_scale * ( b.y + ( b.h / 3 ) ),
+                              config.ui_scale * texW, config.ui_scale * texH };
         SDL_RenderCopy( renderer, texture_label, NULL, &destRect );
     }
 
-    SDL_Surface* surface_label_Lshift = surfaces_labels_Lshift[ index ];
-    SDL_Texture* texture_label_Lshift = textures_labels_Lshift[ index ];
+    SDL_Surface* surface_label_Lshift = surfaces_labels_Lshift[ b.index ];
+    SDL_Texture* texture_label_Lshift = textures_labels_Lshift[ b.index ];
     if ( surface_label_Lshift != NULL && texture_label_Lshift != NULL ) {
-        texW = surface_label_Lshift->w;
-        texH = surface_label_Lshift->h;
-        SDL_Rect destRect = { x + h_padding, y, texW, texH };
+        texW = surface_label_Lshift->w / config.ui_scale;
+        texH = surface_label_Lshift->h / config.ui_scale;
+        SDL_Rect destRect = { config.ui_scale * ( b.x + h_padding ), config.ui_scale * b.y, config.ui_scale * texW,
+                              config.ui_scale * texH };
         SDL_RenderCopy( renderer, texture_label_Lshift, NULL, &destRect );
     }
 
-    SDL_Surface* surface_label_Rshift = surfaces_labels_Rshift[ index ];
-    SDL_Texture* texture_label_Rshift = textures_labels_Rshift[ index ];
+    SDL_Surface* surface_label_Rshift = surfaces_labels_Rshift[ b.index ];
+    SDL_Texture* texture_label_Rshift = textures_labels_Rshift[ b.index ];
     if ( surface_label_Rshift != NULL && texture_label_Rshift != NULL ) {
-        texW = surface_label_Rshift->w;
-        texH = surface_label_Rshift->h;
-        SDL_Rect destRect = { ( x + btn_w ) - ( texW + h_padding ), y, texW, texH };
+        texW = surface_label_Rshift->w / config.ui_scale;
+        texH = surface_label_Rshift->h / config.ui_scale;
+        SDL_Rect destRect = { config.ui_scale * ( ( b.x + b.w ) - ( texW + h_padding ) ), config.ui_scale * b.y, config.ui_scale * texW,
+                              config.ui_scale * texH };
         if ( surface_label_Lshift == NULL )
-            destRect.x = x + ( btn_w - texW ) / 2;
+            destRect.x = config.ui_scale * ( b.x + ( ( b.w / 2 ) - ( texW / 2 ) ) );
         SDL_RenderCopy( renderer, texture_label_Rshift, NULL, &destRect );
     }
 
-    SDL_Surface* surface_label_letter = surfaces_labels_letter[ index ];
-    SDL_Texture* texture_label_letter = textures_labels_letter[ index ];
+    SDL_Surface* surface_label_letter = surfaces_labels_letter[ b.index ];
+    SDL_Texture* texture_label_letter = textures_labels_letter[ b.index ];
     if ( surface_label_letter != NULL && texture_label_letter != NULL ) {
-        texW = surface_label_letter->w;
-        texH = surface_label_letter->h;
-        SDL_Rect destRect = { ( x + btn_w ) - ( texW / 2 ), y + ( btn_h - ( 5 * config.ui_scale ) ), texW, texH };
+        texW = surface_label_letter->w / config.ui_scale;
+        texH = surface_label_letter->h / config.ui_scale;
+        SDL_Rect destRect = { config.ui_scale * ( ( b.x + b.w ) - ( texW / 2 ) ), config.ui_scale * ( b.y + ( b.h - 5 ) ),
+                              config.ui_scale * texW, config.ui_scale * texH };
         SDL_RenderCopy( renderer, texture_label_letter, NULL, &destRect );
     }
 
-    SDL_Surface* surface_label_below = surfaces_labels_below[ index ];
-    SDL_Texture* texture_label_below = textures_labels_below[ index ];
+    SDL_Surface* surface_label_below = surfaces_labels_below[ b.index ];
+    SDL_Texture* texture_label_below = textures_labels_below[ b.index ];
     if ( surface_label_below != NULL && texture_label_below != NULL ) {
-        texW = surface_label_below->w;
-        texH = surface_label_below->h;
-        SDL_Rect destRect = { x + ( btn_w - texW ) / 2, y + ( btn_h - ( 3 * config.ui_scale ) ), texW, texH };
+        texW = surface_label_below->w / config.ui_scale;
+        texH = surface_label_below->h / config.ui_scale;
+        SDL_Rect destRect = { config.ui_scale * ( b.x + ( b.w - texW ) / 2 ), config.ui_scale * ( b.y + ( b.h - 3 ) ),
+                              config.ui_scale * texW, config.ui_scale * texH };
         SDL_RenderCopy( renderer, texture_label_below, NULL, &destRect );
     }
 }
 
-static inline void _button_draw( Button* b )
+static inline void _button_draw( Button b )
 {
-    SDL_Rect rectToDraw = { ( b->x + ( UI_KEY_PADDING / 2 ) ) * config.ui_scale, ( b->y + ( UI_KEY_PADDING * 1.25 ) ) * config.ui_scale,
-                            ( b->w - UI_KEY_PADDING ) * config.ui_scale, ( b->h - ( UI_KEY_PADDING * 2 ) ) * config.ui_scale };
+    SDL_Rect rectToDraw = { ( b.x + ( UI_KEY_PADDING / 2 ) ) * config.ui_scale, ( b.y + ( UI_KEY_PADDING * 1.25 ) ) * config.ui_scale,
+                            ( b.w - UI_KEY_PADDING ) * config.ui_scale, ( b.h - ( UI_KEY_PADDING * 2 ) ) * config.ui_scale };
 
-    if ( b->index < 6 )
+    if ( b.index < 6 )
         SDL_SetRenderDrawColor( renderer, colors.label.r, colors.label.g, colors.label.g, colors.label.a );
-    else if ( b->index == 34 )
+    else if ( b.index == 34 )
         SDL_SetRenderDrawColor( renderer, colors.Lshift.r, colors.Lshift.g, colors.Lshift.g, colors.Lshift.a );
-    else if ( b->index == 39 )
+    else if ( b.index == 39 )
         SDL_SetRenderDrawColor( renderer, colors.Rshift.r, colors.Rshift.g, colors.Rshift.g, colors.Rshift.a );
     else
         SDL_SetRenderDrawColor( renderer, colors.button_bg.r, colors.button_bg.g, colors.button_bg.g, colors.button_bg.a );
     SDL_RenderFillRect( renderer, &rectToDraw );
 
-    if ( b->flags & BUTTON_PUSHED )
+    if ( b.flags & BUTTON_PUSHED )
         SDL_SetRenderDrawColor( renderer, colors.button_active.r, colors.button_active.g, colors.button_active.b, colors.button_active.a );
     else
         SDL_SetRenderDrawColor( renderer, colors.button_inactive.r, colors.button_inactive.g, colors.button_inactive.b,
@@ -968,88 +939,86 @@ static inline void _button_draw( Button* b )
 
     SDL_RenderDrawRect( renderer, &rectToDraw );
 
-    _draw_button_labels( b->index, b->x * config.ui_scale, b->y * config.ui_scale, b->w * config.ui_scale, b->h * config.ui_scale );
+    _draw_button_labels( b );
 }
 
-static inline Button* _find_button( Button* b, int x, int y )
+static inline int _find_button( int x, int y )
 {
-    while ( b->label ) {
-        if ( x >= b->x * config.ui_scale && x < b->x * config.ui_scale + b->w * config.ui_scale && y >= b->y * config.ui_scale &&
-             y < b->y * config.ui_scale + b->h * config.ui_scale )
-            return b;
+    for ( int i = 0; i < NB_KEYS; ++i )
+        if ( x >= gui_buttons[ i ].x * config.ui_scale && x < gui_buttons[ i ].x * config.ui_scale + gui_buttons[ i ].w * config.ui_scale &&
+             y >= gui_buttons[ i ].y * config.ui_scale &&
+             y < gui_buttons[ i ].y * config.ui_scale + gui_buttons[ i ].h * config.ui_scale ) {
+            if ( gui_buttons[ i ].flags & BUTTON_DISABLED )
+                return -1;
+            else
+                return i;
+        }
 
-        b++;
+    return -1;
+}
+
+static inline void _button_mouse_down( int mouse_x, int mouse_y, int mouse_button )
+{
+    int bindex = _find_button( mouse_x, mouse_y );
+    if ( bindex == -1 )
+        return;
+
+    if ( ( mouse_button == 2 && ( gui_buttons[ bindex ].flags & BUTTON_B2TOGGLE ) ) ||
+         ( mouse_button == 1 && ( gui_buttons[ bindex ].flags & BUTTON_B1TOGGLE ) ) ) {
+        fprintf( stderr, "Toggle mouse_button %i\n", mouse_button );
+
+        if ( gui_buttons[ bindex ].flags & BUTTON_PUSHED ) {
+            gui_buttons[ bindex ].flags &= ~BUTTON_PUSHED;
+
+            if ( gui_buttons[ bindex ].up )
+                gui_buttons[ bindex ].up();
+        } else {
+            gui_buttons[ bindex ].flags |= BUTTON_PUSHED;
+
+            if ( gui_buttons[ bindex ].down )
+                gui_buttons[ bindex ].down();
+        }
+    } else if ( mouse_button == 1 && !( gui_buttons[ bindex ].flags & BUTTON_PUSHED ) ) {
+        gui_buttons[ bindex ].flags |= BUTTON_PUSHED;
+
+        if ( gui_buttons[ bindex ].down )
+            gui_buttons[ bindex ].down();
     }
-
-    return NULL;
 }
 
-static inline int _button_mouse_down( Button* buttons, int mx, int my, int mb )
+static inline void _button_mouse_up( int mouse_x, int mouse_y, int mouse_button )
 {
-    Button* b = _find_button( buttons, mx, my );
-    if ( !b )
-        return 0;
+    int bindex = _find_button( mouse_x, mouse_y );
+    if ( bindex == -1 )
+        return;
 
-    if ( !( b->flags & BUTTON_DISABLED ) ) {
-        if ( ( mb == 2 && ( b->flags & BUTTON_B2TOGGLE ) ) || ( mb == 1 && ( b->flags & BUTTON_B1TOGGLE ) ) ) {
+    if ( !( gui_buttons[ bindex ].flags & BUTTON_DISABLED ) ) {
+        if ( mouse_button == 1 && ( gui_buttons[ bindex ].flags & BUTTON_PUSHED ) && !( gui_buttons[ bindex ].flags & BUTTON_B1TOGGLE ) ) {
+            gui_buttons[ bindex ].flags &= ~BUTTON_PUSHED;
 
-            if ( b->flags & BUTTON_PUSHED ) {
-                b->flags &= ~BUTTON_PUSHED;
-
-                if ( b->up )
-                    b->up();
-            } else {
-                b->flags |= BUTTON_PUSHED;
-
-                if ( b->down )
-                    b->down();
-            }
-        } else if ( mb == 1 && !( b->flags & BUTTON_PUSHED ) ) {
-            b->flags |= BUTTON_PUSHED;
-
-            if ( b->down )
-                b->down();
+            if ( gui_buttons[ bindex ].up )
+                gui_buttons[ bindex ].up();
         }
     }
+    if ( mouse_button == 1 ) {
+        /* for ( b = buttons; gui_buttons[ bindex ].label; b++ ) { */
+        if ( ( gui_buttons[ bindex ].flags & ( BUTTON_B1RELEASE | BUTTON_PUSHED ) ) == ( BUTTON_B1RELEASE | BUTTON_PUSHED ) ) {
+            gui_buttons[ bindex ].flags &= ~BUTTON_PUSHED;
 
-    return 1;
-}
-
-static inline int _button_mouse_up( Button* buttons, int mx, int my, int mb )
-{
-    Button* b = _find_button( buttons, mx, my );
-    int ret = ( b != NULL );
-
-    if ( b && !( b->flags & BUTTON_DISABLED ) ) {
-        if ( mb == 1 && ( b->flags & BUTTON_PUSHED ) && !( b->flags & BUTTON_B1TOGGLE ) ) {
-            b->flags &= ~BUTTON_PUSHED;
-
-            if ( b->up )
-                b->up();
+            if ( gui_buttons[ bindex ].up )
+                gui_buttons[ bindex ].up();
         }
+        /* } */
     }
-    if ( mb == 1 ) {
-        for ( b = buttons; b->label; b++ ) {
-            if ( ( b->flags & ( BUTTON_B1RELEASE | BUTTON_PUSHED ) ) == ( BUTTON_B1RELEASE | BUTTON_PUSHED ) ) {
-                b->flags &= ~BUTTON_PUSHED;
-
-                if ( b->up )
-                    b->up();
-                ret = 1;
-            }
-        }
-    }
-
-    return ret;
 }
 
-static inline void button_draw_all(  )
+static inline void button_draw_all()
 {
-    for ( int i = 0; i < sizeof( gui_buttons ) / sizeof( gui_buttons[ 0 ] ); ++i )
-        _button_draw( &( gui_buttons[ i ] ) );
+    for ( int i = 0; i < NB_KEYS; ++i )
+        _button_draw( gui_buttons[ i ] );
 }
 
-void SDL__display_show()
+void gui_refresh()
 {
     SDL_SetRenderDrawColor( renderer, colors.faceplate.r, colors.faceplate.g, colors.faceplate.b, colors.faceplate.a );
     SDL_RenderClear( renderer );
@@ -1062,10 +1031,10 @@ void SDL__display_show()
         int access;
         Uint32 format;
 
-        if ( SDL_QueryTexture( texTarget, &format, &access, &w, &h ) != 0 )
+        if ( SDL_QueryTexture( window_texture, &format, &access, &w, &h ) != 0 )
             printf( "error\n" );
 
-        if ( SDL_LockTexture( texTarget, NULL, ( void** )&pixels, &pitch ) != 0 )
+        if ( SDL_LockTexture( window_texture, NULL, ( void** )&pixels, &pitch ) != 0 )
             printf( "SDL_LockTexture: %s.\n", SDL_GetError() );
 
         SDL_PixelFormat* pixelFormat = SDL_AllocFormat( format );
@@ -1110,13 +1079,13 @@ void SDL__display_show()
             }
         }
 
-        SDL_UnlockTexture( texTarget );
+        SDL_UnlockTexture( window_texture );
     }
 
     // Show rendered to texture
     SDL_Rect r1 = { 0, 0, LCD_WIDTH, LCD_HEIGHT };
     SDL_Rect r2 = { LCD_X * config.ui_scale, LCD_Y * config.ui_scale, LCD_WIDTH * config.ui_scale, LCD_HEIGHT * config.ui_scale };
-    SDL_RenderCopyEx( renderer, texTarget, &r1, &r2, 0, NULL, SDL_FLIP_NONE );
+    SDL_RenderCopyEx( renderer, window_texture, &r1, &r2, 0, NULL, SDL_FLIP_NONE );
 
     button_draw_all();
 
@@ -1130,11 +1099,11 @@ bool gui_events()
     while ( SDL_PollEvent( &event ) ) {
         switch ( event.type ) {
             case SDL_MOUSEBUTTONUP:
-                _button_mouse_up( gui_buttons, event.button.x, event.button.y, 1 );
+                _button_mouse_up( event.button.x, event.button.y, 1 );
                 break;
 
             case SDL_MOUSEBUTTONDOWN:
-                _button_mouse_down( gui_buttons, event.button.x, event.button.y, 1 );
+                _button_mouse_down( event.button.x, event.button.y, 1 );
                 break;
 
             case SDL_KEYDOWN:
@@ -1519,12 +1488,11 @@ bool gui_init( void )
         return false;
     }
 
-    tex2Target = SDL_CreateTexture( renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, window_width, window_height );
-    texTarget = SDL_CreateTexture( renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, window_width, window_height );
+    window_texture = SDL_CreateTexture( renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, window_width, window_height );
 
     SDL_UpdateWindowSurface( window );
 
-    return _init_keyboard_textures( gui_buttons );
+    return _init_keyboard_textures();
 }
 
 bool gui_exit( void )
