@@ -135,11 +135,11 @@ static void op0D( byte* opc ) // P=P-1
 static void op0E( byte* opc ) // r=r&s f/A / r=r!s f/A
 {
     int len = ( opc[ 2 ] == 0xF ) ? 5 : fl[ opc[ 2 ] ];
-    if ( !( opc[ 3 ] & 8 ) ) {
-        alu_and( REGrF( opc[ 3 ], opc[ 2 ] ), REGsF( opc[ 3 ], opc[ 2 ] ), len );
-    } else {
+    if ( opc[ 3 ] & 8 )
         alu_or( REGrF( opc[ 3 ], opc[ 2 ] ), REGsF( opc[ 3 ], opc[ 2 ] ), len );
-    }
+    else
+        alu_and( REGrF( opc[ 3 ], opc[ 2 ] ), REGsF( opc[ 3 ], opc[ 2 ] ), len );
+
     cpu.pc += 4;
     cpu.cycles += 4 + len;
 }
@@ -427,7 +427,6 @@ static void op808C_E( byte* opc ) // PC=(r)
 
 static void op808F( byte* opc ) // INTOFF
 {
-    // TODO: Implement INTOFF
     cpu.keyscan = false;
     cpu.pc += 4;
     cpu.cycles += 5;
