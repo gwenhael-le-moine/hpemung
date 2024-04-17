@@ -48,10 +48,8 @@ static address draw_lcd_line( address adr, int y )
         }
 
         byte pixel = ( ( data & 1 ) << 6 );
-        if ( pixel != '\0' )
-            pixel = '\3';
-
-        byte pixelGS = lcdScreenGS[ x + y * LCD_WIDTH ];
+        if ( pixel != 0 )
+            pixel = 3;
 
         prev2_lcdScreen[ x + y * LCD_WIDTH ] = prev_lcdScreen[ x + y * LCD_WIDTH ];
         prev_lcdScreen[ x + y * LCD_WIDTH ] = lcdScreen[ x + y * LCD_WIDTH ];
@@ -60,33 +58,8 @@ static address draw_lcd_line( address adr, int y )
         byte prev_pixel = prev_lcdScreen[ x + y * LCD_WIDTH ];
         byte prev2_pixel = prev2_lcdScreen[ x + y * LCD_WIDTH ];
 
-        if ( drawGS == true ) {
-            if ( prev2_pixel == '\0' && prev_pixel == '\0' && pixel == '\0' )
-                pixelGS = '\0';
-
-            if ( prev2_pixel == '\0' && prev_pixel == '\0' && pixel == '\3' )
-                pixelGS = '\1';
-
-            if ( prev2_pixel == '\0' && prev_pixel == '\3' && pixel == '\0' )
-                pixelGS = '\1';
-
-            if ( prev2_pixel == '\3' && prev_pixel == '\0' && pixel == '\0' )
-                pixelGS = '\1';
-
-            if ( prev2_pixel == '\0' && prev_pixel == '\3' && pixel == '\3' )
-                pixelGS = '\2';
-
-            if ( prev2_pixel == '\3' && prev_pixel == '\0' && pixel == '\3' )
-                pixelGS = '\2';
-
-            if ( prev2_pixel == '\3' && prev_pixel == '\3' && pixel == '\0' )
-                pixelGS = '\2';
-
-            if ( prev2_pixel == '\3' && prev_pixel == '\3' && pixel == '\3' )
-                pixelGS = '\3';
-
-            lcdScreenGS[ x + y * LCD_WIDTH ] = pixelGS;
-        }
+        if ( drawGS == true )
+            lcdScreenGS[ x + y * LCD_WIDTH ] = ( prev2_pixel + prev_pixel + pixel ) / 3;
 
         data >>= 1;
         bit--;

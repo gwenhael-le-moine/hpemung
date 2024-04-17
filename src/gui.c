@@ -72,12 +72,6 @@ typedef struct {
 
 typedef struct {
     SDL_Color faceplate;
-
-    SDL_Color lcd_pixoff;
-    SDL_Color lcd_pixgray1;
-    SDL_Color lcd_pixgray2;
-    SDL_Color lcd_pixon;
-
     SDL_Color button_bg;
     SDL_Color button_active;
     SDL_Color button_inactive;
@@ -774,14 +768,8 @@ static Button gui_buttons[ NB_KEYS ] = {
      .up = release_LoadFile},
 };
 
-static colors_t colors = {
+static colors_t gui_colors = {
     .faceplate = {.r = 48,  .g = 68,  .b = 90,  .a = 255},
-
-    .lcd_pixoff = {.r = 119, .g = 153, .b = 136, .a = 255},
-    .lcd_pixgray1 = {.r = 71,  .g = 134, .b = 145, .a = 255},
-    .lcd_pixgray2 = {.r = 13,  .g = 108, .b = 111, .a = 255},
-    .lcd_pixon = {.r = 37,  .g = 61,  .b = 84,  .a = 255},
-
     .button_bg = {.r = 16,  .g = 26,  .b = 39,  .a = 33 },
     .button_active = {.r = 255, .g = 255, .b = 39,  .a = 33 },
     .button_inactive = {.r = 0,   .g = 0,   .b = 0,   .a = 255},
@@ -790,6 +778,12 @@ static colors_t colors = {
     .Rshift = {.r = 125, .g = 215, .b = 235, .a = 255},
     .letter = {.r = 255, .g = 255, .b = 255, .a = 255},
     .below = {.r = 128, .g = 108, .b = 29,  .a = 255},
+};
+static SDL_Color pixels_colors[] = {
+    {.r = 119, .g = 153, .b = 136, .a = 255},
+    {.r = 71,  .g = 134, .b = 145, .a = 255},
+    {.r = 13,  .g = 108, .b = 111, .a = 255},
+    {.r = 37,  .g = 61,  .b = 84,  .a = 255},
 };
 
 static inline bool _init_keyboard_textures()
@@ -806,7 +800,7 @@ static inline bool _init_keyboard_textures()
         s = NULL;
         t = NULL;
         if ( gui_buttons[ i ].label && strcmp( gui_buttons[ i ].label, "" ) != 0 ) {
-            s = TTF_RenderUTF8_Blended( ttffont, gui_buttons[ i ].label, colors.label );
+            s = TTF_RenderUTF8_Blended( ttffont, gui_buttons[ i ].label, gui_colors.label );
             if ( s )
                 t = SDL_CreateTextureFromSurface( renderer, s );
         }
@@ -816,7 +810,7 @@ static inline bool _init_keyboard_textures()
         s = NULL;
         t = NULL;
         if ( gui_buttons[ i ].label_Lshift && strcmp( gui_buttons[ i ].label_Lshift, "" ) != 0 ) {
-            s = TTF_RenderUTF8_Blended( ttffont2, gui_buttons[ i ].label_Lshift, colors.Lshift );
+            s = TTF_RenderUTF8_Blended( ttffont2, gui_buttons[ i ].label_Lshift, gui_colors.Lshift );
             if ( s )
                 t = SDL_CreateTextureFromSurface( renderer, s );
         }
@@ -826,7 +820,7 @@ static inline bool _init_keyboard_textures()
         s = NULL;
         t = NULL;
         if ( gui_buttons[ i ].label_Rshift && strcmp( gui_buttons[ i ].label_Rshift, "" ) != 0 ) {
-            s = TTF_RenderUTF8_Blended( ttffont2, gui_buttons[ i ].label_Rshift, colors.Rshift );
+            s = TTF_RenderUTF8_Blended( ttffont2, gui_buttons[ i ].label_Rshift, gui_colors.Rshift );
             if ( s )
                 t = SDL_CreateTextureFromSurface( renderer, s );
         }
@@ -836,7 +830,7 @@ static inline bool _init_keyboard_textures()
         s = NULL;
         t = NULL;
         if ( gui_buttons[ i ].label_below && strcmp( gui_buttons[ i ].label_below, "" ) != 0 ) {
-            s = TTF_RenderUTF8_Blended( ttffont2, gui_buttons[ i ].label_below, colors.below );
+            s = TTF_RenderUTF8_Blended( ttffont2, gui_buttons[ i ].label_below, gui_colors.below );
             if ( s )
                 t = SDL_CreateTextureFromSurface( renderer, s );
         }
@@ -846,7 +840,7 @@ static inline bool _init_keyboard_textures()
         s = NULL;
         t = NULL;
         if ( gui_buttons[ i ].label_letter && strcmp( gui_buttons[ i ].label_letter, "" ) != 0 ) {
-            s = TTF_RenderUTF8_Blended( ttffont2, gui_buttons[ i ].label_letter, colors.letter );
+            s = TTF_RenderUTF8_Blended( ttffont2, gui_buttons[ i ].label_letter, gui_colors.letter );
             if ( s )
                 t = SDL_CreateTextureFromSurface( renderer, s );
         }
@@ -922,20 +916,21 @@ static inline void _button_draw( Button b )
                             ( b.w - UI_KEY_PADDING ) * config.ui_scale, ( b.h - ( UI_KEY_PADDING * 2 ) ) * config.ui_scale };
 
     if ( b.index < 6 )
-        SDL_SetRenderDrawColor( renderer, colors.label.r, colors.label.g, colors.label.g, colors.label.a );
+        SDL_SetRenderDrawColor( renderer, gui_colors.label.r, gui_colors.label.g, gui_colors.label.g, gui_colors.label.a );
     else if ( b.index == 34 )
-        SDL_SetRenderDrawColor( renderer, colors.Lshift.r, colors.Lshift.g, colors.Lshift.g, colors.Lshift.a );
+        SDL_SetRenderDrawColor( renderer, gui_colors.Lshift.r, gui_colors.Lshift.g, gui_colors.Lshift.g, gui_colors.Lshift.a );
     else if ( b.index == 39 )
-        SDL_SetRenderDrawColor( renderer, colors.Rshift.r, colors.Rshift.g, colors.Rshift.g, colors.Rshift.a );
+        SDL_SetRenderDrawColor( renderer, gui_colors.Rshift.r, gui_colors.Rshift.g, gui_colors.Rshift.g, gui_colors.Rshift.a );
     else
-        SDL_SetRenderDrawColor( renderer, colors.button_bg.r, colors.button_bg.g, colors.button_bg.g, colors.button_bg.a );
+        SDL_SetRenderDrawColor( renderer, gui_colors.button_bg.r, gui_colors.button_bg.g, gui_colors.button_bg.g, gui_colors.button_bg.a );
     SDL_RenderFillRect( renderer, &rectToDraw );
 
     if ( b.flags & BUTTON_PUSHED )
-        SDL_SetRenderDrawColor( renderer, colors.button_active.r, colors.button_active.g, colors.button_active.b, colors.button_active.a );
+        SDL_SetRenderDrawColor( renderer, gui_colors.button_active.r, gui_colors.button_active.g, gui_colors.button_active.b,
+                                gui_colors.button_active.a );
     else
-        SDL_SetRenderDrawColor( renderer, colors.button_inactive.r, colors.button_inactive.g, colors.button_inactive.b,
-                                colors.button_inactive.a );
+        SDL_SetRenderDrawColor( renderer, gui_colors.button_inactive.r, gui_colors.button_inactive.g, gui_colors.button_inactive.b,
+                                gui_colors.button_inactive.a );
 
     SDL_RenderDrawRect( renderer, &rectToDraw );
 
@@ -1020,7 +1015,7 @@ static inline void button_draw_all()
 
 void gui_refresh()
 {
-    SDL_SetRenderDrawColor( renderer, colors.faceplate.r, colors.faceplate.g, colors.faceplate.b, colors.faceplate.a );
+    SDL_SetRenderDrawColor( renderer, gui_colors.faceplate.r, gui_colors.faceplate.g, gui_colors.faceplate.b, gui_colors.faceplate.a );
     SDL_RenderClear( renderer );
 
     if ( shouldRender == true ) {
@@ -1042,34 +1037,12 @@ void gui_refresh()
         // do stuff
         for ( int y = 0; y < LCD_HEIGHT; y++ ) {
             for ( int x = 0; x < LCD_WIDTH; x++ ) {
-                int R = 0;
-                int G = 0;
-                int B = 0;
-
-                byte hp48pixel = lcdScreenGS[ x + y * LCD_WIDTH ];
-
-                if ( hp48pixel == '\0' ) {
-                    R = colors.lcd_pixoff.r;
-                    G = colors.lcd_pixoff.g;
-                    B = colors.lcd_pixoff.b;
-                } else if ( hp48pixel == '\1' ) {
-                    R = colors.lcd_pixgray1.r;
-                    G = colors.lcd_pixgray1.g;
-                    B = colors.lcd_pixgray1.b;
-                } else if ( hp48pixel == '\2' ) {
-                    R = colors.lcd_pixgray2.r;
-                    G = colors.lcd_pixgray2.g;
-                    B = colors.lcd_pixgray2.b;
-                } else if ( hp48pixel == '\3' ) {
-                    R = colors.lcd_pixon.r;
-                    G = colors.lcd_pixon.g;
-                    B = colors.lcd_pixon.b;
-                }
+                byte pixel = lcdScreenGS[ x + y * LCD_WIDTH ];
 
                 // Now you want to format the color to a correct format that SDL
                 // can use. Basically we convert our RGB color to a hex-like BGR
                 // color.
-                Uint32 color = SDL_MapRGB( pixelFormat, R, G, B );
+                Uint32 color = SDL_MapRGB( pixelFormat, pixels_colors[ pixel ].r, pixels_colors[ pixel ].g, pixels_colors[ pixel ].b );
 
                 // Before setting the color, we need to know where we have to
                 // place it.
