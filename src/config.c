@@ -21,11 +21,12 @@ void parse_args( int argc, char* argv[] )
 {
     int option_index;
     int c = '?';
-    char* optstring = "hVs:";
+    char* optstring = "hVs:f:";
     struct option long_options[] = {
         {"help",           no_argument,       NULL, 'h' },
         {"verbose",        no_argument,       NULL, 'V' },
         {"scale",          required_argument, NULL, 's' },
+        {"font",           required_argument, NULL, 'f' },
         {"throttle",       no_argument,       NULL, 1800},
         {"allow-shutdown", no_argument,       NULL, 1900},
 
@@ -36,7 +37,8 @@ void parse_args( int argc, char* argv[] )
                       "options:\n"
                       "  -h --help               what you are reading\n"
                       "  -V --verbose            be verbose (default: false)\n"
-                      "  -s --scale=<i>          scale GUI (default: 3)\n"
+                      "  -s --scale=<i>          scale GUI (default: %i)\n"
+                      "  -f --font=<path>        set GUI font (default: %s)\n"
                       "     --throttle           Throttle speed (default: false)\n"
                       "     --allow-shutdown     Enable SHUTDN instruction (default: false)\n";
     while ( c != EOF ) {
@@ -44,11 +46,15 @@ void parse_args( int argc, char* argv[] )
 
         switch ( c ) {
             case 'h':
-                fprintf( stderr, help_text, config.progname );
+                fprintf( stderr, help_text, config.progname, config.ui_scale, config.ui_font1 );
                 exit( 0 );
                 break;
             case 's':
                 config.ui_scale = atoi( optarg );
+                break;
+            case 'f':
+                config.ui_font1 = optarg;
+                config.ui_font2 = optarg;
                 break;
             case 'V':
                 config.verbose = true;
