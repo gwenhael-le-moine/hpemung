@@ -2,7 +2,10 @@
 
 Config config = {
     .progname = "hpemung",
-    .ui_font = "/usr/share/fonts/TTF/unifont.ttf",
+    .ui_font1 = "/usr/share/fonts/TTF/unifont.ttf",
+    .ui_font2 = "/usr/share/fonts/TTF/unifont.ttf",
+    .ui_font_size1 = 6,
+    .ui_font_size2 = 4,
     .real_speed = true,
     .verbose = true,
 };

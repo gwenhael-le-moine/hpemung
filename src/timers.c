@@ -49,9 +49,11 @@ void timer2_update( void )
         return;
 
     timer2_value--;
+
     if ( timer2_value & 0x80000000 ) {
         if ( timer2_control & TIMER2_WAKE ) {
             timer2_control |= TIMER2_SRQ;
+
             if ( cpu.shutdown ) {
                 cpu.shutdown = 0;
                 timer2_control &= ~TIMER2_WAKE;
@@ -59,6 +61,7 @@ void timer2_update( void )
         }
         if ( timer2_control & TIMER2_INT ) {
             timer2_control |= TIMER2_SRQ;
+
             if ( !cpu.shutdown )
                 cpu_interrupt();
         }

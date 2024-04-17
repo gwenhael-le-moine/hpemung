@@ -359,7 +359,7 @@ static Button gui_buttons[] = {
      .flags = std_flags,
      .label = "SIN",
      .label_Lshift = "ASIN",
-     .label_Rshift = "𝛛",
+     .label_Rshift = "\u2202",
      .label_letter = "S",
      .label_below = "",
      .down = press_SIN,
@@ -385,7 +385,7 @@ static Button gui_buttons[] = {
      .flags = std_flags,
      .label = "TAN",
      .label_Lshift = "ATAN",
-     .label_Rshift = "𝚺",
+     .label_Rshift = "\u03a3",
      .label_letter = "U",
      .label_below = "",
      .down = press_TAN,
@@ -409,8 +409,8 @@ static Button gui_buttons[] = {
      .w = UI_K_WIDTH_1,
      .h = UI_K_HEIGHT_2,
      .flags = std_flags,
-     .label = "y^x",
-     .label_Lshift = "⏨^x",
+     .label = "y\u02e3",
+     .label_Lshift = "\u23e8\u02e3",
      .label_Rshift = "LOG",
      .label_letter = "W",
      .label_below = "",
@@ -423,7 +423,7 @@ static Button gui_buttons[] = {
      .h = UI_K_HEIGHT_2,
      .flags = std_flags,
      .label = "1/x",
-     .label_Lshift = "e^x",
+     .label_Lshift = "e\u02e3",
      .label_Rshift = "LN",
      .label_letter = "X",
      .label_below = "",
@@ -449,7 +449,7 @@ static Button gui_buttons[] = {
      .w = UI_K_WIDTH_1,
      .h = UI_K_HEIGHT_2,
      .flags = std_flags,
-     .label = "±",
+     .label = "+/-",
      .label_Lshift = "EDIT",
      .label_Rshift = "CMD",
      .label_letter = "Y",
@@ -568,7 +568,7 @@ static Button gui_buttons[] = {
      .w = UI_K_WIDTH_1,
      .h = UI_K_HEIGHT_2,
      .flags = std_flags,
-     .label = "⮢",
+     .label = "\u2ba2",
      .label_Lshift = "",
      .label_Rshift = "",
      .label_letter = "",
@@ -634,7 +634,7 @@ static Button gui_buttons[] = {
      .w = UI_K_WIDTH_1,
      .h = UI_K_HEIGHT_2,
      .flags = std_flags,
-     .label = "⮣",
+     .label = "\u2ba3",
      .label_Lshift = "",
      .label_Rshift = "",
      .label_letter = "",
@@ -715,7 +715,7 @@ static Button gui_buttons[] = {
      .flags = std_flags,
      .label = "0",
      .label_Lshift = "=",
-     .label_Rshift = "→",
+     .label_Rshift = "\u2192",
      .label_letter = "",
      .label_below = "",
      .down = press_0,
@@ -728,7 +728,7 @@ static Button gui_buttons[] = {
      .flags = std_flags,
      .label = ".",
      .label_Lshift = ",",
-     .label_Rshift = "⮐",
+     .label_Rshift = "\u2ba0",
      .label_letter = "",
      .label_below = "",
      .down = press_PERIOD,
@@ -740,8 +740,8 @@ static Button gui_buttons[] = {
      .h = UI_K_HEIGHT_2,
      .flags = std_flags,
      .label = "SPC",
-     .label_Lshift = "𝛑",
-     .label_Rshift = "⦨",
+     .label_Lshift = "\u03c0",
+     .label_Rshift = "\u29a8",
      .label_letter = "",
      .label_below = "",
      .down = press_SPC,
@@ -862,7 +862,7 @@ static inline void _init_keyboard_textures( Button* calcbuttons )
         s = NULL;
         t = NULL;
         if ( buttons->label_below && strcmp( buttons->label_below, "" ) != 0 ) {
-            s = TTF_RenderUTF8_Blended( ttffont2, buttons->label_below, colors.letter );
+            s = TTF_RenderUTF8_Blended( ttffont2, buttons->label_below, colors.below );
             if ( s ) {
                 t = SDL_CreateTextureFromSurface( renderer, s );
             }
@@ -879,7 +879,7 @@ static inline void _init_keyboard_textures( Button* calcbuttons )
         s = NULL;
         t = NULL;
         if ( buttons->label_letter && strcmp( buttons->label_letter, "" ) != 0 ) {
-            s = TTF_RenderUTF8_Blended( ttffont2, buttons->label_letter, colors.below );
+            s = TTF_RenderUTF8_Blended( ttffont2, buttons->label_letter, colors.letter );
             if ( s ) {
                 t = SDL_CreateTextureFromSurface( renderer, s );
             }
@@ -1503,8 +1503,8 @@ bool gui_init( void )
         return false;
     }
 
-    ttffont = TTF_OpenFont( config.ui_font, 7 * UI_SCALE );
-    ttffont2 = TTF_OpenFont( config.ui_font, 5 * UI_SCALE );
+    ttffont = TTF_OpenFont( config.ui_font1, config.ui_font_size1 * UI_SCALE );
+    ttffont2 = TTF_OpenFont( config.ui_font2, config.ui_font_size2 * UI_SCALE );
 
     int window_width = ( LCD_WIDTH + ( 2 * UI_PADDING ) ) * UI_SCALE;
     int window_height = ( UI_KB_OFFSET_Y + UI_KB_HEIGHT ) + 2 * UI_PADDING;
