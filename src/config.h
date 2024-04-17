@@ -10,8 +10,9 @@ typedef struct {
     char* ui_font2;
     int ui_font_size1;
     int ui_font_size2;
-    bool real_speed;
+    bool throttle;
     bool verbose;
+    bool allow_shutdn;
 } Config;
 
 extern Config config;

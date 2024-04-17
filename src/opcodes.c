@@ -1,6 +1,7 @@
 #include <string.h>
 
 #include "types.h"
+#include "config.h"
 #include "cpu.h"
 #include "bus.h"
 #include "keyboard.h"
@@ -367,9 +368,8 @@ static void op806( byte* opc ) // C=ID
 static void op807( byte* opc ) // SHUTDN
 {
     // TODO: Fix SHUTDN
-    /* if ( !cpu.in[ 0 ] && !cpu.in[ 1 ] && !cpu.in[ 3 ] ) { */
-    /*     cpu.shutdown = true; */
-    /* } */
+    cpu.shutdown = config.allow_shutdn && ( !cpu.in[ 0 ] && !cpu.in[ 1 ] && !cpu.in[ 3 ] );
+
     cpu.pc += 3;
     cpu.cycles += 5;
 }
