@@ -13,8 +13,6 @@
 
 #define PANEL_FLAG_VISIBLE 0x01
 
-#define UI_SCALE 4
-
 #define UI_PADDING 4
 #define UI_KEY_PADDING 4
 
@@ -38,7 +36,7 @@
 #define X_COL( i ) ( UI_PADDING + ( UI_K_WIDTH_1 * i ) )
 #define X2_COL( i ) ( UI_PADDING + ( UI_K_WIDTH_2 * i ) )
 
-#define UI_KB_HEIGHT ( UI_SCALE * Y_LINE( 9 ) )
+#define UI_KB_HEIGHT ( config.ui_scale * Y_LINE( 9 ) )
 
 /* Button flags:
  * Use BUTTON_B1RELEASE for normal buttons.
@@ -793,12 +791,12 @@ static colors_t colors = {
     .below = {.r = 128, .g = 108, .b = 29,  .a = 255},
 };
 
-static inline void _init_keyboard_textures( Button* calcbuttons )
+static inline bool _init_keyboard_textures( Button* calcbuttons )
 {
     printf( "init texts\n" );
     if ( ttffont == NULL ) {
         printf( "init texts error Font NULL\n" );
-        return;
+        return false;
     }
     SDL_Surface* s = NULL;
     SDL_Texture* t = NULL;
@@ -889,6 +887,8 @@ static inline void _init_keyboard_textures( Button* calcbuttons )
         i++;
         buttons++;
     }
+
+    return true;
 }
 
 static inline void _draw_button_labels( int index, int x, int y, int btn_w, int btn_h )
@@ -931,7 +931,7 @@ static inline void _draw_button_labels( int index, int x, int y, int btn_w, int 
     if ( surface_label_letter != NULL && texture_label_letter != NULL ) {
         texW = surface_label_letter->w;
         texH = surface_label_letter->h;
-        SDL_Rect destRect = { ( x + btn_w ) - ( texW / 2 ), y + ( btn_h - ( 5 * UI_SCALE ) ), texW, texH };
+        SDL_Rect destRect = { ( x + btn_w ) - ( texW / 2 ), y + ( btn_h - ( 5 * config.ui_scale ) ), texW, texH };
         SDL_RenderCopy( renderer, texture_label_letter, NULL, &destRect );
     }
 
@@ -940,15 +940,15 @@ static inline void _draw_button_labels( int index, int x, int y, int btn_w, int 
     if ( surface_label_below != NULL && texture_label_below != NULL ) {
         texW = surface_label_below->w;
         texH = surface_label_below->h;
-        SDL_Rect destRect = { x + ( btn_w - texW ) / 2, y + ( btn_h - ( 3 * UI_SCALE ) ), texW, texH };
+        SDL_Rect destRect = { x + ( btn_w - texW ) / 2, y + ( btn_h - ( 3 * config.ui_scale ) ), texW, texH };
         SDL_RenderCopy( renderer, texture_label_below, NULL, &destRect );
     }
 }
 
 static inline void _button_draw( Button* b )
 {
-    SDL_Rect rectToDraw = { ( b->x + ( UI_KEY_PADDING / 2 ) ) * UI_SCALE, ( b->y + ( UI_KEY_PADDING * 1.25 ) ) * UI_SCALE,
-                            ( b->w - UI_KEY_PADDING ) * UI_SCALE, ( b->h - ( UI_KEY_PADDING * 2 ) ) * UI_SCALE };
+    SDL_Rect rectToDraw = { ( b->x + ( UI_KEY_PADDING / 2 ) ) * config.ui_scale, ( b->y + ( UI_KEY_PADDING * 1.25 ) ) * config.ui_scale,
+                            ( b->w - UI_KEY_PADDING ) * config.ui_scale, ( b->h - ( UI_KEY_PADDING * 2 ) ) * config.ui_scale };
 
     if ( b->index < 6 )
         SDL_SetRenderDrawColor( renderer, colors.label.r, colors.label.g, colors.label.g, colors.label.a );
@@ -968,14 +968,14 @@ static inline void _button_draw( Button* b )
 
     SDL_RenderDrawRect( renderer, &rectToDraw );
 
-    _draw_button_labels( b->index, b->x * UI_SCALE, b->y * UI_SCALE, b->w * UI_SCALE, b->h * UI_SCALE );
+    _draw_button_labels( b->index, b->x * config.ui_scale, b->y * config.ui_scale, b->w * config.ui_scale, b->h * config.ui_scale );
 }
 
 static inline Button* _find_button( Button* b, int x, int y )
 {
     while ( b->label ) {
-        if ( x >= b->x * UI_SCALE && x < b->x * UI_SCALE + b->w * UI_SCALE && y >= b->y * UI_SCALE &&
-             y < b->y * UI_SCALE + b->h * UI_SCALE )
+        if ( x >= b->x * config.ui_scale && x < b->x * config.ui_scale + b->w * config.ui_scale && y >= b->y * config.ui_scale &&
+             y < b->y * config.ui_scale + b->h * config.ui_scale )
             return b;
 
         b++;
@@ -1117,7 +1117,7 @@ void SDL__display_show()
 
     // Show rendered to texture
     SDL_Rect r1 = { 0, 0, LCD_WIDTH, LCD_HEIGHT };
-    SDL_Rect r2 = { LCD_X * UI_SCALE, LCD_Y * UI_SCALE, LCD_WIDTH * UI_SCALE, LCD_HEIGHT * UI_SCALE };
+    SDL_Rect r2 = { LCD_X * config.ui_scale, LCD_Y * config.ui_scale, LCD_WIDTH * config.ui_scale, LCD_HEIGHT * config.ui_scale };
     SDL_RenderCopyEx( renderer, texTarget, &r1, &r2, 0, NULL, SDL_FLIP_NONE );
 
     button_draw_all( gui_buttons );
@@ -1503,10 +1503,10 @@ bool gui_init( void )
         return false;
     }
 
-    ttffont = TTF_OpenFont( config.ui_font1, config.ui_font_size1 * UI_SCALE );
-    ttffont2 = TTF_OpenFont( config.ui_font2, config.ui_font_size2 * UI_SCALE );
+    ttffont = TTF_OpenFont( config.ui_font1, config.ui_font_size1 * config.ui_scale );
+    ttffont2 = TTF_OpenFont( config.ui_font2, config.ui_font_size2 * config.ui_scale );
 
-    int window_width = ( LCD_WIDTH + ( 2 * UI_PADDING ) ) * UI_SCALE;
+    int window_width = ( LCD_WIDTH + ( 2 * UI_PADDING ) ) * config.ui_scale;
     int window_height = ( UI_KB_OFFSET_Y + UI_KB_HEIGHT ) + 2 * UI_PADDING;
 
     window = SDL_CreateWindow( "hpemung", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, window_width, window_height, SDL_WINDOW_SHOWN );
@@ -1526,11 +1526,7 @@ bool gui_init( void )
 
     SDL_UpdateWindowSurface( window );
 
-    _init_keyboard_textures( gui_buttons );
-
-    printf( "init done\n" );
-
-    return true;
+    return _init_keyboard_textures( gui_buttons );
 }
 
 bool gui_exit( void )

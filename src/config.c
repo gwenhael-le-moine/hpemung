@@ -2,6 +2,7 @@
 
 Config config = {
     .progname = "hpemung",
+    .ui_scale = 3,
     .ui_font1 = "/usr/share/fonts/TTF/unifont.ttf",
     .ui_font2 = "/usr/share/fonts/TTF/unifont.ttf",
     .ui_font_size1 = 6,

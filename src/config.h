@@ -5,6 +5,7 @@
 
 typedef struct {
     char* progname;
+    int ui_scale;
     char* ui_font1;
     char* ui_font2;
     int ui_font_size1;
