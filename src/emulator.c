@@ -117,7 +117,7 @@ bool emulator_run( void )
         if ( !cpu.shutdown ) {
             execute_instruction();
 
-            throttle( config.throttle || cpu.keyintp );
+            throttle( cpu.keyintp || config.throttle );
 
             if ( emulator_state == EMULATOR_STEP )
                 emulator_set_state( EMULATOR_STOP );
