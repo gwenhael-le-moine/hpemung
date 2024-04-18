@@ -436,38 +436,38 @@ void rom_init( char* filename )
 
     size = file_size( fullpath );
     if ( !size ) {
-        printf( "ERROR: Can't read ROM file size\n" );
+        fprintf( stderr, "ERROR: Can't read ROM file size\n" );
         exit( 0x10 );
     }
     if ( size != 256 * 1024 && size != 512 * 1024 && size != 1024 * 1024 ) {
-        printf( "ERROR: ROM file size invalid\n" );
+        fprintf( stderr, "ERROR: ROM file size invalid\n" );
         exit( 0x11 );
     }
     buf = malloc( size );
     if ( !buf ) {
-        printf( "ERROR: can't malloc ROM\n" );
+        fprintf( stderr, "ERROR: can't malloc ROM\n" );
         exit( 0x12 );
     }
 
     f = fopen( fullpath, "r" );
     if ( !f ) {
-        printf( "ERROR: can't open ROM file\n" );
+        fprintf( stderr, "ERROR: can't open ROM file\n" );
         exit( 0x13 );
     }
     if ( ( int )fread( buf, sizeof( char ), size, f ) != size ) { // pack_fread
-        printf( "ERROR: can't read ROM file\n" );
+        fprintf( stderr, "ERROR: can't read ROM file\n" );
         exit( 0x14 );
     }
     fclose( f );
 
     if ( buf[ 0 ] & 0xF0 || buf[ 1 ] & 0xF0 ) {
         if ( size == 1024 * 1024 ) {
-            printf( "ERROR: wrong ROM\n" );
+            fprintf( stderr, "ERROR: wrong ROM\n" );
             exit( 0x15 );
         }
         buf = realloc( buf, size * 2 );
         if ( !buf ) {
-            printf( "ERROR: can't realloc ROM\n" );
+            fprintf( stderr, "ERROR: can't realloc ROM\n" );
             exit( 0x16 );
         }
         ptr1 = buf + size - 1;
@@ -480,7 +480,6 @@ void rom_init( char* filename )
     }
     bus_info.rom_data = buf;
     bus_info.rom_mask = size - 1;
-    printf( "rom_init succeed!\n" );
 }
 
 void rom_exit( void )
