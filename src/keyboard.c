@@ -1,6 +1,7 @@
 #include "types.h"
 #include "cpu.h"
-#include "persistence.h"
+
+#include "keyboard.h"
 
 bool kbd_on;
 
@@ -39,7 +40,7 @@ static void update_in( void )
 
 void kbd_out_changed( void ) { update_in(); }
 
-void kbd_key_pressed( int row, int col )
+static void kbd_key_pressed( int row, int col )
 {
     bool no_key = !cpu.in[ 0 ] && !cpu.in[ 1 ] && !cpu.in[ 3 ];
     kbd_row[ row ] |= 1 << col;
@@ -58,7 +59,7 @@ void kbd_key_pressed( int row, int col )
         cpu.keyintp = false;
 }
 
-void kbd_key_released( int row, int col )
+static void kbd_key_released( int row, int col )
 {
     kbd_row[ row ] &= ~( 1 << col );
     update_in();
@@ -66,120 +67,512 @@ void kbd_key_released( int row, int col )
         cpu.keyintp = false;
 }
 
-void press_PLUS( void ) { kbd_key_pressed( 0, 0 ); }
-void release_PLUS( void ) { kbd_key_released( 0, 0 ); }
-void press_SPC( void ) { kbd_key_pressed( 0, 1 ); }
-void release_SPC( void ) { kbd_key_released( 0, 1 ); }
-void press_PERIOD( void ) { kbd_key_pressed( 0, 2 ); }
-void release_PERIOD( void ) { kbd_key_released( 0, 2 ); }
-void press_0( void ) { kbd_key_pressed( 0, 3 ); }
-void release_0( void ) { kbd_key_released( 0, 3 ); }
-void press_QUOTE( void ) { kbd_key_pressed( 0, 4 ); }
-void release_QUOTE( void ) { kbd_key_released( 0, 4 ); }
-void press_MINUS( void ) { kbd_key_pressed( 1, 0 ); }
-void release_MINUS( void ) { kbd_key_released( 1, 0 ); }
-void press_3( void ) { kbd_key_pressed( 1, 1 ); }
-void release_3( void ) { kbd_key_released( 1, 1 ); }
-void press_2( void ) { kbd_key_pressed( 1, 2 ); }
-void release_2( void ) { kbd_key_released( 1, 2 ); }
-void press_1( void ) { kbd_key_pressed( 1, 3 ); }
-void release_1( void ) { kbd_key_released( 1, 3 ); }
-void press_A( void ) { kbd_key_pressed( 1, 4 ); }
-void release_A( void ) { kbd_key_released( 1, 4 ); }
-void press_RSHIFT( void ) { kbd_key_pressed( 1, 5 ); }
-void release_RSHIFT( void ) { kbd_key_released( 1, 5 ); }
-void press_MULT( void ) { kbd_key_pressed( 2, 0 ); }
-void release_MULT( void ) { kbd_key_released( 2, 0 ); }
-void press_6( void ) { kbd_key_pressed( 2, 1 ); }
-void release_6( void ) { kbd_key_released( 2, 1 ); }
-void press_5( void ) { kbd_key_pressed( 2, 2 ); }
-void release_5( void ) { kbd_key_released( 2, 2 ); }
-void press_4( void ) { kbd_key_pressed( 2, 3 ); }
-void release_4( void ) { kbd_key_released( 2, 3 ); }
-void press_MTH( void ) { kbd_key_pressed( 2, 4 ); }
-void release_MTH( void ) { kbd_key_released( 2, 4 ); }
-void press_LSHIFT( void ) { kbd_key_pressed( 2, 5 ); }
-void release_LSHIFT( void ) { kbd_key_released( 2, 5 ); }
-void press_DIV( void ) { kbd_key_pressed( 3, 0 ); }
-void release_DIV( void ) { kbd_key_released( 3, 0 ); }
-void press_9( void ) { kbd_key_pressed( 3, 1 ); }
-void release_9( void ) { kbd_key_released( 3, 1 ); }
-void press_8( void ) { kbd_key_pressed( 3, 2 ); }
-void release_8( void ) { kbd_key_released( 3, 2 ); }
-void press_7( void ) { kbd_key_pressed( 3, 3 ); }
-void release_7( void ) { kbd_key_released( 3, 3 ); }
-void press_SIN( void ) { kbd_key_pressed( 3, 4 ); }
-void release_SIN( void ) { kbd_key_released( 3, 4 ); }
-void press_ALPHA( void ) { kbd_key_pressed( 3, 5 ); }
-void release_ALPHA( void ) { kbd_key_released( 3, 5 ); }
-void press_BKSP( void ) { kbd_key_pressed( 4, 0 ); }
-void release_BKSP( void ) { kbd_key_released( 4, 0 ); }
-void press_DEL( void ) { kbd_key_pressed( 4, 1 ); }
-void release_DEL( void ) { kbd_key_released( 4, 1 ); }
-void press_EEX( void ) { kbd_key_pressed( 4, 2 ); }
-void release_EEX( void ) { kbd_key_released( 4, 2 ); }
-void press_NEG( void ) { kbd_key_pressed( 4, 3 ); }
-void release_NEG( void ) { kbd_key_released( 4, 3 ); }
-void press_ENTER( void ) { kbd_key_pressed( 4, 4 ); }
-void release_ENTER( void ) { kbd_key_released( 4, 4 ); }
-void press_INV( void ) { kbd_key_pressed( 5, 0 ); }
-void release_INV( void ) { kbd_key_released( 5, 0 ); }
-void press_POW( void ) { kbd_key_pressed( 5, 1 ); }
-void release_POW( void ) { kbd_key_released( 5, 1 ); }
-void press_SQRT( void ) { kbd_key_pressed( 5, 2 ); }
-void release_SQRT( void ) { kbd_key_released( 5, 2 ); }
-void press_TAN( void ) { kbd_key_pressed( 5, 3 ); }
-void release_TAN( void ) { kbd_key_released( 5, 3 ); }
-void press_COS( void ) { kbd_key_pressed( 5, 4 ); }
-void release_COS( void ) { kbd_key_released( 5, 4 ); }
-void press_RIGHT( void ) { kbd_key_pressed( 6, 0 ); }
-void release_RIGHT( void ) { kbd_key_released( 6, 0 ); }
-void press_DOWN( void ) { kbd_key_pressed( 6, 1 ); }
-void release_DOWN( void ) { kbd_key_released( 6, 1 ); }
-void press_LEFT( void ) { kbd_key_pressed( 6, 2 ); }
-void release_LEFT( void ) { kbd_key_released( 6, 2 ); }
-void press_EVAL( void ) { kbd_key_pressed( 6, 3 ); }
-void release_EVAL( void ) { kbd_key_released( 6, 3 ); }
-void press_STO( void ) { kbd_key_pressed( 6, 4 ); }
-void release_STO( void ) { kbd_key_released( 6, 4 ); }
-void press_NXT( void ) { kbd_key_pressed( 7, 0 ); }
-void release_NXT( void ) { kbd_key_released( 7, 0 ); }
-void press_UP( void ) { kbd_key_pressed( 7, 1 ); }
-void release_UP( void ) { kbd_key_released( 7, 1 ); }
-void press_VAR( void ) { kbd_key_pressed( 7, 2 ); }
-void release_VAR( void ) { kbd_key_released( 7, 2 ); }
-void press_CST( void ) { kbd_key_pressed( 7, 3 ); }
-void release_CST( void ) { kbd_key_released( 7, 3 ); }
-void press_PRG( void ) { kbd_key_pressed( 7, 4 ); }
-void release_PRG( void ) { kbd_key_released( 7, 4 ); }
-void press_F( void ) { kbd_key_pressed( 8, 0 ); }
-void release_F( void ) { kbd_key_released( 8, 0 ); }
-void press_E( void ) { kbd_key_pressed( 8, 1 ); }
-void release_E( void ) { kbd_key_released( 8, 1 ); }
-void press_D( void ) { kbd_key_pressed( 8, 2 ); }
-void release_D( void ) { kbd_key_released( 8, 2 ); }
-void press_C( void ) { kbd_key_pressed( 8, 3 ); }
-void release_C( void ) { kbd_key_released( 8, 3 ); }
-void press_B( void ) { kbd_key_pressed( 8, 4 ); }
-void release_B( void ) { kbd_key_released( 8, 4 ); }
-
-void press_ON( void )
+void press_key( int hpkey )
 {
-    bool no_key = !cpu.in[ 3 ];
-    kbd_on = true;
-    cpu.in[ 3 ] |= 8;
-    if ( cpu.shutdown && no_key )
-        cpu.shutdown = false;
+    switch ( hpkey ) {
+        case HPKEY_ON:
+            {
+                bool no_key = !cpu.in[ 3 ];
+                kbd_on = true;
+                cpu.in[ 3 ] |= 8;
+                if ( cpu.shutdown && no_key )
+                    cpu.shutdown = false;
 
-    if ( cpu.inte && no_key )
-        cpu_interrupt();
+                if ( cpu.inte && no_key )
+                    cpu_interrupt();
+            }
+            break;
+        case HPKEY_PLUS:
+            {
+                kbd_key_pressed( 0, 0 );
+            }
+            break;
+        case HPKEY_SPC:
+            {
+                kbd_key_pressed( 0, 1 );
+            }
+            break;
+        case HPKEY_PERIOD:
+            {
+                kbd_key_pressed( 0, 2 );
+            }
+            break;
+        case HPKEY_0:
+            {
+                kbd_key_pressed( 0, 3 );
+            }
+            break;
+        case HPKEY_QUOTE:
+            {
+                kbd_key_pressed( 0, 4 );
+            }
+            break;
+        case HPKEY_MINUS:
+            {
+                kbd_key_pressed( 1, 0 );
+            }
+            break;
+        case HPKEY_3:
+            {
+                kbd_key_pressed( 1, 1 );
+            }
+            break;
+        case HPKEY_2:
+            {
+                kbd_key_pressed( 1, 2 );
+            }
+            break;
+        case HPKEY_1:
+            {
+                kbd_key_pressed( 1, 3 );
+            }
+            break;
+        case HPKEY_A:
+            {
+                kbd_key_pressed( 1, 4 );
+            }
+            break;
+        case HPKEY_SHR:
+            {
+                kbd_key_pressed( 1, 5 );
+            }
+            break;
+        case HPKEY_MUL:
+            {
+                kbd_key_pressed( 2, 0 );
+            }
+            break;
+        case HPKEY_6:
+            {
+                kbd_key_pressed( 2, 1 );
+            }
+            break;
+        case HPKEY_5:
+            {
+                kbd_key_pressed( 2, 2 );
+            }
+            break;
+        case HPKEY_4:
+            {
+                kbd_key_pressed( 2, 3 );
+            }
+            break;
+        case HPKEY_MTH:
+            {
+                kbd_key_pressed( 2, 4 );
+            }
+            break;
+        case HPKEY_SHL:
+            {
+                kbd_key_pressed( 2, 5 );
+            }
+            break;
+        case HPKEY_DIV:
+            {
+                kbd_key_pressed( 3, 0 );
+            }
+            break;
+        case HPKEY_9:
+            {
+                kbd_key_pressed( 3, 1 );
+            }
+            break;
+        case HPKEY_8:
+            {
+                kbd_key_pressed( 3, 2 );
+            }
+            break;
+        case HPKEY_7:
+            {
+                kbd_key_pressed( 3, 3 );
+            }
+            break;
+        case HPKEY_SIN:
+            {
+                kbd_key_pressed( 3, 4 );
+            }
+            break;
+        case HPKEY_ALPHA:
+            {
+                kbd_key_pressed( 3, 5 );
+            }
+            break;
+        case HPKEY_BS:
+            {
+                kbd_key_pressed( 4, 0 );
+            }
+            break;
+        case HPKEY_DEL:
+            {
+                kbd_key_pressed( 4, 1 );
+            }
+            break;
+        case HPKEY_EEX:
+            {
+                kbd_key_pressed( 4, 2 );
+            }
+            break;
+        case HPKEY_NEG:
+            {
+                kbd_key_pressed( 4, 3 );
+            }
+            break;
+        case HPKEY_ENTER:
+            {
+                kbd_key_pressed( 4, 4 );
+            }
+            break;
+        case HPKEY_INV:
+            {
+                kbd_key_pressed( 5, 0 );
+            }
+            break;
+        case HPKEY_POWER:
+            {
+                kbd_key_pressed( 5, 1 );
+            }
+            break;
+        case HPKEY_SQRT:
+            {
+                kbd_key_pressed( 5, 2 );
+            }
+            break;
+        case HPKEY_TAN:
+            {
+                kbd_key_pressed( 5, 3 );
+            }
+            break;
+        case HPKEY_COS:
+            {
+                kbd_key_pressed( 5, 4 );
+            }
+            break;
+        case HPKEY_RIGHT:
+            {
+                kbd_key_pressed( 6, 0 );
+            }
+            break;
+        case HPKEY_DOWN:
+            {
+                kbd_key_pressed( 6, 1 );
+            }
+            break;
+        case HPKEY_LEFT:
+            {
+                kbd_key_pressed( 6, 2 );
+            }
+            break;
+        case HPKEY_EVAL:
+            {
+                kbd_key_pressed( 6, 3 );
+            }
+            break;
+        case HPKEY_STO:
+            {
+                kbd_key_pressed( 6, 4 );
+            }
+            break;
+        case HPKEY_NXT:
+            {
+                kbd_key_pressed( 7, 0 );
+            }
+            break;
+        case HPKEY_UP:
+            {
+                kbd_key_pressed( 7, 1 );
+            }
+            break;
+        case HPKEY_VAR:
+            {
+                kbd_key_pressed( 7, 2 );
+            }
+            break;
+        case HPKEY_CST:
+            {
+                kbd_key_pressed( 7, 3 );
+            }
+            break;
+        case HPKEY_PRG:
+            {
+                kbd_key_pressed( 7, 4 );
+            }
+            break;
+        case HPKEY_F:
+            {
+                kbd_key_pressed( 8, 0 );
+            }
+            break;
+        case HPKEY_E:
+            {
+                kbd_key_pressed( 8, 1 );
+            }
+            break;
+        case HPKEY_D:
+            {
+                kbd_key_pressed( 8, 2 );
+            }
+            break;
+        case HPKEY_C:
+            {
+                kbd_key_pressed( 8, 3 );
+            }
+            break;
+        case HPKEY_B:
+            {
+                kbd_key_pressed( 8, 4 );
+            }
+            break;
+    }
 }
 
-void release_ON( void )
+void release_key( int hpkey )
 {
-    kbd_on = false;
-    cpu.in[ 3 ] &= ~8;
+    switch ( hpkey ) {
+        case HPKEY_ON:
+            {
+                kbd_on = false;
+                cpu.in[ 3 ] &= ~8;
+            }
+            break;
+        case HPKEY_PLUS:
+            {
+                kbd_key_released( 0, 0 );
+            }
+            break;
+        case HPKEY_SPC:
+            {
+                kbd_key_released( 0, 1 );
+            }
+            break;
+        case HPKEY_PERIOD:
+            {
+                kbd_key_released( 0, 2 );
+            }
+            break;
+        case HPKEY_0:
+            {
+                kbd_key_released( 0, 3 );
+            }
+            break;
+        case HPKEY_QUOTE:
+            {
+                kbd_key_released( 0, 4 );
+            }
+            break;
+        case HPKEY_MINUS:
+            {
+                kbd_key_released( 1, 0 );
+            }
+            break;
+        case HPKEY_3:
+            {
+                kbd_key_released( 1, 1 );
+            }
+            break;
+        case HPKEY_2:
+            {
+                kbd_key_released( 1, 2 );
+            }
+            break;
+        case HPKEY_1:
+            {
+                kbd_key_released( 1, 3 );
+            }
+            break;
+        case HPKEY_A:
+            {
+                kbd_key_released( 1, 4 );
+            }
+            break;
+        case HPKEY_SHR:
+            {
+                kbd_key_released( 1, 5 );
+            }
+            break;
+        case HPKEY_MUL:
+            {
+                kbd_key_released( 2, 0 );
+            }
+            break;
+        case HPKEY_6:
+            {
+                kbd_key_released( 2, 1 );
+            }
+            break;
+        case HPKEY_5:
+            {
+                kbd_key_released( 2, 2 );
+            }
+            break;
+        case HPKEY_4:
+            {
+                kbd_key_released( 2, 3 );
+            }
+            break;
+        case HPKEY_MTH:
+            {
+                kbd_key_released( 2, 4 );
+            }
+            break;
+        case HPKEY_SHL:
+            {
+                kbd_key_released( 2, 5 );
+            }
+            break;
+        case HPKEY_DIV:
+            {
+                kbd_key_released( 3, 0 );
+            }
+            break;
+        case HPKEY_9:
+            {
+                kbd_key_released( 3, 1 );
+            }
+            break;
+        case HPKEY_8:
+            {
+                kbd_key_released( 3, 2 );
+            }
+            break;
+        case HPKEY_7:
+            {
+                kbd_key_released( 3, 3 );
+            }
+            break;
+        case HPKEY_SIN:
+            {
+                kbd_key_released( 3, 4 );
+            }
+            break;
+        case HPKEY_ALPHA:
+            {
+                kbd_key_released( 3, 5 );
+            }
+            break;
+        case HPKEY_BS:
+            {
+                kbd_key_released( 4, 0 );
+            }
+            break;
+        case HPKEY_DEL:
+            {
+                kbd_key_released( 4, 1 );
+            }
+            break;
+        case HPKEY_EEX:
+            {
+                kbd_key_released( 4, 2 );
+            }
+            break;
+        case HPKEY_NEG:
+            {
+                kbd_key_released( 4, 3 );
+            }
+            break;
+        case HPKEY_ENTER:
+            {
+                kbd_key_released( 4, 4 );
+            }
+            break;
+        case HPKEY_INV:
+            {
+                kbd_key_released( 5, 0 );
+            }
+            break;
+        case HPKEY_POWER:
+            {
+                kbd_key_released( 5, 1 );
+            }
+            break;
+        case HPKEY_SQRT:
+            {
+                kbd_key_released( 5, 2 );
+            }
+            break;
+        case HPKEY_TAN:
+            {
+                kbd_key_released( 5, 3 );
+            }
+            break;
+        case HPKEY_COS:
+            {
+                kbd_key_released( 5, 4 );
+            }
+            break;
+        case HPKEY_RIGHT:
+            {
+                kbd_key_released( 6, 0 );
+            }
+            break;
+        case HPKEY_DOWN:
+            {
+                kbd_key_released( 6, 1 );
+            }
+            break;
+        case HPKEY_LEFT:
+            {
+                kbd_key_released( 6, 2 );
+            }
+            break;
+        case HPKEY_EVAL:
+            {
+                kbd_key_released( 6, 3 );
+            }
+            break;
+        case HPKEY_STO:
+            {
+                kbd_key_released( 6, 4 );
+            }
+            break;
+        case HPKEY_NXT:
+            {
+                kbd_key_released( 7, 0 );
+            }
+            break;
+        case HPKEY_UP:
+            {
+                kbd_key_released( 7, 1 );
+            }
+            break;
+        case HPKEY_VAR:
+            {
+                kbd_key_released( 7, 2 );
+            }
+            break;
+        case HPKEY_CST:
+            {
+                kbd_key_released( 7, 3 );
+            }
+            break;
+        case HPKEY_PRG:
+            {
+                kbd_key_released( 7, 4 );
+            }
+            break;
+        case HPKEY_F:
+            {
+                kbd_key_released( 8, 0 );
+            }
+            break;
+        case HPKEY_E:
+            {
+                kbd_key_released( 8, 1 );
+            }
+            break;
+        case HPKEY_D:
+            {
+                kbd_key_released( 8, 2 );
+            }
+            break;
+        case HPKEY_C:
+            {
+                kbd_key_released( 8, 3 );
+            }
+            break;
+        case HPKEY_B:
+            {
+                kbd_key_released( 8, 4 );
+            }
+            break;
+    }
 }
-
-void press_LoadFile( void ) {}
-void release_LoadFile( void ) { load_file_on_stack( "zeldahp.dir" ); }

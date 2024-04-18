@@ -5,11 +5,11 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 
-#include "config.h"
-#include "keyboard.h"
-#include "gui.h"
-#include "emulator.h" /* for please_exit */
-#include "display.h"
+#include "config.h"      /* config.ui_* */
+#include "keyboard.h"    /* press_*(); release_*() */
+#include "emulator.h"    /* for please_exit */
+#include "display.h"     /* LCD_HEIGHT; LCD_WIDTH; shouldRender; lcdScreenGS[] */
+#include "persistence.h" /* load_file_on_stack(); */
 
 #define PANEL_FLAG_VISIBLE 0x01
 
@@ -38,8 +38,6 @@
 
 #define UI_KB_HEIGHT ( config.ui_scale * Y_LINE( 9 ) )
 
-#define NB_KEYS 50
-
 /* Button flags:
  * Use BUTTON_B1RELEASE for normal buttons.
  * Use BUTTON_B1RELEASE | BUTTON_B2TOGGLE for calculator buttons.
@@ -66,8 +64,7 @@ typedef struct {
     char* label_Rshift;
     char* label_letter;
     char* label_below;
-    void ( *down )( void );
-    void ( *up )( void );
+    int hpkey;
 } Button;
 
 typedef struct {
@@ -118,8 +115,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "",
      .label_letter = "A",
      .label_below = "",
-     .down = press_A,
-     .up = release_A       },
+     .hpkey = HPKEY_A     },
     {.index = 1,
      .x = X_COL( 1 ),
      .y = Y_LINE( 0 ),
@@ -131,8 +127,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "",
      .label_letter = "B",
      .label_below = "",
-     .down = press_B,
-     .up = release_B       },
+     .hpkey = HPKEY_B     },
     {.index = 2,
      .x = X_COL( 2 ),
      .y = Y_LINE( 0 ),
@@ -144,8 +139,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "",
      .label_letter = "C",
      .label_below = "",
-     .down = press_C,
-     .up = release_C       },
+     .hpkey = HPKEY_C     },
     {.index = 3,
      .x = X_COL( 3 ),
      .y = Y_LINE( 0 ),
@@ -157,8 +151,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "",
      .label_letter = "D",
      .label_below = "",
-     .down = press_D,
-     .up = release_D       },
+     .hpkey = HPKEY_D     },
     {.index = 4,
      .x = X_COL( 4 ),
      .y = Y_LINE( 0 ),
@@ -170,8 +163,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "",
      .label_letter = "E",
      .label_below = "",
-     .down = press_E,
-     .up = release_E       },
+     .hpkey = HPKEY_E     },
     {.index = 5,
      .x = X_COL( 5 ),
      .y = Y_LINE( 0 ),
@@ -183,8 +175,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "",
      .label_letter = "F",
      .label_below = "",
-     .down = press_F,
-     .up = release_F       },
+     .hpkey = HPKEY_F     },
 
     {.index = 6,
      .x = X_COL( 0 ),
@@ -197,8 +188,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "POLAR",
      .label_letter = "G",
      .label_below = "",
-     .down = press_MTH,
-     .up = release_MTH     },
+     .hpkey = HPKEY_MTH   },
     {.index = 7,
      .x = X_COL( 1 ),
      .y = Y_LINE( 1 ),
@@ -210,8 +200,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "CHARS",
      .label_letter = "H",
      .label_below = "",
-     .down = press_PRG,
-     .up = release_PRG     },
+     .hpkey = HPKEY_PRG   },
     {.index = 8,
      .x = X_COL( 2 ),
      .y = Y_LINE( 1 ),
@@ -223,8 +212,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "MODES",
      .label_letter = "I",
      .label_below = "",
-     .down = press_CST,
-     .up = release_CST     },
+     .hpkey = HPKEY_CST   },
     {.index = 9,
      .x = X_COL( 3 ),
      .y = Y_LINE( 1 ),
@@ -236,8 +224,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "MEMORY",
      .label_letter = "J",
      .label_below = "",
-     .down = press_VAR,
-     .up = release_VAR     },
+     .hpkey = HPKEY_VAR   },
     {.index = 10,
      .x = X_COL( 4 ),
      .y = Y_LINE( 1 ),
@@ -249,8 +236,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "STACK",
      .label_letter = "K",
      .label_below = "",
-     .down = press_UP,
-     .up = release_UP      },
+     .hpkey = HPKEY_UP    },
     {.index = 11,
      .x = X_COL( 5 ),
      .y = Y_LINE( 1 ),
@@ -262,8 +248,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "MENU",
      .label_letter = "L",
      .label_below = "",
-     .down = press_NXT,
-     .up = release_NXT     },
+     .hpkey = HPKEY_NXT   },
 
     {.index = 12,
      .x = X_COL( 0 ),
@@ -276,8 +261,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "HOME",
      .label_letter = "M",
      .label_below = "",
-     .down = press_QUOTE,
-     .up = release_QUOTE   },
+     .hpkey = HPKEY_QUOTE },
     {.index = 13,
      .x = X_COL( 1 ),
      .y = Y_LINE( 2 ),
@@ -289,8 +273,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "RCL",
      .label_letter = "N",
      .label_below = "",
-     .down = press_STO,
-     .up = release_STO     },
+     .hpkey = HPKEY_STO   },
     {.index = 14,
      .x = X_COL( 2 ),
      .y = Y_LINE( 2 ),
@@ -302,8 +285,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "UNDO",
      .label_letter = "O",
      .label_below = "",
-     .down = press_EVAL,
-     .up = release_EVAL    },
+     .hpkey = HPKEY_EVAL  },
     {.index = 15,
      .x = X_COL( 3 ),
      .y = Y_LINE( 2 ),
@@ -315,8 +297,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "PICTURE",
      .label_letter = "P",
      .label_below = "",
-     .down = press_LEFT,
-     .up = release_LEFT    },
+     .hpkey = HPKEY_LEFT  },
     {.index = 16,
      .x = X_COL( 4 ),
      .y = Y_LINE( 2 ),
@@ -328,8 +309,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "VIEW",
      .label_letter = "Q",
      .label_below = "",
-     .down = press_DOWN,
-     .up = release_DOWN    },
+     .hpkey = HPKEY_DOWN  },
     {.index = 17,
      .x = X_COL( 5 ),
      .y = Y_LINE( 2 ),
@@ -341,8 +321,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "SWAP",
      .label_letter = "R",
      .label_below = "",
-     .down = press_RIGHT,
-     .up = release_RIGHT   },
+     .hpkey = HPKEY_RIGHT },
 
     {.index = 18,
      .x = X_COL( 0 ),
@@ -355,8 +334,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "\u2202",
      .label_letter = "S",
      .label_below = "",
-     .down = press_SIN,
-     .up = release_SIN     },
+     .hpkey = HPKEY_SIN   },
     {.index = 19,
      .x = X_COL( 1 ),
      .y = Y_LINE( 3 ),
@@ -368,8 +346,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "∫",
      .label_letter = "T",
      .label_below = "",
-     .down = press_COS,
-     .up = release_COS     },
+     .hpkey = HPKEY_COS   },
     {.index = 20,
      .x = X_COL( 2 ),
      .y = Y_LINE( 3 ),
@@ -381,8 +358,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "\u03a3",
      .label_letter = "U",
      .label_below = "",
-     .down = press_TAN,
-     .up = release_TAN     },
+     .hpkey = HPKEY_TAN   },
     {.index = 21,
      .x = X_COL( 3 ),
      .y = Y_LINE( 3 ),
@@ -394,8 +370,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "x√y",
      .label_letter = "V",
      .label_below = "",
-     .down = press_SQRT,
-     .up = release_SQRT    },
+     .hpkey = HPKEY_SQRT  },
     {.index = 22,
      .x = X_COL( 4 ),
      .y = Y_LINE( 3 ),
@@ -407,8 +382,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "LOG",
      .label_letter = "W",
      .label_below = "",
-     .down = press_POW,
-     .up = release_POW     },
+     .hpkey = HPKEY_POWER },
     {.index = 23,
      .x = X_COL( 5 ),
      .y = Y_LINE( 3 ),
@@ -420,8 +394,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "LN",
      .label_letter = "X",
      .label_below = "",
-     .down = press_INV,
-     .up = release_INV     },
+     .hpkey = HPKEY_INV   },
 
     {.index = 24,
      .x = X_COL( 0 ),
@@ -434,8 +407,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "MATRIX",
      .label_letter = "",
      .label_below = "",
-     .down = press_ENTER,
-     .up = release_ENTER   },
+     .hpkey = HPKEY_ENTER },
     {.index = 25,
      .x = X_COL( 2 ),
      .y = Y_LINE( 4 ),
@@ -447,8 +419,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "CMD",
      .label_letter = "Y",
      .label_below = "",
-     .down = press_NEG,
-     .up = release_NEG     },
+     .hpkey = HPKEY_NEG   },
     {.index = 26,
      .x = X_COL( 3 ),
      .y = Y_LINE( 4 ),
@@ -460,8 +431,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "ARG",
      .label_letter = "Z",
      .label_below = "",
-     .down = press_EEX,
-     .up = release_EEX     },
+     .hpkey = HPKEY_EEX   },
     {.index = 27,
      .x = X_COL( 4 ),
      .y = Y_LINE( 4 ),
@@ -473,8 +443,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "CLEAR",
      .label_letter = "",
      .label_below = "",
-     .down = press_DEL,
-     .up = release_DEL     },
+     .hpkey = HPKEY_DEL   },
     {.index = 28,
      .x = X_COL( 5 ),
      .y = Y_LINE( 4 ),
@@ -486,8 +455,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "DROP",
      .label_letter = "",
      .label_below = "",
-     .down = press_BKSP,
-     .up = release_BKSP    },
+     .hpkey = HPKEY_BS    },
 
     {.index = 29,
      .x = X_COL( 0 ),
@@ -500,8 +468,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "ENTRY",
      .label_letter = "",
      .label_below = "",
-     .down = press_ALPHA,
-     .up = release_ALPHA   },
+     .hpkey = HPKEY_ALPHA },
     {.index = 30,
      .x = X2_COL( 1 ),
      .y = Y_LINE( 5 ),
@@ -513,8 +480,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "SOLVE",
      .label_letter = "",
      .label_below = "",
-     .down = press_7,
-     .up = release_7       },
+     .hpkey = HPKEY_7     },
     {.index = 31,
      .x = X2_COL( 2 ),
      .y = Y_LINE( 5 ),
@@ -526,8 +492,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "PLOT",
      .label_letter = "",
      .label_below = "",
-     .down = press_8,
-     .up = release_8       },
+     .hpkey = HPKEY_8     },
     {.index = 32,
      .x = X2_COL( 3 ),
      .y = Y_LINE( 5 ),
@@ -539,8 +504,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "SYMBOLIC",
      .label_letter = "",
      .label_below = "",
-     .down = press_9,
-     .up = release_9       },
+     .hpkey = HPKEY_9     },
     {.index = 33,
      .x = X2_COL( 4 ) + 2,
      .y = Y_LINE( 5 ),
@@ -552,8 +516,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "#",
      .label_letter = "",
      .label_below = "",
-     .down = press_DIV,
-     .up = release_DIV     },
+     .hpkey = HPKEY_DIV   },
 
     {.index = 34,
      .x = X_COL( 0 ),
@@ -566,8 +529,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "",
      .label_letter = "",
      .label_below = "",
-     .down = press_LSHIFT,
-     .up = release_LSHIFT  },
+     .hpkey = HPKEY_SHL   },
     {.index = 35,
      .x = X2_COL( 1 ),
      .y = Y_LINE( 6 ),
@@ -579,8 +541,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "TIME",
      .label_letter = "",
      .label_below = "",
-     .down = press_4,
-     .up = release_4       },
+     .hpkey = HPKEY_4     },
     {.index = 36,
      .x = X2_COL( 2 ),
      .y = Y_LINE( 6 ),
@@ -592,8 +553,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "STAT",
      .label_letter = "",
      .label_below = "",
-     .down = press_5,
-     .up = release_5       },
+     .hpkey = HPKEY_5     },
     {.index = 37,
      .x = X2_COL( 3 ),
      .y = Y_LINE( 6 ),
@@ -605,8 +565,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "UNITS",
      .label_letter = "",
      .label_below = "",
-     .down = press_6,
-     .up = release_6       },
+     .hpkey = HPKEY_6     },
     {.index = 38,
      .x = X2_COL( 4 ) + 2,
      .y = Y_LINE( 6 ),
@@ -618,8 +577,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "_",
      .label_letter = "",
      .label_below = "",
-     .down = press_MULT,
-     .up = release_MULT    },
+     .hpkey = HPKEY_MUL   },
 
     {.index = 39,
      .x = X_COL( 0 ),
@@ -632,8 +590,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "",
      .label_letter = "",
      .label_below = "",
-     .down = press_RSHIFT,
-     .up = release_RSHIFT  },
+     .hpkey = HPKEY_SHR   },
     {.index = 40,
      .x = X2_COL( 1 ),
      .y = Y_LINE( 7 ),
@@ -645,8 +602,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "I/O",
      .label_letter = "",
      .label_below = "",
-     .down = press_1,
-     .up = release_1       },
+     .hpkey = HPKEY_1     },
     {.index = 41,
      .x = X2_COL( 2 ),
      .y = Y_LINE( 7 ),
@@ -658,8 +614,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "LIBRARY",
      .label_letter = "",
      .label_below = "",
-     .down = press_2,
-     .up = release_2       },
+     .hpkey = HPKEY_2     },
     {.index = 42,
      .x = X2_COL( 3 ),
      .y = Y_LINE( 7 ),
@@ -671,8 +626,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "EQ LIB",
      .label_letter = "",
      .label_below = "",
-     .down = press_3,
-     .up = release_3       },
+     .hpkey = HPKEY_3     },
     {.index = 43,
      .x = X2_COL( 4 ) + 2,
      .y = Y_LINE( 7 ),
@@ -684,8 +638,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "\" \"",
      .label_letter = "",
      .label_below = "",
-     .down = press_MINUS,
-     .up = release_MINUS   },
+     .hpkey = HPKEY_MINUS },
 
     {.index = 44,
      .x = X_COL( 0 ),
@@ -698,8 +651,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "OFF",
      .label_letter = "",
      .label_below = "CANCEL",
-     .down = press_ON,
-     .up = release_ON      },
+     .hpkey = HPKEY_ON    },
     {.index = 45,
      .x = X2_COL( 1 ),
      .y = Y_LINE( 8 ),
@@ -711,8 +663,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "\u2192",
      .label_letter = "",
      .label_below = "",
-     .down = press_0,
-     .up = release_0       },
+     .hpkey = HPKEY_0     },
     {.index = 46,
      .x = X2_COL( 2 ),
      .y = Y_LINE( 8 ),
@@ -724,8 +675,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "\u2ba0",
      .label_letter = "",
      .label_below = "",
-     .down = press_PERIOD,
-     .up = release_PERIOD  },
+     .hpkey = HPKEY_PERIOD},
     {.index = 47,
      .x = X2_COL( 3 ),
      .y = Y_LINE( 8 ),
@@ -737,8 +687,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = "\u29a8",
      .label_letter = "",
      .label_below = "",
-     .down = press_SPC,
-     .up = release_SPC     },
+     .hpkey = HPKEY_SPC   },
     {.index = 48,
      .x = X2_COL( 4 ) + 2,
      .y = Y_LINE( 8 ),
@@ -750,22 +699,21 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_Rshift = ": :",
      .label_letter = "",
      .label_below = "",
-     .down = press_PLUS,
-     .up = release_PLUS    },
+     .hpkey = HPKEY_PLUS  },
 
-    {.index = 49,
-     .x = X_COL( 0 ),
-     .y = Y_LINE( 9 ),
-     .w = 40,
-     .h = UI_K_HEIGHT_2,
-     .flags = std_flags,
-     .label = "load file",
-     .label_Lshift = "",
-     .label_Rshift = "",
-     .label_letter = "",
-     .label_below = "",
-     .down = press_LoadFile,
-     .up = release_LoadFile},
+    /* {.index = 49, */
+    /*  .x = X_COL( 0 ), */
+    /*  .y = Y_LINE( 9 ), */
+    /*  .w = 40, */
+    /*  .h = UI_K_HEIGHT_2, */
+    /*  .flags = std_flags, */
+    /*  .label = "load file", */
+    /*  .label_Lshift = "", */
+    /*  .label_Rshift = "", */
+    /*  .label_letter = "", */
+    /*  .label_below = "", */
+    /*  .down = press_LoadFile, */
+    /*  .up = release_LoadFile}, */
 };
 
 static colors_t gui_colors = {
@@ -965,19 +913,16 @@ static inline void _button_mouse_down( int mouse_x, int mouse_y, int mouse_butto
         if ( gui_buttons[ bindex ].flags & BUTTON_PUSHED ) {
             gui_buttons[ bindex ].flags &= ~BUTTON_PUSHED;
 
-            if ( gui_buttons[ bindex ].up )
-                gui_buttons[ bindex ].up();
+            release_key( gui_buttons[ bindex ].hpkey );
         } else {
             gui_buttons[ bindex ].flags |= BUTTON_PUSHED;
 
-            if ( gui_buttons[ bindex ].down )
-                gui_buttons[ bindex ].down();
+            press_key( gui_buttons[ bindex ].hpkey );
         }
     } else if ( mouse_button == 1 && !( gui_buttons[ bindex ].flags & BUTTON_PUSHED ) ) {
         gui_buttons[ bindex ].flags |= BUTTON_PUSHED;
 
-        if ( gui_buttons[ bindex ].down )
-            gui_buttons[ bindex ].down();
+        press_key( gui_buttons[ bindex ].hpkey );
     }
 }
 
@@ -991,8 +936,7 @@ static inline void _button_mouse_up( int mouse_x, int mouse_y, int mouse_button 
         if ( mouse_button == 1 && ( gui_buttons[ bindex ].flags & BUTTON_PUSHED ) && !( gui_buttons[ bindex ].flags & BUTTON_B1TOGGLE ) ) {
             gui_buttons[ bindex ].flags &= ~BUTTON_PUSHED;
 
-            if ( gui_buttons[ bindex ].up )
-                gui_buttons[ bindex ].up();
+            press_key( gui_buttons[ bindex ].hpkey );
         }
     }
     if ( mouse_button == 1 ) {
@@ -1000,8 +944,7 @@ static inline void _button_mouse_up( int mouse_x, int mouse_y, int mouse_button 
         if ( ( gui_buttons[ bindex ].flags & ( BUTTON_B1RELEASE | BUTTON_PUSHED ) ) == ( BUTTON_B1RELEASE | BUTTON_PUSHED ) ) {
             gui_buttons[ bindex ].flags &= ~BUTTON_PUSHED;
 
-            if ( gui_buttons[ bindex ].up )
-                gui_buttons[ bindex ].up();
+            release_key( gui_buttons[ bindex ].hpkey );
         }
         /* } */
     }
@@ -1083,168 +1026,175 @@ bool gui_events()
                 switch ( event.key.keysym.scancode ) {
                     case SDL_SCANCODE_KP_0:
                     case SDL_SCANCODE_0:
-                        press_0();
+                        press_key( HPKEY_0 );
                         break;
                     case SDL_SCANCODE_KP_1:
                     case SDL_SCANCODE_1:
-                        press_1();
+                        press_key( HPKEY_1 );
                         break;
                     case SDL_SCANCODE_KP_2:
                     case SDL_SCANCODE_2:
-                        press_2();
+                        press_key( HPKEY_2 );
                         break;
                     case SDL_SCANCODE_KP_3:
                     case SDL_SCANCODE_3:
-                        press_3();
+                        press_key( HPKEY_3 );
                         break;
                     case SDL_SCANCODE_KP_4:
                     case SDL_SCANCODE_4:
-                        press_4();
+                        press_key( HPKEY_4 );
                         break;
                     case SDL_SCANCODE_KP_5:
                     case SDL_SCANCODE_5:
-                        press_5();
+                        press_key( HPKEY_5 );
                         break;
                     case SDL_SCANCODE_KP_6:
                     case SDL_SCANCODE_6:
-                        press_6();
+                        press_key( HPKEY_6 );
                         break;
                     case SDL_SCANCODE_KP_7:
                     case SDL_SCANCODE_7:
-                        press_7();
+                        press_key( HPKEY_7 );
                         break;
                     case SDL_SCANCODE_KP_8:
                     case SDL_SCANCODE_8:
-                        press_8();
+                        press_key( HPKEY_8 );
                         break;
                     case SDL_SCANCODE_KP_9:
                     case SDL_SCANCODE_9:
-                        press_9();
+                        press_key( HPKEY_9 );
                         break;
                     case SDL_SCANCODE_KP_PERIOD:
-                        press_PERIOD();
+                        press_key( HPKEY_PERIOD );
                         break;
                     case SDL_SCANCODE_SPACE:
-                        press_SPC();
+                        press_key( HPKEY_SPC );
                         break;
                     case SDL_SCANCODE_ESCAPE:
                     case SDL_SCANCODE_F5:
-                        press_ON();
+                        press_key( HPKEY_ON );
                         break;
                     case SDL_SCANCODE_RETURN:
                     case SDL_SCANCODE_KP_ENTER:
                     case SDL_SCANCODE_F1:
-                        press_ENTER();
+                        press_key( HPKEY_ENTER );
                         break;
                     case SDL_SCANCODE_BACKSPACE:
-                        press_BKSP();
+                        press_key( HPKEY_BS );
                         break;
                     case SDL_SCANCODE_KP_PLUS:
-                        press_PLUS();
+                        press_key( HPKEY_PLUS );
                         break;
                     case SDL_SCANCODE_KP_MINUS:
-                        press_MINUS();
+                        press_key( HPKEY_MINUS );
                         break;
                     case SDL_SCANCODE_KP_MULTIPLY:
-                        press_MULT();
+                        press_key( HPKEY_MUL );
                         break;
                     case SDL_SCANCODE_KP_DIVIDE:
-                        press_DIV();
+                        press_key( HPKEY_DIV );
                         break;
                     case SDL_SCANCODE_A:
-                        press_A();
+                        press_key( HPKEY_A );
                         break;
                     case SDL_SCANCODE_B:
-                        press_B();
+                        press_key( HPKEY_B );
                         break;
                     case SDL_SCANCODE_C:
-                        press_C();
+                        press_key( HPKEY_C );
                         break;
                     case SDL_SCANCODE_D:
-                        press_D();
+                        press_key( HPKEY_D );
                         break;
                     case SDL_SCANCODE_E:
-                        press_E();
+                        press_key( HPKEY_E );
                         break;
                     case SDL_SCANCODE_F:
-                        press_F();
+                        press_key( HPKEY_F );
                         break;
                     case SDL_SCANCODE_G:
-                        press_MTH();
+                        press_key( HPKEY_MTH );
                         break;
                     case SDL_SCANCODE_H:
-                        press_PRG();
+                        press_key( HPKEY_PRG );
                         break;
                     case SDL_SCANCODE_I:
-                        press_CST();
+                        press_key( HPKEY_CST );
                         break;
                     case SDL_SCANCODE_J:
-                        press_VAR();
+                        press_key( HPKEY_VAR );
                         break;
                     case SDL_SCANCODE_K:
                     case SDL_SCANCODE_UP:
-                        press_UP();
+                        press_key( HPKEY_UP );
                         break;
                     case SDL_SCANCODE_L:
-                        press_NXT();
+                        press_key( HPKEY_NXT );
                         break;
                     case SDL_SCANCODE_M:
-                        press_QUOTE();
+                        press_key( HPKEY_QUOTE );
                         break;
                     case SDL_SCANCODE_N:
-                        press_STO();
+                        press_key( HPKEY_STO );
                         break;
                     case SDL_SCANCODE_O:
-                        press_EVAL();
+                        press_key( HPKEY_EVAL );
                         break;
                     case SDL_SCANCODE_P:
                     case SDL_SCANCODE_LEFT:
-                        press_LEFT();
+                        press_key( HPKEY_LEFT );
                         break;
                     case SDL_SCANCODE_Q:
                     case SDL_SCANCODE_DOWN:
-                        press_DOWN();
+                        press_key( HPKEY_DOWN );
                         break;
                     case SDL_SCANCODE_R:
                     case SDL_SCANCODE_RIGHT:
-                        press_RIGHT();
+                        press_key( HPKEY_RIGHT );
                         break;
                     case SDL_SCANCODE_S:
-                        press_SIN();
+                        press_key( HPKEY_SIN );
                         break;
                     case SDL_SCANCODE_T:
-                        press_COS();
+                        press_key( HPKEY_COS );
                         break;
                     case SDL_SCANCODE_U:
-                        press_TAN();
+                        press_key( HPKEY_TAN );
                         break;
                     case SDL_SCANCODE_V:
-                        press_SQRT();
+                        press_key( HPKEY_SQRT );
                         break;
                     case SDL_SCANCODE_W:
-                        press_POW();
+                        press_key( HPKEY_POWER );
                         break;
                     case SDL_SCANCODE_X:
-                        press_INV();
+                        press_key( HPKEY_INV );
                         break;
                     case SDL_SCANCODE_Y:
-                        press_NEG();
+                        press_key( HPKEY_NEG );
                         break;
                     case SDL_SCANCODE_Z:
-                        press_EEX();
+                        press_key( HPKEY_EEX );
                         break;
                     case SDL_SCANCODE_F2:
-                        press_LSHIFT();
+                        press_key( HPKEY_SHL );
                         break;
                     case SDL_SCANCODE_F3:
-                        press_RSHIFT();
+                        press_key( HPKEY_SHR );
                         break;
                     case SDL_SCANCODE_F4:
-                        press_ALPHA();
+                        press_key( HPKEY_ALPHA );
                         break;
                     case SDL_SCANCODE_F7:
                         please_exit = true;
                         break;
+
+                    case SDL_SCANCODE_F11:
+                        {
+                            load_file_on_stack( "zeldahp.dir" );
+                        }
+                        break;
+
                     default:
                         break;
                 }
@@ -1254,164 +1204,164 @@ bool gui_events()
                 switch ( event.key.keysym.scancode ) {
                     case SDL_SCANCODE_KP_0:
                     case SDL_SCANCODE_0:
-                        release_0();
+                        release_key( HPKEY_0 );
                         break;
                     case SDL_SCANCODE_KP_1:
                     case SDL_SCANCODE_1:
-                        release_1();
+                        release_key( HPKEY_1 );
                         break;
                     case SDL_SCANCODE_KP_2:
                     case SDL_SCANCODE_2:
-                        release_2();
+                        release_key( HPKEY_2 );
                         break;
                     case SDL_SCANCODE_KP_3:
                     case SDL_SCANCODE_3:
-                        release_3();
+                        release_key( HPKEY_3 );
                         break;
                     case SDL_SCANCODE_KP_4:
                     case SDL_SCANCODE_4:
-                        release_4();
+                        release_key( HPKEY_4 );
                         break;
                     case SDL_SCANCODE_KP_5:
                     case SDL_SCANCODE_5:
-                        release_5();
+                        release_key( HPKEY_5 );
                         break;
                     case SDL_SCANCODE_KP_6:
                     case SDL_SCANCODE_6:
-                        release_6();
+                        release_key( HPKEY_6 );
                         break;
                     case SDL_SCANCODE_KP_7:
                     case SDL_SCANCODE_7:
-                        release_7();
+                        release_key( HPKEY_7 );
                         break;
                     case SDL_SCANCODE_KP_8:
                     case SDL_SCANCODE_8:
-                        release_8();
+                        release_key( HPKEY_8 );
                         break;
                     case SDL_SCANCODE_KP_9:
                     case SDL_SCANCODE_9:
-                        release_9();
+                        release_key( HPKEY_9 );
                         break;
                     case SDL_SCANCODE_KP_PERIOD:
-                        release_PERIOD();
+                        release_key( HPKEY_PERIOD );
                         break;
                     case SDL_SCANCODE_SPACE:
-                        release_SPC();
+                        release_key( HPKEY_SPC );
                         break;
                     case SDL_SCANCODE_ESCAPE:
                     case SDL_SCANCODE_F5:
-                        release_ON();
+                        release_key( HPKEY_ON );
                         break;
                     case SDL_SCANCODE_RETURN:
                     case SDL_SCANCODE_KP_ENTER:
                     case SDL_SCANCODE_F1:
-                        release_ENTER();
+                        release_key( HPKEY_ENTER );
                         break;
                     case SDL_SCANCODE_BACKSPACE:
-                        release_BKSP();
+                        release_key( HPKEY_BS );
                         break;
                     case SDL_SCANCODE_KP_PLUS:
-                        release_PLUS();
+                        release_key( HPKEY_PLUS );
                         break;
                     case SDL_SCANCODE_KP_MINUS:
-                        release_MINUS();
+                        release_key( HPKEY_MINUS );
                         break;
                     case SDL_SCANCODE_KP_MULTIPLY:
-                        release_MULT();
+                        release_key( HPKEY_MUL );
                         break;
                     case SDL_SCANCODE_KP_DIVIDE:
-                        release_DIV();
+                        release_key( HPKEY_DIV );
                         break;
                     case SDL_SCANCODE_A:
-                        release_A();
+                        release_key( HPKEY_A );
                         break;
                     case SDL_SCANCODE_B:
-                        release_B();
+                        release_key( HPKEY_B );
                         break;
                     case SDL_SCANCODE_C:
-                        release_C();
+                        release_key( HPKEY_C );
                         break;
                     case SDL_SCANCODE_D:
-                        release_D();
+                        release_key( HPKEY_D );
                         break;
                     case SDL_SCANCODE_E:
-                        release_E();
+                        release_key( HPKEY_E );
                         break;
                     case SDL_SCANCODE_F:
-                        release_F();
+                        release_key( HPKEY_F );
                         break;
                     case SDL_SCANCODE_G:
-                        release_MTH();
+                        release_key( HPKEY_MTH );
                         break;
                     case SDL_SCANCODE_H:
-                        release_PRG();
+                        release_key( HPKEY_PRG );
                         break;
                     case SDL_SCANCODE_I:
-                        release_CST();
+                        release_key( HPKEY_CST );
                         break;
                     case SDL_SCANCODE_J:
-                        release_VAR();
+                        release_key( HPKEY_VAR );
                         break;
                     case SDL_SCANCODE_K:
                     case SDL_SCANCODE_UP:
-                        release_UP();
+                        release_key( HPKEY_UP );
                         break;
                     case SDL_SCANCODE_L:
-                        release_NXT();
+                        release_key( HPKEY_NXT );
                         break;
                     case SDL_SCANCODE_M:
-                        release_QUOTE();
+                        release_key( HPKEY_QUOTE );
                         break;
                     case SDL_SCANCODE_N:
-                        release_STO();
+                        release_key( HPKEY_STO );
                         break;
                     case SDL_SCANCODE_O:
-                        release_EVAL();
+                        release_key( HPKEY_EVAL );
                         break;
                     case SDL_SCANCODE_P:
                     case SDL_SCANCODE_LEFT:
-                        release_LEFT();
+                        release_key( HPKEY_LEFT );
                         break;
                     case SDL_SCANCODE_Q:
                     case SDL_SCANCODE_DOWN:
-                        release_DOWN();
+                        release_key( HPKEY_DOWN );
                         break;
                     case SDL_SCANCODE_R:
                     case SDL_SCANCODE_RIGHT:
-                        release_RIGHT();
+                        release_key( HPKEY_RIGHT );
                         break;
                     case SDL_SCANCODE_S:
-                        release_SIN();
+                        release_key( HPKEY_SIN );
                         break;
                     case SDL_SCANCODE_T:
-                        release_COS();
+                        release_key( HPKEY_COS );
                         break;
                     case SDL_SCANCODE_U:
-                        release_TAN();
+                        release_key( HPKEY_TAN );
                         break;
                     case SDL_SCANCODE_V:
-                        release_SQRT();
+                        release_key( HPKEY_SQRT );
                         break;
                     case SDL_SCANCODE_W:
-                        release_POW();
+                        release_key( HPKEY_POWER );
                         break;
                     case SDL_SCANCODE_X:
-                        release_INV();
+                        release_key( HPKEY_INV );
                         break;
                     case SDL_SCANCODE_Y:
-                        release_NEG();
+                        release_key( HPKEY_NEG );
                         break;
                     case SDL_SCANCODE_Z:
-                        release_EEX();
+                        release_key( HPKEY_EEX );
                         break;
                     case SDL_SCANCODE_F2:
-                        release_LSHIFT();
+                        release_key( HPKEY_SHL );
                         break;
                     case SDL_SCANCODE_F3:
-                        release_RSHIFT();
+                        release_key( HPKEY_SHR );
                         break;
                     case SDL_SCANCODE_F4:
-                        release_ALPHA();
+                        release_key( HPKEY_ALPHA );
                         break;
                     default:
                         break;
