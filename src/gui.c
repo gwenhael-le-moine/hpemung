@@ -11,6 +11,9 @@
 #include "emulator.h" /* for please_exit */
 #include "display.h"
 
+/***********/
+/* DEFINES */
+/***********/
 #define PANEL_FLAG_VISIBLE 0x01
 
 #define UI_PADDING 4
@@ -56,6 +59,9 @@
 // Releaseing mouse button 1 anywhere unpushes the button
 #define BUTTON_B1RELEASE 0x10
 
+/***********/
+/* TYPEDEF */
+/***********/
 typedef struct {
     int index;
     int x, y;
@@ -82,6 +88,9 @@ typedef struct {
     SDL_Color below;
 } colors_t;
 
+/*************/
+/* VARIABLES */
+/*************/
 static TTF_Font* ttffont = NULL;
 static TTF_Font* ttffont2 = NULL;
 
@@ -786,6 +795,9 @@ static SDL_Color pixels_colors[] = {
     {.r = 37,  .g = 61,  .b = 84,  .a = 255},
 };
 
+/*************/
+/* FUNCTIONS */
+/*************/
 static inline bool _init_keyboard_textures()
 {
     SDL_Surface* s = NULL;
@@ -1013,6 +1025,9 @@ static inline void button_draw_all()
         _button_draw( gui_buttons[ i ] );
 }
 
+/********************/
+/* PUBLIC FUNCTIONS */
+/********************/
 void gui_refresh()
 {
     SDL_SetRenderDrawColor( renderer, gui_colors.faceplate.r, gui_colors.faceplate.g, gui_colors.faceplate.b, gui_colors.faceplate.a );
