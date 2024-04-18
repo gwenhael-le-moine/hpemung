@@ -1,22 +1,26 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include <SDL2/SDL.h>
+#include <sys/time.h>
 
 #include "config.h"
 #include "emulator.h"
 #include "gui.h"
 #include "display.h"
 
-Uint64 currentTime;
+long long time_in_mseconds( void )
+{
+    struct timeval tv;
 
-// display_update
-Uint64 lastTime_timer1 = 0;
-unsigned int delay_timer1 = 16384;
+    gettimeofday( &tv, NULL );
+    return ( ( ( long long )tv.tv_sec ) * 1000 ) + ( tv.tv_usec / 1000 );
+}
 
-// display show
-Uint64 lastTime_timer5 = 0;
-unsigned int delay_timer5 = 64; // fps
+long long currentTime;
+
+// gui_update
+long long lastTime_gui_update = 0;
+long long delay_gui_update = 16;
 
 int main( int argc, char* argv[] )
 {
@@ -27,29 +31,19 @@ int main( int argc, char* argv[] )
 
     emulator_init();
 
-    while ( !please_exit ) {
-        if ( please_exit )
+    do {
+        if ( !gui_events() )
             break;
-
-        currentTime = SDL_GetTicks64();
 
         emulator_run();
 
-        if ( currentTime > lastTime_timer1 + delay_timer1 ) {
-            lastTime_timer1 = currentTime;
-
-            display_update();
-        }
-
-        if ( currentTime > lastTime_timer5 + delay_timer5 ) {
-            lastTime_timer5 = currentTime;
+        currentTime = time_in_mseconds();
+        if ( currentTime > lastTime_gui_update + delay_gui_update ) {
+            lastTime_gui_update = currentTime;
 
             gui_update();
         }
-
-        if ( !gui_events() )
-            break;
-    }
+    } while ( !please_exit );
 
     emulator_exit();
     gui_exit();

@@ -104,13 +104,6 @@ bool emulator_run( void )
     CycleEvent* cep;
     dword delta;
 
-    static bool first_run = false;
-    if ( first_run == false && emulator_state == EMULATOR_RUN )
-        first_run = true;
-
-    if ( please_exit )
-        return false;
-
     if ( emulator_state != EMULATOR_STOP ) {
         if ( !cpu.shutdown ) {
             execute_instruction();
