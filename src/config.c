@@ -7,14 +7,16 @@
 
 Config config = {
     .progname = "hpemung",
+
+    .throttle = false,
+    .verbose = false,
+    .allow_shutdn = false,
+
     .ui_scale = 3,
     .ui_font1 = "/usr/share/fonts/TTF/unifont.ttf",
     .ui_font2 = "/usr/share/fonts/TTF/unifont.ttf",
     .ui_font_size1 = 6,
     .ui_font_size2 = 4,
-    .throttle = false,
-    .verbose = false,
-    .allow_shutdn = false,
 
     .fn_rom = "rom",
     .fn_ram = "ram",
