@@ -41,25 +41,23 @@ static int emulator_state = EMULATOR_RUN;
 
 void emulator_set_state( int state ) { emulator_state = state; }
 
-void emulator_init( char* fn_rom, char* fn_ram, char* fn_port1, char* fn_port2, char* fn_bus, char* fn_cpu )
+void emulator_init()
 {
-    get_absolute_working_dir_path( "hpemung" );
+    get_absolute_working_dir_path();
 
-    rom_init( fn_rom );
-    ram_init( fn_ram );
-    ports_init( fn_port1, fn_port2 );
+    rom_init( config.fn_rom );
+    ram_init( config.fn_ram );
+    ports_init( config.fn_port1, config.fn_port2 );
 
-    cpu_init( fn_cpu );
-    bus_init( fn_bus );
+    cpu_bus_init( config.fn_state );
 }
 
-void emulator_exit( char* fn_rom, char* fn_ram, char* fn_port1, char* fn_port2, char* fn_bus, char* fn_cpu )
+void emulator_exit()
 {
-    ports_exit( fn_port1, fn_port2 );
-    ram_exit( fn_ram );
+    ports_exit( config.fn_port1, config.fn_port2 );
+    ram_exit( config.fn_ram );
     rom_exit();
-    bus_exit( fn_bus );
-    cpu_exit( fn_cpu );
+    cpu_bus_exit( config.fn_state );
 }
 
 static inline void throttle( bool is_needed )

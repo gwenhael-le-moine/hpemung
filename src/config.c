@@ -15,6 +15,12 @@ Config config = {
     .throttle = false,
     .verbose = false,
     .allow_shutdn = false,
+
+    .fn_rom = "rom",
+    .fn_ram = "ram",
+    .fn_port1 = "port1",
+    .fn_port2 = "port2",
+    .fn_state = "state",
 };
 
 void parse_args( int argc, char* argv[] )

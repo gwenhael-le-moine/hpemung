@@ -13,6 +13,12 @@ typedef struct {
     bool throttle;
     bool verbose;
     bool allow_shutdn;
+
+    char* fn_rom;
+    char* fn_ram;
+    char* fn_port1;
+    char* fn_port2;
+    char* fn_state;
 } Config;
 
 extern Config config;

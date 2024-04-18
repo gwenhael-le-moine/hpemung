@@ -335,93 +335,50 @@ void load_file_on_stack( char* filename )
     free( obj );
 }
 
-void bus_init( char* filename )
+void cpu_bus_init( char* filename )
 {
     bus_reset();
 
-    char fullpath[ MAX_LENGTH_FILENAME ];
-    get_absolute_working_dir_path();
-    sprintf( fullpath, "%s%s", absolute_working_dir_path, filename );
+    /* char fullpath[ MAX_LENGTH_FILENAME ]; */
+    /* get_absolute_working_dir_path(); */
+    /* sprintf( fullpath, "%s%s", absolute_working_dir_path, filename ); */
 
-    int filesize = file_size( fullpath );
+    /* int filesize = file_size( fullpath ); */
 
-    if ( filesize ) {
-        FILE* fp;
-        /* BusInfo tmp_bus_info; */
+    /* if ( filesize ) { */
+    /*     FILE* fp; */
+    /*     /\* BusInfo tmp_bus_info; *\/ */
 
-        if ( NULL == ( fp = fopen( fullpath, "w" ) ) ) {
-            if ( config.verbose )
-                fprintf( stderr, "can\'t open %s\n", fullpath );
-            return;
-        }
-        if ( config.verbose )
-            fprintf( stderr, "Loading bus_info from %s\n", fullpath );
+    /*     if ( NULL == ( fp = fopen( fullpath, "w" ) ) ) { */
+    /*         if ( config.verbose ) */
+    /*             fprintf( stderr, "can\'t open %s\n", fullpath ); */
+    /*         return; */
+    /*     } */
+    /*     if ( config.verbose ) */
+    /*         fprintf( stderr, "Loading bus_info from %s\n", fullpath ); */
 
-        fread( &bus_info, sizeof( BusInfo ), 1, fp );
+    /*     fread( &bus_info, sizeof( BusInfo ), 1, fp ); */
 
-        fclose( fp );
-    }
+    /*     fclose( fp ); */
+    /* } */
 }
-void bus_exit( char* filename )
+void cpu_bus_exit( char* filename )
 {
-    char fullpath[ MAX_LENGTH_FILENAME ];
-    get_absolute_working_dir_path();
-    sprintf( fullpath, "%s%s", absolute_working_dir_path, filename );
+    /* char fullpath[ MAX_LENGTH_FILENAME ]; */
+    /* get_absolute_working_dir_path(); */
+    /* sprintf( fullpath, "%s%s", absolute_working_dir_path, filename ); */
 
-    FILE* fp;
+    /* FILE* fp; */
 
-    if ( NULL == ( fp = fopen( fullpath, "w" ) ) ) {
-        if ( config.verbose )
-            fprintf( stderr, "can\'t open %s\n", fullpath );
-        return;
-    }
+    /* if ( NULL == ( fp = fopen( fullpath, "w" ) ) ) { */
+    /*     if ( config.verbose ) */
+    /*         fprintf( stderr, "can\'t open %s\n", fullpath ); */
+    /*     return; */
+    /* } */
 
-    fwrite( &bus_info, sizeof( BusInfo ), 1, fp );
+    /* fwrite( &bus_info, sizeof( BusInfo ), 1, fp ); */
 
-    fclose( fp );
-}
-
-void cpu_init( char* filename )
-{
-    char fullpath[ MAX_LENGTH_FILENAME ];
-    get_absolute_working_dir_path();
-    sprintf( fullpath, "%s%s", absolute_working_dir_path, filename );
-
-    int filesize = file_size( fullpath );
-
-    if ( filesize ) {
-        FILE* fp;
-
-        if ( NULL == ( fp = fopen( fullpath, "w" ) ) ) {
-            if ( config.verbose )
-                fprintf( stderr, "can\'t open %s\n", fullpath );
-            return;
-        }
-        if ( config.verbose )
-            fprintf( stderr, "Loading cpu from %s\n", fullpath );
-
-        fread( &cpu, sizeof( Cpu ), 1, fp );
-
-        fclose( fp );
-    }
-}
-void cpu_exit( char* filename )
-{
-    char fullpath[ MAX_LENGTH_FILENAME ];
-    get_absolute_working_dir_path();
-    sprintf( fullpath, "%s%s", absolute_working_dir_path, filename );
-
-    FILE* fp;
-
-    if ( NULL == ( fp = fopen( fullpath, "w" ) ) ) {
-        if ( config.verbose )
-            fprintf( stderr, "can\'t open %s\n", fullpath );
-        return;
-    }
-
-    fwrite( &cpu, sizeof( Cpu ), 1, fp );
-
-    fclose( fp );
+    /* fclose( fp ); */
 }
 
 void rom_init( char* filename )
