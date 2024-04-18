@@ -6,7 +6,7 @@
 #include <SDL2/SDL_ttf.h>
 
 #include "config.h"      /* config.ui_* */
-#include "keyboard.h"    /* press_*(); release_*() */
+#include "keyboard.h"    /* press_key(); release_key() */
 #include "emulator.h"    /* for please_exit */
 #include "display.h"     /* LCD_HEIGHT; LCD_WIDTH; shouldRender; lcdScreenGS[] */
 #include "persistence.h" /* load_file_on_stack(); */
@@ -113,6 +113,7 @@ SDL_Texture* textures_labels_letter[ NB_KEYS ];
 static const int std_flags = BUTTON_B1RELEASE | BUTTON_B2TOGGLE;
 
 static Button gui_buttons[ NB_KEYS ] = {
+    /* line 0 */
     {.index = 0,
      .x = X_COL( 0 ),
      .y = Y_LINE( 0 ),
@@ -185,7 +186,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_letter = "F",
      .label_below = "",
      .hpkey = HPKEY_F     },
-
+    /* line 1 */
     {.index = 6,
      .x = X_COL( 0 ),
      .y = Y_LINE( 1 ),
@@ -258,7 +259,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_letter = "L",
      .label_below = "",
      .hpkey = HPKEY_NXT   },
-
+    /* line 2 */
     {.index = 12,
      .x = X_COL( 0 ),
      .y = Y_LINE( 2 ),
@@ -331,7 +332,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_letter = "R",
      .label_below = "",
      .hpkey = HPKEY_RIGHT },
-
+    /* line 3 */
     {.index = 18,
      .x = X_COL( 0 ),
      .y = Y_LINE( 3 ),
@@ -404,7 +405,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_letter = "X",
      .label_below = "",
      .hpkey = HPKEY_INV   },
-
+    /* line 4 */
     {.index = 24,
      .x = X_COL( 0 ),
      .y = Y_LINE( 4 ),
@@ -465,7 +466,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_letter = "",
      .label_below = "",
      .hpkey = HPKEY_BS    },
-
+    /* line 5 */
     {.index = 29,
      .x = X_COL( 0 ),
      .y = Y_LINE( 5 ),
@@ -526,7 +527,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_letter = "",
      .label_below = "",
      .hpkey = HPKEY_DIV   },
-
+    /* line 6 */
     {.index = 34,
      .x = X_COL( 0 ),
      .y = Y_LINE( 6 ),
@@ -587,7 +588,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_letter = "",
      .label_below = "",
      .hpkey = HPKEY_MUL   },
-
+    /* line 7 */
     {.index = 39,
      .x = X_COL( 0 ),
      .y = Y_LINE( 7 ),
@@ -648,7 +649,7 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_letter = "",
      .label_below = "",
      .hpkey = HPKEY_MINUS },
-
+    /* line 8 */
     {.index = 44,
      .x = X_COL( 0 ),
      .y = Y_LINE( 8 ),
@@ -709,20 +710,6 @@ static Button gui_buttons[ NB_KEYS ] = {
      .label_letter = "",
      .label_below = "",
      .hpkey = HPKEY_PLUS  },
-
-    /* {.index = 49, */
-    /*  .x = X_COL( 0 ), */
-    /*  .y = Y_LINE( 9 ), */
-    /*  .w = 40, */
-    /*  .h = UI_K_HEIGHT_2, */
-    /*  .flags = std_flags, */
-    /*  .label = "load file", */
-    /*  .label_Lshift = "", */
-    /*  .label_Rshift = "", */
-    /*  .label_letter = "", */
-    /*  .label_below = "", */
-    /*  .down = press_LoadFile, */
-    /*  .up = release_LoadFile}, */
 };
 
 static colors_t gui_colors = {
@@ -811,7 +798,7 @@ static inline bool _init_keyboard_textures()
     return true;
 }
 
-static inline void _draw_button_labels( Button b )
+static inline void _draw_key_labels( Button b )
 {
     int texW;
     int texH;
@@ -870,7 +857,7 @@ static inline void _draw_button_labels( Button b )
     }
 }
 
-static inline void _button_draw( Button b )
+static inline void _draw_key( Button b )
 {
     SDL_Rect rectToDraw = { ( b.x + ( UI_KEY_PADDING / 2 ) ) * config.ui_scale, ( b.y + ( UI_KEY_PADDING * 1.25 ) ) * config.ui_scale,
                             ( b.w - UI_KEY_PADDING ) * config.ui_scale, ( b.h - ( UI_KEY_PADDING * 2 ) ) * config.ui_scale };
@@ -894,7 +881,13 @@ static inline void _button_draw( Button b )
 
     SDL_RenderDrawRect( renderer, &rectToDraw );
 
-    _draw_button_labels( b );
+    _draw_key_labels( b );
+}
+
+static inline void _draw_keyboard()
+{
+    for ( int i = 0; i < NB_KEYS; ++i )
+        _draw_key( gui_buttons[ i ] );
 }
 
 static inline int _find_button( int x, int y )
@@ -962,12 +955,6 @@ static inline void _button_mouse_up( int mouse_x, int mouse_y, int mouse_button 
     }
 }
 
-static inline void button_draw_all()
-{
-    for ( int i = 0; i < NB_KEYS; ++i )
-        _button_draw( gui_buttons[ i ] );
-}
-
 /********************/
 /* PUBLIC FUNCTIONS */
 /********************/
@@ -976,35 +963,42 @@ void gui_refresh()
     SDL_SetRenderDrawColor( renderer, gui_colors.faceplate.r, gui_colors.faceplate.g, gui_colors.faceplate.b, gui_colors.faceplate.a );
     SDL_RenderClear( renderer );
 
-    if ( shouldRender == true ) {
+    if ( shouldRender ) {
         shouldRender = false;
 
         int pitch, w, h;
         Uint32* pixels;
         int access;
         Uint32 format;
+        byte pixel;
+        Uint32 color;
+        Uint32 pixelPosition;
 
-        if ( SDL_QueryTexture( window_texture, &format, &access, &w, &h ) != 0 )
-            printf( "error\n" );
+        if ( SDL_QueryTexture( window_texture, &format, &access, &w, &h ) ) {
+            printf( "SDL_QueryTexture: %s.\n", SDL_GetError() );
+            please_exit = true;
+        }
 
-        if ( SDL_LockTexture( window_texture, NULL, ( void** )&pixels, &pitch ) != 0 )
+        if ( SDL_LockTexture( window_texture, NULL, ( void** )&pixels, &pitch ) ) {
             printf( "SDL_LockTexture: %s.\n", SDL_GetError() );
+            please_exit = true;
+        }
 
         SDL_PixelFormat* pixelFormat = SDL_AllocFormat( format );
 
         // do stuff
         for ( int y = 0; y < LCD_HEIGHT; y++ ) {
             for ( int x = 0; x < LCD_WIDTH; x++ ) {
-                byte pixel = lcdScreenGS[ x + y * LCD_WIDTH ];
+                pixel = lcdScreenGS[ x + y * LCD_WIDTH ];
 
                 // Now you want to format the color to a correct format that SDL
                 // can use. Basically we convert our RGB color to a hex-like BGR
                 // color.
-                Uint32 color = SDL_MapRGB( pixelFormat, pixels_colors[ pixel ].r, pixels_colors[ pixel ].g, pixels_colors[ pixel ].b );
+                color = SDL_MapRGB( pixelFormat, pixels_colors[ pixel ].r, pixels_colors[ pixel ].g, pixels_colors[ pixel ].b );
 
                 // Before setting the color, we need to know where we have to
                 // place it.
-                Uint32 pixelPosition = y * ( pitch / sizeof( unsigned int ) ) + x;
+                pixelPosition = y * ( pitch / sizeof( unsigned int ) ) + x;
 
                 pixels[ pixelPosition ] = color;
             }
@@ -1018,7 +1012,7 @@ void gui_refresh()
     SDL_Rect r2 = { LCD_X * config.ui_scale, LCD_Y * config.ui_scale, LCD_WIDTH * config.ui_scale, LCD_HEIGHT * config.ui_scale };
     SDL_RenderCopyEx( renderer, window_texture, &r1, &r2, 0, NULL, SDL_FLIP_NONE );
 
-    button_draw_all();
+    _draw_keyboard();
 
     SDL_RenderPresent( renderer );
 }
