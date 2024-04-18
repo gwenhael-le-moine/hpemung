@@ -23,7 +23,7 @@ Config config = {
     .fn_state = "state",
 };
 
-void parse_args( int argc, char* argv[] )
+void config_init( int argc, char* argv[] )
 {
     int option_index;
     int c = '?';

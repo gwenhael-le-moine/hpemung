@@ -3,7 +3,7 @@
 
 #include <stdbool.h>
 
-extern void gui_refresh( void );
+extern void gui_update( void );
 extern bool gui_events();
 
 extern bool gui_init( void );

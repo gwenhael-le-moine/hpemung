@@ -23,6 +23,6 @@ typedef struct {
 
 extern Config config;
 
-void parse_args( int argc, char* argv[] );
+void config_init( int argc, char* argv[] );
 
 #endif

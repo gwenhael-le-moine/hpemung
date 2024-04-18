@@ -958,7 +958,7 @@ static inline void _button_mouse_up( int mouse_x, int mouse_y, int mouse_button 
 /********************/
 /* PUBLIC FUNCTIONS */
 /********************/
-void gui_refresh()
+void gui_update()
 {
     SDL_SetRenderDrawColor( renderer, gui_colors.faceplate.r, gui_colors.faceplate.g, gui_colors.faceplate.b, gui_colors.faceplate.a );
     SDL_RenderClear( renderer );
