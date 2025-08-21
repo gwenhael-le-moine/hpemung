@@ -57,7 +57,7 @@ static address hdw_seg;
 
 word crc;
 
-static inline void update_crc( byte nibble ) { crc = ( crc >> 4 ) ^ ( ( ( crc ^ nibble ) & 0xF ) * 0x1081 ); }
+static inline void update_crc( byte nib ) { crc = ( crc >> 4 ) ^ ( ( ( crc ^ nib ) & 0xF ) * 0x1081 ); }
 
 void bus_read( byte* buf, address adr, address len )
 {

@@ -58,6 +58,6 @@ extern void bus_remap( void );
 extern void bus_configure( address adr );
 extern void bus_unconfigure( address adr );
 extern void bus_reset( void );
-extern address bus_get_id();
+extern address bus_get_id( void );
 
 #endif

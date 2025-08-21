@@ -27,7 +27,7 @@ static address ram_size = 256 * 1024; // in nibbles, not bytes!
 static address port1_size = ( 256 * 1024 );  /* 128Kio in nibbles */
 static address port2_size = ( 8192 * 1024 ); /* 4Mio in nibbles */
 
-void get_absolute_working_dir_path()
+void get_absolute_working_dir_path( void )
 {
     if ( absolute_working_dir_path[ 0 ] == '/' )
         return;

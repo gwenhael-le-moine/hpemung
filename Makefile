@@ -1,29 +1,119 @@
-PREFIX = /usr
-DOCDIR = $(PREFIX)/doc/hpemung
+# Makefile to build x48ng without autotools
+#
+# The cc-option function and the C{,PP}FLAGS logic were copied from the
+# fsverity-utils project.
+# https://git.kernel.org/pub/scm/fs/fsverity/fsverity-utils.git/
+# The governing license can be found in the LICENSE file or at
+# https://opensource.org/license/MIT.
 
-CC = gcc
-LIBS = $(shell pkg-config --libs sdl2 SDL2_ttf)
-CFLAGS = -Wall -Werror -O3 -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=unused-but-set-variable -Wno-error=missing-braces -Wno-error=incompatible-pointer-types
+TARGET = dist/hpemung
+
+VERSION_MAJOR = 0
+VERSION_MINOR = 10
+PATCHLEVEL = 0
+
+PREFIX ?= /usr
+DOCDIR ?= $(PREFIX)/doc/hpemung
+
+PKG_CONFIG ?= pkg-config
+
+OPTIM ?= 2
+FULL_WARNINGS ?= no
+WITH_SDL ?= yes
+
+makeflags +=-j$(NUM_CORES) -l$(NUM_CORES)
+
+cc-option = $(shell if $(CC) $(1) -c -x c /dev/null -o /dev/null > /dev/null 2>&1; \
+		  then echo $(1); fi)
+
+### SDL UI
+ifeq ($(WITH_SDL), yes)
+	SDL_CFLAGS = $(shell "$(PKG_CONFIG)" --cflags sdl2 SDL2_ttf) -DHAS_SDL=1
+	SDL_LIBS = $(shell "$(PKG_CONFIG)" --libs sdl2 SDL2_ttf)
+	SDL_SRC = src/ui4x/sdl.c
+	SDL_HEADERS = src/ui4x/sdl.h
+endif
+
+LIBS = $(SDL_LIBS)
+
+#CFLAGS = -Wall -Werror -O3 -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=unused-but-set-variable -Wno-error=missing-braces -Wno-error=incompatible-pointer-types
+
+ifeq ($(FULL_WARNINGS), no)
+EXTRA_WARNING_CFLAGS := -Wno-unused-function \
+	-Wno-redundant-decls \
+	$(call cc-option,-Wno-maybe-uninitialized) \
+	$(call cc-option,-Wno-discarded-qualifiers) \
+	$(call cc-option,-Wno-uninitialized) \
+	$(call cc-option,-Wno-ignored-qualifiers)
+else
+EXTRA_WARNING_CFLAGS := -Wunused-function \
+	-Wredundant-decls \
+	-fsanitize=thread \
+	$(call cc-option,-Wunused-variable)
+endif
+
+override CFLAGS := -std=c11 \
+	-Wall -Wextra -Wpedantic \
+	-Wformat=2 -Wshadow \
+	-Wwrite-strings -Wstrict-prototypes -Wold-style-definition \
+	-Wnested-externs -Wmissing-include-dirs \
+	-Wdouble-promotion \
+	-Wno-sign-conversion \
+	-Wno-unused-variable \
+	-Wno-unused-parameter \
+	-Wno-conversion \
+	-Wno-format-nonliteral \
+	$(call cc-option,-Wjump-misses-init) \
+	$(call cc-option,-Wlogical-op) \
+	$(call cc-option,-Wno-unknown-warning-option) \
+	$(EXTRA_WARNING_CFLAGS) \
+	$(SDL_CFLAGS) \
+	-O$(OPTIM) \
+	-D_GNU_SOURCE=1 \
+	-DVERSION_MAJOR=$(VERSION_MAJOR) \
+	-DVERSION_MINOR=$(VERSION_MINOR) \
+	-DPATCHLEVEL=$(PATCHLEVEL) \
+	-I./src/ \
+	$(CFLAGS)
+
+HEADERS = src/bus.h \
+	src/config.h \
+	src/cpu.h \
+	src/display.h \
+	src/emulator.h \
+	src/gui.h \
+	src/hdw.h \
+	src/keyboard.h \
+	src/opcodes.h \
+	src/opinline.h \
+	src/persistence.h \
+	src/ports.h \
+	src/rpl.h \
+	src/timers.h \
+	src/types.h
+
+SRC = src/bus.c \
+	src/config.c \
+	src/cpu.c \
+	src/display.c \
+	src/emulator.c \
+	src/gui.c \
+	src/hdw.c \
+	src/keyboard.c \
+	src/main.c \
+	src/opcodes.c \
+	src/persistence.c \
+	src/ports.c \
+	src/rpl.c \
+	src/timers.c
+OBJS = $(SRC:.c=.o)
 
 .PHONY: all clean clean-all pretty-code install mrproper get-roms
 
-all: dist/hpemung
+all: $(TARGET)
 
-dist/hpemung: src/bus.o \
-	src/cpu.o \
-	src/display.o \
-	src/emulator.o \
-	src/gui.o \
-	src/hdw.o \
-	src/keyboard.o \
-	src/main.o \
-	src/opcodes.o \
-	src/persistence.o \
-	src/ports.o \
-	src/rpl.o \
-	src/config.o \
-	src/timers.o
-	$(CC) $(CFLAGS) $(LIBS) -o $@ $+
+$(TARGET): $(OBJS) $(HEADERS)
+	$(CC) $(CFLAGS) $(LIBS) -o $@ $(OBJS)
 
 # Cleaning
 clean:
@@ -33,6 +123,10 @@ mrproper: clean
 	-rm dist/hpemung
 
 clean-all: mrproper
+
+# for clangd
+compile_commands.json: mrproper
+	bear -- make $(TARGET)
 
 # Formatting
 pretty-code:

@@ -5,6 +5,7 @@
 #include "display.h"
 
 static byte hdw_ram[ 64 ];
+int tmp;
 
 byte hdw_read_nibble( address adr )
 {
@@ -131,7 +132,7 @@ void hdw_write_nibble( byte data, address adr )
             display_height &= 0x0F;
             display_height |= ( data & 3 ) << 4;
             hdw_ram[ 0x29 ] = data & 0x4;
-            int tmp = bus_info.da19;
+            tmp = bus_info.da19;
             bus_info.da19 = ( data & 0x8 ) ? true : false;
             if ( tmp != bus_info.da19 ) {
                 bus_remap();

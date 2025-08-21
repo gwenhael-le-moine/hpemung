@@ -733,7 +733,7 @@ static SDL_Color pixels_colors[] = {
 /*************/
 /* FUNCTIONS */
 /*************/
-static inline bool _init_keyboard_textures()
+static inline bool _init_keyboard_textures( void )
 {
     SDL_Surface* s = NULL;
     SDL_Texture* t = NULL;
@@ -884,7 +884,7 @@ static inline void _draw_key( Button b )
     _draw_key_labels( b );
 }
 
-static inline void _draw_keyboard()
+static inline void _draw_keyboard( void )
 {
     for ( int i = 0; i < NB_KEYS; ++i )
         _draw_key( gui_buttons[ i ] );
@@ -958,7 +958,7 @@ static inline void _button_mouse_up( int mouse_x, int mouse_y, int mouse_button 
 /********************/
 /* PUBLIC FUNCTIONS */
 /********************/
-void gui_update()
+void gui_update( void )
 {
     SDL_SetRenderDrawColor( renderer, gui_colors.faceplate.r, gui_colors.faceplate.g, gui_colors.faceplate.b, gui_colors.faceplate.a );
     SDL_RenderClear( renderer );
@@ -1017,7 +1017,7 @@ void gui_update()
     SDL_RenderPresent( renderer );
 }
 
-bool gui_events()
+bool gui_events( void )
 {
     SDL_Event event;
 

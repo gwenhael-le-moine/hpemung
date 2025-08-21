@@ -41,7 +41,7 @@ static int emulator_state = EMULATOR_RUN;
 
 void emulator_set_state( int state ) { emulator_state = state; }
 
-void emulator_init()
+void emulator_init( void )
 {
     get_absolute_working_dir_path();
 
@@ -52,7 +52,7 @@ void emulator_init()
     cpu_bus_init( config.fn_state );
 }
 
-void emulator_exit()
+void emulator_exit( void )
 {
     ports_exit( config.fn_port1, config.fn_port2 );
     ram_exit( config.fn_ram );
