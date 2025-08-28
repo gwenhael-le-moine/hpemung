@@ -14,6 +14,8 @@
 
 #include <curses.h>
 
+#include "../persistence.h"
+
 #include "../emulator_ui4x_api.h"
 #include "../options.h"
 #include "common.h"
@@ -547,6 +549,12 @@ void ui_get_event_ncurses( void )
             case KEY_F( 10 ):
                 // please_exit = true;
                 close_and_exit();
+                break;
+
+            case KEY_F( 11 ):
+                {
+                    load_file_on_stack( "zeldahp.dir" );
+                }
                 break;
 
             default:

@@ -5,6 +5,8 @@
 
 #include <SDL3/SDL.h>
 
+#include "../persistence.h"
+
 #include "../emulator_ui4x_api.h"
 #include "../options.h"
 #include "common.h"
@@ -414,6 +416,12 @@ static int sdlkey_to_hpkey( SDL_Keycode k )
         case SDLK_F10:
             close_and_exit();
             return -1;
+
+        case SDLK_F11:
+            {
+                load_file_on_stack( "zeldahp.dir" );
+            }
+            break;
         default:
             return -1;
     }
