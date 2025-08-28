@@ -3,6 +3,7 @@
 #include "types.h"
 #include "bus.h"
 #include "display.h"
+#include "emulator_ui4x_api.h"
 
 address menu_base;
 address display_base;
@@ -15,7 +16,7 @@ bool shouldRender = false;
 
 byte lcdScreenGS[ LCD_WIDTH * LCD_HEIGHT ];
 
-static byte lcdScreen[ LCD_WIDTH * LCD_HEIGHT ];
+byte lcdScreen[ LCD_WIDTH * LCD_HEIGHT ];
 static byte prev_lcdScreen[ LCD_WIDTH * LCD_HEIGHT ];
 static byte prev2_lcdScreen[ LCD_WIDTH * LCD_HEIGHT ];
 

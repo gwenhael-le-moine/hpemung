@@ -4,8 +4,8 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 
-#include "config.h"      /* config.ui_* */
-#include "keyboard.h"    /* press_key(); release_key() */
+#include "options.h"     /* config.ui_* */
+#include "keyboard.h"    /* pressKey(); releaseKey() */
 #include "emulator.h"    /* for please_exit */
 #include "display.h"     /* LCD_HEIGHT; LCD_WIDTH; shouldRender; lcdScreenGS[] */
 #include "persistence.h" /* load_file_on_stack(); */
@@ -917,16 +917,16 @@ static inline void _button_mouse_down( int mouse_x, int mouse_y, int mouse_butto
         if ( gui_buttons[ bindex ].flags & BUTTON_PUSHED ) {
             gui_buttons[ bindex ].flags &= ~BUTTON_PUSHED;
 
-            release_key( gui_buttons[ bindex ].hpkey );
+            releaseKey( gui_buttons[ bindex ].hpkey );
         } else {
             gui_buttons[ bindex ].flags |= BUTTON_PUSHED;
 
-            press_key( gui_buttons[ bindex ].hpkey );
+            pressKey( gui_buttons[ bindex ].hpkey );
         }
     } else if ( mouse_button == 1 && !( gui_buttons[ bindex ].flags & BUTTON_PUSHED ) ) {
         gui_buttons[ bindex ].flags |= BUTTON_PUSHED;
 
-        press_key( gui_buttons[ bindex ].hpkey );
+        pressKey( gui_buttons[ bindex ].hpkey );
     }
 }
 
@@ -940,7 +940,7 @@ static inline void _button_mouse_up( int mouse_x, int mouse_y, int mouse_button 
         if ( mouse_button == 1 && ( gui_buttons[ bindex ].flags & BUTTON_PUSHED ) && !( gui_buttons[ bindex ].flags & BUTTON_B1TOGGLE ) ) {
             gui_buttons[ bindex ].flags &= ~BUTTON_PUSHED;
 
-            press_key( gui_buttons[ bindex ].hpkey );
+            pressKey( gui_buttons[ bindex ].hpkey );
         }
     }
     if ( mouse_button == 1 ) {
@@ -948,7 +948,7 @@ static inline void _button_mouse_up( int mouse_x, int mouse_y, int mouse_button 
         if ( ( gui_buttons[ bindex ].flags & ( BUTTON_B1RELEASE | BUTTON_PUSHED ) ) == ( BUTTON_B1RELEASE | BUTTON_PUSHED ) ) {
             gui_buttons[ bindex ].flags &= ~BUTTON_PUSHED;
 
-            release_key( gui_buttons[ bindex ].hpkey );
+            releaseKey( gui_buttons[ bindex ].hpkey );
         }
         /* } */
     }
@@ -1034,164 +1034,164 @@ bool gui_events( void )
                 switch ( event.key.keysym.scancode ) {
                     case SDL_SCANCODE_KP_0:
                     case SDL_SCANCODE_0:
-                        press_key( HPKEY_0 );
+                        pressKey( HPKEY_0 );
                         break;
                     case SDL_SCANCODE_KP_1:
                     case SDL_SCANCODE_1:
-                        press_key( HPKEY_1 );
+                        pressKey( HPKEY_1 );
                         break;
                     case SDL_SCANCODE_KP_2:
                     case SDL_SCANCODE_2:
-                        press_key( HPKEY_2 );
+                        pressKey( HPKEY_2 );
                         break;
                     case SDL_SCANCODE_KP_3:
                     case SDL_SCANCODE_3:
-                        press_key( HPKEY_3 );
+                        pressKey( HPKEY_3 );
                         break;
                     case SDL_SCANCODE_KP_4:
                     case SDL_SCANCODE_4:
-                        press_key( HPKEY_4 );
+                        pressKey( HPKEY_4 );
                         break;
                     case SDL_SCANCODE_KP_5:
                     case SDL_SCANCODE_5:
-                        press_key( HPKEY_5 );
+                        pressKey( HPKEY_5 );
                         break;
                     case SDL_SCANCODE_KP_6:
                     case SDL_SCANCODE_6:
-                        press_key( HPKEY_6 );
+                        pressKey( HPKEY_6 );
                         break;
                     case SDL_SCANCODE_KP_7:
                     case SDL_SCANCODE_7:
-                        press_key( HPKEY_7 );
+                        pressKey( HPKEY_7 );
                         break;
                     case SDL_SCANCODE_KP_8:
                     case SDL_SCANCODE_8:
-                        press_key( HPKEY_8 );
+                        pressKey( HPKEY_8 );
                         break;
                     case SDL_SCANCODE_KP_9:
                     case SDL_SCANCODE_9:
-                        press_key( HPKEY_9 );
+                        pressKey( HPKEY_9 );
                         break;
                     case SDL_SCANCODE_KP_PERIOD:
-                        press_key( HPKEY_PERIOD );
+                        pressKey( HPKEY_PERIOD );
                         break;
                     case SDL_SCANCODE_SPACE:
-                        press_key( HPKEY_SPC );
+                        pressKey( HPKEY_SPC );
                         break;
                     case SDL_SCANCODE_ESCAPE:
                     case SDL_SCANCODE_F5:
-                        press_key( HPKEY_ON );
+                        pressKey( HPKEY_ON );
                         break;
                     case SDL_SCANCODE_RETURN:
                     case SDL_SCANCODE_KP_ENTER:
                     case SDL_SCANCODE_F1:
-                        press_key( HPKEY_ENTER );
+                        pressKey( HPKEY_ENTER );
                         break;
                     case SDL_SCANCODE_BACKSPACE:
-                        press_key( HPKEY_BS );
+                        pressKey( HPKEY_BS );
                         break;
                     case SDL_SCANCODE_KP_PLUS:
-                        press_key( HPKEY_PLUS );
+                        pressKey( HPKEY_PLUS );
                         break;
                     case SDL_SCANCODE_KP_MINUS:
-                        press_key( HPKEY_MINUS );
+                        pressKey( HPKEY_MINUS );
                         break;
                     case SDL_SCANCODE_KP_MULTIPLY:
-                        press_key( HPKEY_MUL );
+                        pressKey( HPKEY_MUL );
                         break;
                     case SDL_SCANCODE_KP_DIVIDE:
-                        press_key( HPKEY_DIV );
+                        pressKey( HPKEY_DIV );
                         break;
                     case SDL_SCANCODE_A:
-                        press_key( HPKEY_A );
+                        pressKey( HPKEY_A );
                         break;
                     case SDL_SCANCODE_B:
-                        press_key( HPKEY_B );
+                        pressKey( HPKEY_B );
                         break;
                     case SDL_SCANCODE_C:
-                        press_key( HPKEY_C );
+                        pressKey( HPKEY_C );
                         break;
                     case SDL_SCANCODE_D:
-                        press_key( HPKEY_D );
+                        pressKey( HPKEY_D );
                         break;
                     case SDL_SCANCODE_E:
-                        press_key( HPKEY_E );
+                        pressKey( HPKEY_E );
                         break;
                     case SDL_SCANCODE_F:
-                        press_key( HPKEY_F );
+                        pressKey( HPKEY_F );
                         break;
                     case SDL_SCANCODE_G:
-                        press_key( HPKEY_MTH );
+                        pressKey( HPKEY_MTH );
                         break;
                     case SDL_SCANCODE_H:
-                        press_key( HPKEY_PRG );
+                        pressKey( HPKEY_PRG );
                         break;
                     case SDL_SCANCODE_I:
-                        press_key( HPKEY_CST );
+                        pressKey( HPKEY_CST );
                         break;
                     case SDL_SCANCODE_J:
-                        press_key( HPKEY_VAR );
+                        pressKey( HPKEY_VAR );
                         break;
                     case SDL_SCANCODE_K:
                     case SDL_SCANCODE_UP:
-                        press_key( HPKEY_UP );
+                        pressKey( HPKEY_UP );
                         break;
                     case SDL_SCANCODE_L:
-                        press_key( HPKEY_NXT );
+                        pressKey( HPKEY_NXT );
                         break;
                     case SDL_SCANCODE_M:
-                        press_key( HPKEY_QUOTE );
+                        pressKey( HPKEY_QUOTE );
                         break;
                     case SDL_SCANCODE_N:
-                        press_key( HPKEY_STO );
+                        pressKey( HPKEY_STO );
                         break;
                     case SDL_SCANCODE_O:
-                        press_key( HPKEY_EVAL );
+                        pressKey( HPKEY_EVAL );
                         break;
                     case SDL_SCANCODE_P:
                     case SDL_SCANCODE_LEFT:
-                        press_key( HPKEY_LEFT );
+                        pressKey( HPKEY_LEFT );
                         break;
                     case SDL_SCANCODE_Q:
                     case SDL_SCANCODE_DOWN:
-                        press_key( HPKEY_DOWN );
+                        pressKey( HPKEY_DOWN );
                         break;
                     case SDL_SCANCODE_R:
                     case SDL_SCANCODE_RIGHT:
-                        press_key( HPKEY_RIGHT );
+                        pressKey( HPKEY_RIGHT );
                         break;
                     case SDL_SCANCODE_S:
-                        press_key( HPKEY_SIN );
+                        pressKey( HPKEY_SIN );
                         break;
                     case SDL_SCANCODE_T:
-                        press_key( HPKEY_COS );
+                        pressKey( HPKEY_COS );
                         break;
                     case SDL_SCANCODE_U:
-                        press_key( HPKEY_TAN );
+                        pressKey( HPKEY_TAN );
                         break;
                     case SDL_SCANCODE_V:
-                        press_key( HPKEY_SQRT );
+                        pressKey( HPKEY_SQRT );
                         break;
                     case SDL_SCANCODE_W:
-                        press_key( HPKEY_POWER );
+                        pressKey( HPKEY_POWER );
                         break;
                     case SDL_SCANCODE_X:
-                        press_key( HPKEY_INV );
+                        pressKey( HPKEY_INV );
                         break;
                     case SDL_SCANCODE_Y:
-                        press_key( HPKEY_NEG );
+                        pressKey( HPKEY_NEG );
                         break;
                     case SDL_SCANCODE_Z:
-                        press_key( HPKEY_EEX );
+                        pressKey( HPKEY_EEX );
                         break;
                     case SDL_SCANCODE_F2:
-                        press_key( HPKEY_SHL );
+                        pressKey( HPKEY_SHL );
                         break;
                     case SDL_SCANCODE_F3:
-                        press_key( HPKEY_SHR );
+                        pressKey( HPKEY_SHR );
                         break;
                     case SDL_SCANCODE_F4:
-                        press_key( HPKEY_ALPHA );
+                        pressKey( HPKEY_ALPHA );
                         break;
                     case SDL_SCANCODE_F7:
                         please_exit = true;
@@ -1212,164 +1212,164 @@ bool gui_events( void )
                 switch ( event.key.keysym.scancode ) {
                     case SDL_SCANCODE_KP_0:
                     case SDL_SCANCODE_0:
-                        release_key( HPKEY_0 );
+                        releaseKey( HPKEY_0 );
                         break;
                     case SDL_SCANCODE_KP_1:
                     case SDL_SCANCODE_1:
-                        release_key( HPKEY_1 );
+                        releaseKey( HPKEY_1 );
                         break;
                     case SDL_SCANCODE_KP_2:
                     case SDL_SCANCODE_2:
-                        release_key( HPKEY_2 );
+                        releaseKey( HPKEY_2 );
                         break;
                     case SDL_SCANCODE_KP_3:
                     case SDL_SCANCODE_3:
-                        release_key( HPKEY_3 );
+                        releaseKey( HPKEY_3 );
                         break;
                     case SDL_SCANCODE_KP_4:
                     case SDL_SCANCODE_4:
-                        release_key( HPKEY_4 );
+                        releaseKey( HPKEY_4 );
                         break;
                     case SDL_SCANCODE_KP_5:
                     case SDL_SCANCODE_5:
-                        release_key( HPKEY_5 );
+                        releaseKey( HPKEY_5 );
                         break;
                     case SDL_SCANCODE_KP_6:
                     case SDL_SCANCODE_6:
-                        release_key( HPKEY_6 );
+                        releaseKey( HPKEY_6 );
                         break;
                     case SDL_SCANCODE_KP_7:
                     case SDL_SCANCODE_7:
-                        release_key( HPKEY_7 );
+                        releaseKey( HPKEY_7 );
                         break;
                     case SDL_SCANCODE_KP_8:
                     case SDL_SCANCODE_8:
-                        release_key( HPKEY_8 );
+                        releaseKey( HPKEY_8 );
                         break;
                     case SDL_SCANCODE_KP_9:
                     case SDL_SCANCODE_9:
-                        release_key( HPKEY_9 );
+                        releaseKey( HPKEY_9 );
                         break;
                     case SDL_SCANCODE_KP_PERIOD:
-                        release_key( HPKEY_PERIOD );
+                        releaseKey( HPKEY_PERIOD );
                         break;
                     case SDL_SCANCODE_SPACE:
-                        release_key( HPKEY_SPC );
+                        releaseKey( HPKEY_SPC );
                         break;
                     case SDL_SCANCODE_ESCAPE:
                     case SDL_SCANCODE_F5:
-                        release_key( HPKEY_ON );
+                        releaseKey( HPKEY_ON );
                         break;
                     case SDL_SCANCODE_RETURN:
                     case SDL_SCANCODE_KP_ENTER:
                     case SDL_SCANCODE_F1:
-                        release_key( HPKEY_ENTER );
+                        releaseKey( HPKEY_ENTER );
                         break;
                     case SDL_SCANCODE_BACKSPACE:
-                        release_key( HPKEY_BS );
+                        releaseKey( HPKEY_BS );
                         break;
                     case SDL_SCANCODE_KP_PLUS:
-                        release_key( HPKEY_PLUS );
+                        releaseKey( HPKEY_PLUS );
                         break;
                     case SDL_SCANCODE_KP_MINUS:
-                        release_key( HPKEY_MINUS );
+                        releaseKey( HPKEY_MINUS );
                         break;
                     case SDL_SCANCODE_KP_MULTIPLY:
-                        release_key( HPKEY_MUL );
+                        releaseKey( HPKEY_MUL );
                         break;
                     case SDL_SCANCODE_KP_DIVIDE:
-                        release_key( HPKEY_DIV );
+                        releaseKey( HPKEY_DIV );
                         break;
                     case SDL_SCANCODE_A:
-                        release_key( HPKEY_A );
+                        releaseKey( HPKEY_A );
                         break;
                     case SDL_SCANCODE_B:
-                        release_key( HPKEY_B );
+                        releaseKey( HPKEY_B );
                         break;
                     case SDL_SCANCODE_C:
-                        release_key( HPKEY_C );
+                        releaseKey( HPKEY_C );
                         break;
                     case SDL_SCANCODE_D:
-                        release_key( HPKEY_D );
+                        releaseKey( HPKEY_D );
                         break;
                     case SDL_SCANCODE_E:
-                        release_key( HPKEY_E );
+                        releaseKey( HPKEY_E );
                         break;
                     case SDL_SCANCODE_F:
-                        release_key( HPKEY_F );
+                        releaseKey( HPKEY_F );
                         break;
                     case SDL_SCANCODE_G:
-                        release_key( HPKEY_MTH );
+                        releaseKey( HPKEY_MTH );
                         break;
                     case SDL_SCANCODE_H:
-                        release_key( HPKEY_PRG );
+                        releaseKey( HPKEY_PRG );
                         break;
                     case SDL_SCANCODE_I:
-                        release_key( HPKEY_CST );
+                        releaseKey( HPKEY_CST );
                         break;
                     case SDL_SCANCODE_J:
-                        release_key( HPKEY_VAR );
+                        releaseKey( HPKEY_VAR );
                         break;
                     case SDL_SCANCODE_K:
                     case SDL_SCANCODE_UP:
-                        release_key( HPKEY_UP );
+                        releaseKey( HPKEY_UP );
                         break;
                     case SDL_SCANCODE_L:
-                        release_key( HPKEY_NXT );
+                        releaseKey( HPKEY_NXT );
                         break;
                     case SDL_SCANCODE_M:
-                        release_key( HPKEY_QUOTE );
+                        releaseKey( HPKEY_QUOTE );
                         break;
                     case SDL_SCANCODE_N:
-                        release_key( HPKEY_STO );
+                        releaseKey( HPKEY_STO );
                         break;
                     case SDL_SCANCODE_O:
-                        release_key( HPKEY_EVAL );
+                        releaseKey( HPKEY_EVAL );
                         break;
                     case SDL_SCANCODE_P:
                     case SDL_SCANCODE_LEFT:
-                        release_key( HPKEY_LEFT );
+                        releaseKey( HPKEY_LEFT );
                         break;
                     case SDL_SCANCODE_Q:
                     case SDL_SCANCODE_DOWN:
-                        release_key( HPKEY_DOWN );
+                        releaseKey( HPKEY_DOWN );
                         break;
                     case SDL_SCANCODE_R:
                     case SDL_SCANCODE_RIGHT:
-                        release_key( HPKEY_RIGHT );
+                        releaseKey( HPKEY_RIGHT );
                         break;
                     case SDL_SCANCODE_S:
-                        release_key( HPKEY_SIN );
+                        releaseKey( HPKEY_SIN );
                         break;
                     case SDL_SCANCODE_T:
-                        release_key( HPKEY_COS );
+                        releaseKey( HPKEY_COS );
                         break;
                     case SDL_SCANCODE_U:
-                        release_key( HPKEY_TAN );
+                        releaseKey( HPKEY_TAN );
                         break;
                     case SDL_SCANCODE_V:
-                        release_key( HPKEY_SQRT );
+                        releaseKey( HPKEY_SQRT );
                         break;
                     case SDL_SCANCODE_W:
-                        release_key( HPKEY_POWER );
+                        releaseKey( HPKEY_POWER );
                         break;
                     case SDL_SCANCODE_X:
-                        release_key( HPKEY_INV );
+                        releaseKey( HPKEY_INV );
                         break;
                     case SDL_SCANCODE_Y:
-                        release_key( HPKEY_NEG );
+                        releaseKey( HPKEY_NEG );
                         break;
                     case SDL_SCANCODE_Z:
-                        release_key( HPKEY_EEX );
+                        releaseKey( HPKEY_EEX );
                         break;
                     case SDL_SCANCODE_F2:
-                        release_key( HPKEY_SHL );
+                        releaseKey( HPKEY_SHL );
                         break;
                     case SDL_SCANCODE_F3:
-                        release_key( HPKEY_SHR );
+                        releaseKey( HPKEY_SHR );
                         break;
                     case SDL_SCANCODE_F4:
-                        release_key( HPKEY_ALPHA );
+                        releaseKey( HPKEY_ALPHA );
                         break;
                     default:
                         break;

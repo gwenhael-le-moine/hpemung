@@ -64,13 +64,13 @@
 
 #define FIRST_HPKEY HPKEY_A
 #define LAST_HPKEY HPKEY_PLUS
-#define NB_KEYS ( LAST_HPKEY + 1 )
+// #define NB_KEYS ( LAST_HPKEY + 1 )
 
 extern bool kbd_on;
 
 extern void kbd_out_changed( void );
 
-extern void press_key( int hpkey );
-extern void release_key( int hpkey );
+extern void pressKey( int hpkey );
+extern void releaseKey( int hpkey );
 
 #endif

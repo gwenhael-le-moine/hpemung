@@ -1,7 +1,7 @@
 #include <string.h>
 
 #include "types.h"
-#include "config.h"
+#include "options.h"
 #include "cpu.h"
 #include "bus.h"
 #include "keyboard.h"

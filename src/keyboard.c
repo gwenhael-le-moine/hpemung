@@ -67,7 +67,7 @@ static void kbd_key_released( int row, int col )
         cpu.keyintp = false;
 }
 
-void press_key( int hpkey )
+void pressKey( int hpkey )
 {
     switch ( hpkey ) {
         case HPKEY_ON:
@@ -325,7 +325,7 @@ void press_key( int hpkey )
     }
 }
 
-void release_key( int hpkey )
+void releaseKey( int hpkey )
 {
     switch ( hpkey ) {
         case HPKEY_ON:

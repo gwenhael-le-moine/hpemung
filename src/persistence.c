@@ -10,7 +10,7 @@
 
 #include "rpl.h"
 #include "bus.h"
-#include "config.h"
+#include "options.h"
 #include "types.h"
 
 #define MAX_LENGTH_FILENAME 2048

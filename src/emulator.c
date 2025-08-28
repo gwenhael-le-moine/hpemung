@@ -9,7 +9,7 @@
 #include "display.h"
 #include "emulator.h"
 #include "persistence.h"
-#include "config.h"
+#include "options.h"
 
 #define MAX_DELTA 4000
 

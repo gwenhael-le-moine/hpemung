@@ -6,8 +6,8 @@
 
 #include "types.h"
 
-#define LCD_WIDTH 131
-#define LCD_HEIGHT 64
+/* #define LCD_WIDTH 131 */
+/* #define LCD_HEIGHT 64 */
 
 extern address menu_base;
 extern address display_base;
@@ -17,6 +17,7 @@ extern byte display_height;
 extern byte display_offset;
 extern bool display_enable;
 extern bool shouldRender;
+extern byte lcdScreen[];
 extern byte lcdScreenGS[];
 
 extern void display_update( void );
