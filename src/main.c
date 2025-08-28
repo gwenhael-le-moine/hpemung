@@ -7,7 +7,6 @@
 
 #include "options.h"
 #include "emulator.h"
-// #include "gui.h"
 #include "emulator_ui4x_api.h"
 #include "ui4x/common.h"
 
@@ -86,16 +85,7 @@ int main( int argc, char* argv[] )
     setitimer( ITIMER_REAL, &it, ( struct itimerval* )0 );
 
     do {
-        /* ui_get_event(); */
-
         emulator_run();
-
-        /* currentTime = time_in_mseconds(); */
-        /* if ( currentTime > lastTime_gui_update + delay_gui_update ) { */
-        /*     lastTime_gui_update = currentTime; */
-
-        /*     ui_update_display(); */
-        /* } */
     } while ( !please_exit );
 
     close_and_exit();
