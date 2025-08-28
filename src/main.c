@@ -1,6 +1,5 @@
 #include <stdlib.h>
-#include <stdio.h>
-#include <errno.h>
+#include <unistd.h>
 
 #include <time.h>
 #include <sys/time.h>
@@ -8,7 +7,6 @@
 #include "config.h"
 #include "emulator.h"
 #include "gui.h"
-#include "display.h"
 
 static long long time_in_useconds( void )
 {

@@ -1,17 +1,14 @@
 #include <time.h>
 #include <errno.h>
 
-#include <stdlib.h>
 #include <sys/time.h>
 
 #include "types.h"
 #include "cpu.h"
-#include "bus.h"
 #include "timers.h"
 #include "display.h"
 #include "emulator.h"
 #include "persistence.h"
-#include "ports.h"
 #include "config.h"
 
 #define MAX_DELTA 4000

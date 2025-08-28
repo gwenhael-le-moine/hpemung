@@ -68,6 +68,19 @@ void hdw_write_nibble( byte data, address adr )
             display_enable = ( data & 8 ) ? true : false;
             break;
 
+        case 0x01: /* LCD contrast, LS nibble */
+            /* mod_status.hdw.lcd_contrast &= 0x10; */
+            /* mod_status.hdw.lcd_contrast |= ( int )data; */
+            break;
+
+        case 0x02: /* LCD contrast, MS bit */
+            /* mod_status.hdw.lcd_contrast &= 0x0F; */
+            /* mod_status.hdw.lcd_contrast |= ( ( ( int )data & 0x01 ) << 4 ); */
+            break;
+
+        case 0x03: /* LCD test control */
+            break;
+
         case 0x04:
             crc &= 0xFFF0;
             crc |= ( word )data;
@@ -83,6 +96,20 @@ void hdw_write_nibble( byte data, address adr )
         case 0x07:
             crc &= 0x0FFF;
             crc |= ( word )data << 12;
+            break;
+
+        case 0x08: /* Power status and power control */
+        case 0x09:
+            break;
+
+        case 0x0B: /* LCD annunciator control (low nibble) */
+            /* mod_status.hdw.lcd_ann &= 0xF0; */
+            /* mod_status.hdw.lcd_ann |= ( int )data; */
+            break;
+
+        case 0x0C: /* LCD annunciator control (high nibble) */
+            /* mod_status.hdw.lcd_ann &= 0x0F; */
+            /* mod_status.hdw.lcd_ann |= ( ( int )data << 4 ); */
             break;
 
         case 0x0F:

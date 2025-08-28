@@ -10,7 +10,6 @@
 
 #include "rpl.h"
 #include "bus.h"
-#include "cpu.h"
 #include "config.h"
 #include "types.h"
 
