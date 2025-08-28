@@ -142,8 +142,6 @@ static hpkey_t keyboard49[ NB_HP49_KEYS ] = {
     {0x00,   false, ( char* )"0/01"},
 };
 
-static config_t __config;
-
 void press_key( int hpkey )
 {
     if ( hpkey < 0 || hpkey > NB_KEYS )
@@ -194,11 +192,7 @@ int get_contrast( void ) { return display_contrast; }
 
 void init_emulator( config_t* conf )
 {
-    __config = *conf;
-
     emulator_init();
-
-    conf->wire_name = ( char* )"dummy wire" /* SerialInit() */;
 }
 
 void exit_emulator( void ) { emulator_exit(); }
