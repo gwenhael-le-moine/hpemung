@@ -1,2 +1,3 @@
 /src/*.o
+/src/ui4x/*.o
 /dist/hpemung
