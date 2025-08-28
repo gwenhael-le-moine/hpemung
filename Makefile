@@ -150,7 +150,7 @@ compile_commands.json: mrproper
 
 # Formatting
 pretty-code:
-	clang-format -i src/*.c src/*.h
+	clang-format -i src/*.c src/*.h src/ui4x/*.c src/ui4x/*.h
 
 # Installing
 get-roms:
