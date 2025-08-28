@@ -40,6 +40,8 @@ static config_t __config = {
     .tiny = false,
     .small = false,
 
+    .throttle = true,
+
     .fn_rom = "rom",
     .fn_ram = "ram",
     .fn_port1 = "port1",
