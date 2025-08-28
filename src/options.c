@@ -40,7 +40,7 @@ static config_t __config = {
     .tiny = false,
     .small = false,
 
-    .throttle = true,
+    .throttle = false,
 
     .fn_rom = "rom",
     .fn_ram = "ram",
@@ -64,6 +64,7 @@ config_t* config_init( int argc, char* argv[] )
     int clopt_gray = -1;
     int clopt_chromeless = -1;
     int clopt_fullscreen = -1;
+    int clopt_throttle = -1;
     double clopt_scale = -1.0;
 
     int clopt_tiny = -1;
@@ -73,6 +74,8 @@ config_t* config_init( int argc, char* argv[] )
     struct option long_options[] = {
         {"help",       no_argument,       NULL,              'h'             },
         {"verbose",    no_argument,       &clopt_verbose,    true            },
+
+        {"throttle",   no_argument,       &clopt_throttle,   true            },
 
         {"big-screen", no_argument,       &clopt_big_screen, true            },
         {"black-lcd",  no_argument,       &clopt_black_lcd,  true            },
@@ -110,7 +113,7 @@ config_t* config_init( int argc, char* argv[] )
                             "  -h --help         what you are reading\n"
                             "     --print-config output current configuration to stdout and exit (in config.lua formatting)\n"
                             "     --verbose      display more informations\n"
-                            /* "     --throttle     throttle CPU speed\n" */
+                            "     --throttle     throttle CPU speed\n"
                             "     --big-screen   131×80 screen (default: false)\n"
                             "     --black-lcd    (default: false)\n"
                             "     --48gx         emulate a HP 48GX\n"
@@ -194,6 +197,8 @@ config_t* config_init( int argc, char* argv[] )
         __config.gray = clopt_gray == true;
     if ( clopt_shiftless != -1 )
         __config.shiftless = clopt_shiftless == true;
+    if ( clopt_throttle != -1 )
+        __config.throttle = clopt_throttle == true;
 
     if ( __config.model == MODEL_49G || __config.model == MODEL_50G )
         __config.black_lcd = true;

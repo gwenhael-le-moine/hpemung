@@ -16,7 +16,9 @@ bool shouldRender = false;
 
 byte lcdScreenGS[ LCD_WIDTH * LCD_HEIGHT ];
 
-byte lcdScreen[ LCD_WIDTH * LCD_HEIGHT ];
+byte display_contrast = 12;
+
+static byte lcdScreen[ LCD_WIDTH * LCD_HEIGHT ];
 static byte prev_lcdScreen[ LCD_WIDTH * LCD_HEIGHT ];
 static byte prev2_lcdScreen[ LCD_WIDTH * LCD_HEIGHT ];
 
@@ -109,7 +111,6 @@ void display_update( void )
         }
 
         drawGS = screen_draw_count == 0;
-
     } else if ( off_cnt <= 7 ) /* Display is off and still fading */
         off_cnt = 8;
 }

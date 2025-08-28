@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "types.h"
 #include "bus.h"
 #include "ports.h"
@@ -69,13 +71,18 @@ void hdw_write_nibble( byte data, address adr )
             break;
 
         case 0x01: /* LCD contrast, LS nibble */
-            /* mod_status.hdw.lcd_contrast &= 0x10; */
-            /* mod_status.hdw.lcd_contrast |= ( int )data; */
+            // saturn.contrast_ctrl = val;
+            /* fprintf( stderr, "data: %i, display_contrast from %i ", data, display_contrast ); */
+            /* display_contrast &= ~0x0f; */
+            /* display_contrast |= data; */
+            /* fprintf( stderr, "to %i\n", display_contrast ); */
             break;
 
         case 0x02: /* LCD contrast, MS bit */
-            /* mod_status.hdw.lcd_contrast &= 0x0F; */
-            /* mod_status.hdw.lcd_contrast |= ( ( ( int )data & 0x01 ) << 4 ); */
+            /* fprintf( stderr, "data: %i, display_contrast from %i ", data, display_contrast ); */
+            /* display_contrast &= ~0xf0; */
+            /* display_contrast |= ( ( data & 0x1 ) << 4 ); */
+            /* fprintf( stderr, "to %i\n", display_contrast ); */
             break;
 
         case 0x03: /* LCD test control */

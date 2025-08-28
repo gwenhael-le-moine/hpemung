@@ -182,18 +182,15 @@ unsigned char get_annunciators( void ) { return 0 /* mod_status.hdw.lcd_ann */; 
 
 bool get_display_state( void ) { return display_enable; }
 
-static int n_pass = 1;
 void get_lcd_buffer( int* target )
 {
     display_update();
 
-    for ( int y = 0; y < LCD_HEIGHT; ++y )
-        for ( int x = 0; x < LCD_WIDTH; ++x )
-            target[ ( y * LCD_WIDTH ) + x ] = lcdScreen[ ( y * LCD_WIDTH ) + x ];
+    for ( int xy = 0; xy < ( LCD_HEIGHT * LCD_WIDTH ); ++xy )
+        target[ xy ] = lcdScreenGS[ xy ];
 }
 
-static int contrast = 10;
-int get_contrast( void ) { return contrast; }
+int get_contrast( void ) { return display_contrast; }
 
 void init_emulator( config_t* conf )
 {

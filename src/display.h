@@ -17,8 +17,8 @@ extern byte display_height;
 extern byte display_offset;
 extern bool display_enable;
 extern bool shouldRender;
-extern byte lcdScreen[];
 extern byte lcdScreenGS[];
+extern byte display_contrast;
 
 extern void display_update( void );
 

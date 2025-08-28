@@ -1,9 +1,9 @@
 #ifndef _UI4x_EMULATOR_H
-#define _UI4x_EMULATOR_H 1
+#  define _UI4x_EMULATOR_H 1
 
-#include <stdbool.h>
+#  include <stdbool.h>
 
-#include "options.h"
+#  include "options.h"
 
 // HP 48{G,S}X Keys
 typedef enum {
@@ -116,9 +116,9 @@ typedef enum {
 } hp49_keynames_t;
 
 // #define NB_KEYS ( __config.model == MODEL_48GX || __config.model == MODEL_48SX ? NB_HP48_KEYS : NB_HP49_KEYS )
-#define NB_KEYS NB_HP48_KEYS
+#  define NB_KEYS NB_HP48_KEYS
 
-#define KEYS_BUFFER_SIZE 9
+#  define KEYS_BUFFER_SIZE 9
 
 // Annunciators
 typedef enum {
@@ -132,10 +132,10 @@ typedef enum {
 } annunciators_bits_t;
 
 // LCD
-#define NIBBLES_PER_ROW 34
-#define LCD_WIDTH 131
+#  define NIBBLES_PER_ROW 34
+#  define LCD_WIDTH 131
 // #define LCD_HEIGHT ( __config.big_screen ? 80 : 64 )
-#define LCD_HEIGHT 64
+#  define LCD_HEIGHT 64
 
 /*************************************************/
 /* public API: if it's there it's used elsewhere */
