@@ -3,7 +3,7 @@
 #include "types.h"
 #include "bus.h"
 #include "display.h"
-#include "emulator_ui4x_api.h"
+#include "ui4x/api.h"
 
 address menu_base;
 address display_base;

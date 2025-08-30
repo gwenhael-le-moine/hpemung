@@ -80,21 +80,21 @@ override CFLAGS := -std=c11 \
 	-I./src/ \
 	$(CFLAGS)
 
-HEADERS = src/bus.h \
-	src/options.h \
-	src/cpu.h \
-	src/display.h \
-	src/emulator.h \
-	src/hdw.h \
-	src/keyboard.h \
-	src/opcodes.h \
-	src/opinline.h \
-	src/persistence.h \
-	src/ports.h \
-	src/rpl.h \
-	src/timers.h \
-	src/types.h \
-	src/emulator_ui4x_api.h \
+HEADERS = src/options.h \
+	src/core/bus.h \
+	src/core/cpu.h \
+	src/core/display.h \
+	src/core/emulator.h \
+	src/core/hdw.h \
+	src/core/keyboard.h \
+	src/core/opcodes.h \
+	src/core/opinline.h \
+	src/core/persistence.h \
+	src/core/ports.h \
+	src/core/rpl.h \
+	src/core/timers.h \
+	src/core/types.h \
+	src/ui4x/api.h \
 	src/ui4x/bitmaps_misc.h \
 	src/ui4x/common.h \
 	src/ui4x/inner.h \
@@ -102,20 +102,20 @@ HEADERS = src/bus.h \
 	$(SDL_HEADERS) \
 	$(GTK_HEADERS)
 
-SRC = src/bus.c \
+SRC = src/main.c \
 	src/options.c \
-	src/cpu.c \
-	src/display.c \
-	src/emulator.c \
-	src/hdw.c \
-	src/keyboard.c \
-	src/main.c \
-	src/opcodes.c \
-	src/persistence.c \
-	src/ports.c \
-	src/rpl.c \
-	src/timers.c \
-	src/emulator_ui4x_api.c \
+	src/core/bus.c \
+	src/core/cpu.c \
+	src/core/display.c \
+	src/core/emulator.c \
+	src/core/hdw.c \
+	src/core/keyboard.c \
+	src/core/opcodes.c \
+	src/core/persistence.c \
+	src/core/ports.c \
+	src/core/rpl.c \
+	src/core/timers.c \
+	src/ui4x_api_impl.c \
 	src/ui4x/48gx.c \
 	src/ui4x/48sx.c \
 	src/ui4x/49g.c \
@@ -137,10 +137,10 @@ $(TARGET): $(OBJS) $(HEADERS)
 
 # Cleaning
 clean:
-	-rm src/*.o
+	-rm -f $(OBJS)
 
 mrproper: clean
-	-rm dist/hpemung
+	-rm -f $(TARGET)
 
 clean-all: mrproper
 
