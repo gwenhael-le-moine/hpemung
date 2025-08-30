@@ -1,6 +1,6 @@
 #include <string.h>
 
-#include "../options.h"
+#include "../options.h"         /* for config.allow_shutdn */
 
 #include "types.h"
 #include "cpu.h"
