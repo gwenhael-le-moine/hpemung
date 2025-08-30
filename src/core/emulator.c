@@ -3,13 +3,14 @@
 
 #include <sys/time.h>
 
+#include "../options.h"
+
 #include "types.h"
 #include "cpu.h"
 #include "timers.h"
 #include "display.h"
 #include "emulator.h"
 #include "persistence.h"
-#include "options.h"
 
 #define MAX_DELTA 4000
 

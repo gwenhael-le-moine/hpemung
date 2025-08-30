@@ -1,17 +1,18 @@
 #include <string.h>
 
+#include "../options.h"
+
 #include "types.h"
-#include "options.h"
 #include "cpu.h"
 #include "bus.h"
 #include "keyboard.h"
 #include "opcodes.h"
 #include "opinline.h"
 
-//		      P  WP  XS   X   S   M   B   W
+//            P  WP  XS   X   S   M   B   W
 static int fs[ 16 ] = { 0, 0, 2, 0, 15, 3, 0, 0, 0, 0, 2, 0, 15, 3, 0, 0 };
 static int fl[ 16 ] = { 1, 1, 1, 3, 1, 12, 2, 16, 1, 1, 1, 3, 1, 12, 2, 16 };
-//			      0	 1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
+//                0	 1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
 static const int regr[ 16 ] = { A, B, C, D, B, C, A, C, A, B, C, D, B, C, A, C };
 static const int regs[ 16 ] = { B, C, A, C, A, B, C, D, B, C, A, C, A, B, C, D };
 static const int regt[ 16 ] = { A, B, C, D, A, B, C, D, B, C, A, C, A, B, C, D };
