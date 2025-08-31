@@ -8,9 +8,10 @@
 #include <sys/stat.h>
 #include <pwd.h>
 
+#include "../options.h"
+
 #include "rpl.h"
 #include "bus.h"
-#include "options.h"
 #include "types.h"
 
 #define MAX_LENGTH_FILENAME 2048
@@ -19,12 +20,144 @@ extern byte current_bank;
 extern byte* port2;
 extern address port2mask;
 
-char absolute_working_dir_path[ MAX_LENGTH_FILENAME ];
+static char absolute_working_dir_path[ MAX_LENGTH_FILENAME ];
 
 static address ram_size = 256 * 1024; // in nibbles, not bytes!
 
 static address port1_size = ( 256 * 1024 );  /* 128Kio in nibbles */
 static address port2_size = ( 8192 * 1024 ); /* 4Mio in nibbles */
+
+static int read_mem_file( char* absolute_filename, nibble* mem, int size )
+{
+    struct stat st;
+    FILE* fp;
+    byte* tmp_mem;
+    byte rbyte;
+    int i, j;
+
+    if ( NULL == ( fp = fopen( absolute_filename, "r" ) ) ) {
+        if ( config.verbose )
+            fprintf( stderr, "ct open %s\n", absolute_filename );
+        return 0;
+    }
+
+    if ( stat( absolute_filename, &st ) < 0 ) {
+        if ( config.verbose )
+            fprintf( stderr, "can\'t stat %s\n", absolute_filename );
+        return 0;
+    }
+
+    if ( st.st_size == size ) {
+        /*
+         * size is same as memory size, old version file
+         */
+        if ( fread( mem, 1, ( size_t )size, fp ) != ( unsigned long )size ) {
+            if ( config.verbose )
+                fprintf( stderr, "can\'t read %s\n", absolute_filename );
+            fclose( fp );
+            return 0;
+        }
+    } else {
+        /*
+         * size is different, check size and decompress memory
+         */
+
+        if ( st.st_size != size / 2 ) {
+            if ( config.verbose )
+                fprintf( stderr, "strange size %s, expected %d, found %ld\n", absolute_filename, size / 2, st.st_size );
+            fclose( fp );
+            return 0;
+        }
+
+        if ( NULL == ( tmp_mem = ( byte* )malloc( ( size_t )st.st_size ) ) ) {
+            for ( i = 0, j = 0; i < size / 2; i++ ) {
+                if ( 1 != fread( &rbyte, 1, 1, fp ) ) {
+                    if ( config.verbose )
+                        fprintf( stderr, "can\'t read %s\n", absolute_filename );
+                    fclose( fp );
+                    return 0;
+                }
+                mem[ j++ ] = ( nibble )( ( int )rbyte & 0xf );
+                mem[ j++ ] = ( nibble )( ( ( int )rbyte >> 4 ) & 0xf );
+            }
+        } else {
+            if ( fread( tmp_mem, 1, ( size_t )size / 2, fp ) != ( unsigned long )( size / 2 ) ) {
+                if ( config.verbose )
+                    fprintf( stderr, "can\'t read %s\n", absolute_filename );
+                fclose( fp );
+                free( tmp_mem );
+                return 0;
+            }
+
+            for ( i = 0, j = 0; i < size / 2; i++ ) {
+                mem[ j++ ] = ( nibble )( ( int )tmp_mem[ i ] & 0xf );
+                mem[ j++ ] = ( nibble )( ( ( int )tmp_mem[ i ] >> 4 ) & 0xf );
+            }
+
+            free( tmp_mem );
+        }
+    }
+
+    fclose( fp );
+
+    if ( config.verbose )
+        printf( "read %s\n", absolute_filename );
+
+    return 1;
+}
+
+static int write_mem_file( char* absolute_filename, nibble* mem, int size )
+{
+    FILE* fp;
+    byte* tmp_mem;
+    byte rbyte;
+    int i, j;
+
+    if ( NULL == ( fp = fopen( absolute_filename, "w" ) ) ) {
+        if ( config.verbose )
+            fprintf( stderr, "can\'t open %s\n", absolute_filename );
+        return 0;
+    }
+
+    if ( NULL == ( tmp_mem = ( byte* )malloc( ( size_t )size / 2 ) ) ) {
+        for ( i = 0, j = 0; i < size / 2; i++ ) {
+            rbyte = ( mem[ j++ ] & 0x0f );
+            rbyte |= ( mem[ j++ ] << 4 ) & 0xf0;
+            if ( 1 != fwrite( &rbyte, 1, 1, fp ) ) {
+                if ( config.verbose )
+                    fprintf( stderr, "can\'t write %s\n", absolute_filename );
+                fclose( fp );
+                return 0;
+            }
+        }
+    } else {
+        for ( i = 0, j = 0; i < size / 2; i++ ) {
+            tmp_mem[ i ] = ( mem[ j++ ] & 0x0f );
+            tmp_mem[ i ] |= ( mem[ j++ ] << 4 ) & 0xf0;
+        }
+
+        if ( fwrite( tmp_mem, 1, ( size_t )size / 2, fp ) != ( unsigned long )size / 2 ) {
+            if ( config.verbose )
+                fprintf( stderr, "can\'t write %s\n", absolute_filename );
+            fclose( fp );
+            free( tmp_mem );
+            return 0;
+        }
+
+        free( tmp_mem );
+    }
+
+    fclose( fp );
+
+    if ( config.verbose )
+        printf( "wrote %s\n", absolute_filename );
+
+    return 1;
+}
+
+/**********/
+/* public */
+/**********/
 
 void get_absolute_working_dir_path( void )
 {
@@ -105,25 +238,6 @@ void get_absolute_working_dir_path( void )
     }
 }
 
-/* void getExePath() */
-/* { */
-/*     char programPath[ MAX_LENGTH_FILENAME ]; */
-/*     char temp[ MAX_LENGTH_FILENAME ]; */
-/*     memset( programPath, 0, sizeof( programPath ) ); */
-/*     memset( temp, 0, sizeof( temp ) ); */
-
-/*     char result[ PATH_MAX ]; */
-/*     ssize_t count = readlink( "/proc/self/exe", result, PATH_MAX ); */
-/*     const char* path; */
-/*     if ( count != -1 ) { */
-/*         path = dirname( result ); */
-/*         strcpy( programPath, path ); */
-/*     } */
-
-/*     memset( WorkingPath, 0, sizeof( WorkingPath ) ); */
-/*     strcpy( WorkingPath, programPath ); */
-/* } */
-
 int file_size( char* filename )
 {
     /* memset( WorkingPath, 0, sizeof( WorkingPath ) ); */
@@ -143,137 +257,6 @@ int file_size( char* filename )
     return size;
 }
 
-int read_mem_file( char* absolute_filename, nibble* mem, int size )
-{
-    struct stat st;
-    FILE* fp;
-    byte* tmp_mem;
-    byte rbyte;
-    int i, j;
-
-    if ( NULL == ( fp = fopen( absolute_filename, "r" ) ) ) {
-        if ( config.verbose )
-            fprintf( stderr, "ct open %s\n", absolute_filename );
-        return 0;
-    }
-
-    if ( stat( absolute_filename, &st ) < 0 ) {
-        if ( config.verbose )
-            fprintf( stderr, "can\'t stat %s\n", absolute_filename );
-        return 0;
-    }
-
-    if ( st.st_size == size ) {
-        /*
-         * size is same as memory size, old version file
-         */
-        if ( fread( mem, 1, ( size_t )size, fp ) != ( unsigned long )size ) {
-            if ( config.verbose )
-                fprintf( stderr, "can\'t read %s\n", absolute_filename );
-            fclose( fp );
-            return 0;
-        }
-    } else {
-        /*
-         * size is different, check size and decompress memory
-         */
-
-        if ( st.st_size != size / 2 ) {
-            if ( config.verbose )
-                fprintf( stderr, "strange size %s, expected %d, found %ld\n", absolute_filename, size / 2, st.st_size );
-            fclose( fp );
-            return 0;
-        }
-
-        if ( NULL == ( tmp_mem = ( byte* )malloc( ( size_t )st.st_size ) ) ) {
-            for ( i = 0, j = 0; i < size / 2; i++ ) {
-                if ( 1 != fread( &rbyte, 1, 1, fp ) ) {
-                    if ( config.verbose )
-                        fprintf( stderr, "can\'t read %s\n", absolute_filename );
-                    fclose( fp );
-                    return 0;
-                }
-                mem[ j++ ] = ( nibble )( ( int )rbyte & 0xf );
-                mem[ j++ ] = ( nibble )( ( ( int )rbyte >> 4 ) & 0xf );
-            }
-        } else {
-            if ( fread( tmp_mem, 1, ( size_t )size / 2, fp ) != ( unsigned long )( size / 2 ) ) {
-                if ( config.verbose )
-                    fprintf( stderr, "can\'t read %s\n", absolute_filename );
-                fclose( fp );
-                free( tmp_mem );
-                return 0;
-            }
-
-            for ( i = 0, j = 0; i < size / 2; i++ ) {
-                mem[ j++ ] = ( nibble )( ( int )tmp_mem[ i ] & 0xf );
-                mem[ j++ ] = ( nibble )( ( ( int )tmp_mem[ i ] >> 4 ) & 0xf );
-            }
-
-            free( tmp_mem );
-        }
-    }
-
-    fclose( fp );
-
-    if ( config.verbose )
-        printf( "read %s\n", absolute_filename );
-
-    return 1;
-}
-
-int write_mem_file( char* absolute_filename, nibble* mem, int size )
-{
-    FILE* fp;
-    byte* tmp_mem;
-    byte rbyte;
-    int i, j;
-
-    if ( NULL == ( fp = fopen( absolute_filename, "w" ) ) ) {
-        if ( config.verbose )
-            fprintf( stderr, "can\'t open %s\n", absolute_filename );
-        return 0;
-    }
-
-    if ( NULL == ( tmp_mem = ( byte* )malloc( ( size_t )size / 2 ) ) ) {
-        for ( i = 0, j = 0; i < size / 2; i++ ) {
-            rbyte = ( mem[ j++ ] & 0x0f );
-            rbyte |= ( mem[ j++ ] << 4 ) & 0xf0;
-            if ( 1 != fwrite( &rbyte, 1, 1, fp ) ) {
-                if ( config.verbose )
-                    fprintf( stderr, "can\'t write %s\n", absolute_filename );
-                fclose( fp );
-                return 0;
-            }
-        }
-    } else {
-        for ( i = 0, j = 0; i < size / 2; i++ ) {
-            tmp_mem[ i ] = ( mem[ j++ ] & 0x0f );
-            tmp_mem[ i ] |= ( mem[ j++ ] << 4 ) & 0xf0;
-        }
-
-        if ( fwrite( tmp_mem, 1, ( size_t )size / 2, fp ) != ( unsigned long )size / 2 ) {
-            if ( config.verbose )
-                fprintf( stderr, "can\'t write %s\n", absolute_filename );
-            fclose( fp );
-            free( tmp_mem );
-            return 0;
-        }
-
-        free( tmp_mem );
-    }
-
-    fclose( fp );
-
-    if ( config.verbose )
-        printf( "wrote %s\n", absolute_filename );
-
-    return 1;
-}
-
-/********************/
-/* PUBLIC FUNCTIONS */
-/********************/
 void load_file_on_stack( char* filename )
 {
     FILE* f;

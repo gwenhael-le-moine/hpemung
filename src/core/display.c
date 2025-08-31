@@ -1,22 +1,10 @@
 #include <stdlib.h>
 
+#include "../ui4x/api.h"
+
 #include "types.h"
 #include "bus.h"
 #include "display.h"
-#include "ui4x/api.h"
-
-address menu_base;
-address display_base;
-address display_line_offset;
-byte display_line_count;
-byte display_height;
-byte display_offset;
-bool display_enable;
-bool shouldRender = false;
-
-byte lcdScreenGS[ LCD_WIDTH * LCD_HEIGHT ];
-
-byte display_contrast = 12;
 
 static byte lcdScreen[ LCD_WIDTH * LCD_HEIGHT ];
 static byte prev_lcdScreen[ LCD_WIDTH * LCD_HEIGHT ];
@@ -71,6 +59,23 @@ static inline address draw_lcd_line( address adr, int y )
 
     return ( adr + 0x22 + ( !in_menu && ( display_offset & 4 ) ? 2 : 0 ) ) & 0xFFFFF;
 }
+
+/**********/
+/* public */
+/**********/
+
+address menu_base;
+address display_base;
+address display_line_offset;
+byte display_line_count;
+byte display_height;
+byte display_offset;
+bool display_enable;
+bool shouldRender = false;
+
+byte display_contrast = 12;
+
+byte lcdScreenGS[ LCD_WIDTH * LCD_HEIGHT ];
 
 void display_update( void )
 {

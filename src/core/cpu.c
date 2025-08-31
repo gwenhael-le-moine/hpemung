@@ -4,8 +4,6 @@
 #include "opcodes.h"
 #include "cpu.h"
 
-Cpu cpu;
-
 #define MAX_OPC_LEN 21
 
 static inline void decode( byte* ptr )
@@ -25,6 +23,12 @@ static inline void decode( byte* ptr )
     } else
         emulator_set_state( EMULATOR_STOP );
 }
+
+/**********/
+/* public */
+/**********/
+
+Cpu cpu;
 
 void cpu_interrupt( void )
 {

@@ -7,7 +7,7 @@
 #include "display.h"
 
 static byte hdw_ram[ 64 ];
-int tmp;
+static int tmp;
 
 byte hdw_read_nibble( address adr )
 {

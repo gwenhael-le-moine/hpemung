@@ -11,6 +11,78 @@
 #define AVMEM 0x807ED
 #define INTRPPTR 0x8072F
 
+static address read_address( address adr )
+{
+    byte buf[ 5 ];
+    word ocrc = crc;
+
+    bus_read( buf, adr, 5 );
+    crc = ocrc;
+
+    return nib_to_unsigned( buf, 5 );
+}
+
+static void write_address( address adr, address val )
+{
+    byte buf[ 5 ];
+
+    unsigned_to_nib( buf, val, 5 );
+    bus_write( buf, adr, 5 );
+}
+
+static int moveup( address src, address dst, address cnt )
+{
+    byte* buf = malloc( cnt * sizeof( byte ) );
+
+    if ( !buf )
+        return -1;
+
+    word ocrc = crc;
+    bus_read( buf, src, cnt );
+    bus_write( buf, dst, cnt );
+    crc = ocrc;
+
+    free( buf );
+    return 0;
+}
+
+static address rpl_make_temp( address size )
+{
+    address temptop = read_address( TEMPTOP );
+    address rsktop = read_address( RSKTOP );
+    address dsktop = read_address( DSKTOP );
+
+    size += 6;
+
+    if ( rsktop + size > dsktop )
+        return 0;
+
+    if ( moveup( temptop, temptop + size, rsktop - temptop ) )
+        return 0;
+
+    write_address( TEMPTOP, temptop + size );
+    write_address( RSKTOP, rsktop + size );
+    write_address( AVMEM, ( dsktop - rsktop - size ) / 5 );
+    write_address( temptop + size - 5, size );
+
+    return temptop + 1;
+}
+
+static void rpl_push( address adr )
+{
+    address avmem = read_address( AVMEM );
+
+    if ( !avmem )
+        return;
+    write_address( AVMEM, avmem - 1 );
+
+    address dsktop = read_address( DSKTOP );
+    dsktop -= 5;
+
+    write_address( dsktop, adr );
+    write_address( DSKTOP, dsktop );
+}
+
 int rpl_object_size( byte* obj )
 {
     int size;
@@ -96,78 +168,6 @@ int rpl_object_size( byte* obj )
             size = 5;
     }
     return size;
-}
-
-static address read_address( address adr )
-{
-    byte buf[ 5 ];
-    word ocrc = crc;
-
-    bus_read( buf, adr, 5 );
-    crc = ocrc;
-
-    return nib_to_unsigned( buf, 5 );
-}
-
-static void write_address( address adr, address val )
-{
-    byte buf[ 5 ];
-
-    unsigned_to_nib( buf, val, 5 );
-    bus_write( buf, adr, 5 );
-}
-
-static int moveup( address src, address dst, address cnt )
-{
-    byte* buf = malloc( cnt * sizeof( byte ) );
-
-    if ( !buf )
-        return -1;
-
-    word ocrc = crc;
-    bus_read( buf, src, cnt );
-    bus_write( buf, dst, cnt );
-    crc = ocrc;
-
-    free( buf );
-    return 0;
-}
-
-address rpl_make_temp( address size )
-{
-    address temptop = read_address( TEMPTOP );
-    address rsktop = read_address( RSKTOP );
-    address dsktop = read_address( DSKTOP );
-
-    size += 6;
-
-    if ( rsktop + size > dsktop )
-        return 0;
-
-    if ( moveup( temptop, temptop + size, rsktop - temptop ) )
-        return 0;
-
-    write_address( TEMPTOP, temptop + size );
-    write_address( RSKTOP, rsktop + size );
-    write_address( AVMEM, ( dsktop - rsktop - size ) / 5 );
-    write_address( temptop + size - 5, size );
-
-    return temptop + 1;
-}
-
-void rpl_push( address adr )
-{
-    address avmem = read_address( AVMEM );
-
-    if ( !avmem )
-        return;
-    write_address( AVMEM, avmem - 1 );
-
-    address dsktop = read_address( DSKTOP );
-    dsktop -= 5;
-
-    write_address( dsktop, adr );
-    write_address( DSKTOP, dsktop );
 }
 
 int rpl_push_object( byte* obj, address size )

@@ -32,31 +32,8 @@ static CycleEvent cycle_events[] = {
     {.next = 0, .freq = 8192, .proc = timer2_update },
     {.next = 0, .freq = 4096, .proc = display_update},
 };
-
-volatile bool please_exit = false;
-dword emulator_speed = 4000000;
+static dword emulator_speed = 4000000;
 static int emulator_state = EMULATOR_RUN;
-
-void emulator_set_state( int state ) { emulator_state = state; }
-
-void emulator_init( void )
-{
-    get_absolute_working_dir_path();
-
-    rom_init( config.fn_rom );
-    ram_init( config.fn_ram );
-    ports_init( config.fn_port1, config.fn_port2 );
-
-    cpu_bus_init( config.fn_state );
-}
-
-void emulator_exit( void )
-{
-    ports_exit( config.fn_port1, config.fn_port2 );
-    ram_exit( config.fn_ram );
-    rom_exit();
-    cpu_bus_exit( config.fn_state );
-}
 
 static inline void throttle( bool is_needed )
 {
@@ -77,7 +54,7 @@ static inline void throttle( bool is_needed )
     tv2.tv_sec = tv.tv_sec;
 }
 
-int msleep( long msec )
+static int msleep( long msec )
 {
     struct timespec ts;
     int res;
@@ -95,6 +72,33 @@ int msleep( long msec )
     } while ( res && errno == EINTR );
 
     return res;
+}
+
+/**********/
+/* public */
+/**********/
+
+volatile bool please_exit = false;
+
+void emulator_set_state( int state ) { emulator_state = state; }
+
+void emulator_init( void )
+{
+    get_absolute_working_dir_path();
+
+    rom_init( config.fn_rom );
+    ram_init( config.fn_ram );
+    ports_init( config.fn_port1, config.fn_port2 );
+
+    cpu_bus_init( config.fn_state );
+}
+
+void emulator_exit( void )
+{
+    ports_exit( config.fn_port1, config.fn_port2 );
+    ram_exit( config.fn_ram );
+    rom_exit();
+    cpu_bus_exit( config.fn_state );
 }
 
 bool emulator_run( void )

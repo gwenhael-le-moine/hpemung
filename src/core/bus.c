@@ -13,6 +13,71 @@
 #define MAP_READ( adr ) ( read_map[ SEG_OF( adr ) ] + OFFSET_OF( adr ) )
 #define MAP_WRITE( adr ) ( write_map[ SEG_OF( adr ) ] + OFFSET_OF( adr ) )
 
+static byte* read_map[ 256 ];
+static byte* write_map[ 256 ];
+static address hdw_seg;
+
+static inline void update_crc( byte nib ) { crc = ( crc >> 4 ) ^ ( ( ( crc ^ nib ) & 0xF ) * 0x1081 ); }
+
+static void bus_peek( byte* buf, address adr, address len )
+{
+    int n, i;
+
+    while ( true ) {
+        if ( hdw_seg == SEG_OF( adr ) && ( ( bus_info.hdw_base ^ adr ) & 0xFFFC0 ) == 0 ) {
+            n = MIN( len, 0x40 - ( adr & 0x3F ) );
+            for ( i = 0; i < n; i++ )
+                buf[ i ] = hdw_read_nibble( ( adr & 0x3F ) + i );
+
+        } else {
+            if ( hdw_seg == SEG_OF( adr ) && ( bus_info.hdw_base & 0xFFFC0 ) - adr > 0 )
+                n = MIN( len, ( bus_info.hdw_base & 0xFFFC0 ) - adr );
+            else
+                n = MIN( len, 0x1000 - OFFSET_OF( adr ) );
+
+            if ( CAN_READ( adr ) )
+                memcpy( buf, MAP_READ( adr ), n );
+            else
+                for ( i = 0; i < n; i++ )
+                    buf[ i ] = ( ( i + adr ) & 1 ) ? 0xE : 0xD;
+        }
+        len -= n;
+        if ( !len )
+            break;
+
+        buf += n;
+        adr += n;
+        adr &= 0xFFFFF;
+    }
+}
+
+/* Call only when you know that hdw is not in the range of nibbles read */
+static void bus_peek_no_hdw( byte* buf, address adr, address len )
+{
+    int n, i;
+
+    while ( true ) {
+        n = MIN( len, 0x1000 - OFFSET_OF( adr ) );
+        if ( CAN_READ( adr ) )
+            memcpy( buf, MAP_READ( adr ), n );
+        else
+            for ( i = 0; i < n; i++ )
+                buf[ i ] = ( ( i + adr ) & 1 ) ? 0xE : 0xD;
+
+        len -= n;
+        if ( !len )
+            break;
+
+        buf += n;
+        adr += n;
+        adr &= 0xFFFFF;
+    }
+}
+
+/**********/
+/* public */
+/**********/
+
 BusInfo bus_info = {
     .hdw_base = 0,
     .ram_size = 0,
@@ -51,13 +116,7 @@ BusInfo bus_info = {
     .map_cnt = 0,
 };
 
-static byte* read_map[ 256 ];
-static byte* write_map[ 256 ];
-static address hdw_seg;
-
 word crc;
-
-static inline void update_crc( byte nib ) { crc = ( crc >> 4 ) ^ ( ( ( crc ^ nib ) & 0xF ) * 0x1081 ); }
 
 void bus_read( byte* buf, address adr, address len )
 {
@@ -127,61 +186,6 @@ void bus_write( byte* buf, address adr, address len )
                 }
             }
         }
-        len -= n;
-        if ( !len )
-            break;
-
-        buf += n;
-        adr += n;
-        adr &= 0xFFFFF;
-    }
-}
-
-static void bus_peek( byte* buf, address adr, address len )
-{
-    int n, i;
-
-    while ( true ) {
-        if ( hdw_seg == SEG_OF( adr ) && ( ( bus_info.hdw_base ^ adr ) & 0xFFFC0 ) == 0 ) {
-            n = MIN( len, 0x40 - ( adr & 0x3F ) );
-            for ( i = 0; i < n; i++ )
-                buf[ i ] = hdw_read_nibble( ( adr & 0x3F ) + i );
-
-        } else {
-            if ( hdw_seg == SEG_OF( adr ) && ( bus_info.hdw_base & 0xFFFC0 ) - adr > 0 )
-                n = MIN( len, ( bus_info.hdw_base & 0xFFFC0 ) - adr );
-            else
-                n = MIN( len, 0x1000 - OFFSET_OF( adr ) );
-
-            if ( CAN_READ( adr ) )
-                memcpy( buf, MAP_READ( adr ), n );
-            else
-                for ( i = 0; i < n; i++ )
-                    buf[ i ] = ( ( i + adr ) & 1 ) ? 0xE : 0xD;
-        }
-        len -= n;
-        if ( !len )
-            break;
-
-        buf += n;
-        adr += n;
-        adr &= 0xFFFFF;
-    }
-}
-
-/* Call only when you know that hdw is not in the range of nibbles read */
-static void bus_peek_no_hdw( byte* buf, address adr, address len )
-{
-    int n, i;
-
-    while ( true ) {
-        n = MIN( len, 0x1000 - OFFSET_OF( adr ) );
-        if ( CAN_READ( adr ) )
-            memcpy( buf, MAP_READ( adr ), n );
-        else
-            for ( i = 0; i < n; i++ )
-                buf[ i ] = ( ( i + adr ) & 1 ) ? 0xE : 0xD;
-
         len -= n;
         if ( !len )
             break;
