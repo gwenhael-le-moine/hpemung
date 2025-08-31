@@ -4,10 +4,10 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 
-#include "options.h"     /* config.ui_* */
-#include "keyboard.h"    /* pressKey(); releaseKey() */
-#include "emulator.h"    /* for please_exit */
 #include "display.h"     /* LCD_HEIGHT; LCD_WIDTH; shouldRender; lcdScreenGS[] */
+#include "emulator.h"    /* for please_exit */
+#include "keyboard.h"    /* pressKey(); releaseKey() */
+#include "options.h"     /* config.ui_* */
 #include "persistence.h" /* load_file_on_stack(); */
 
 /***********/

@@ -1,9 +1,8 @@
-#include "types.h"
-#include "cpu.h"
-
 #include "../ui4x/api.h"
 
 #include "keyboard.h"
+#include "types.h"
+#include "cpu.h"
 
 static byte kbd_row[ KEYS_BUFFER_SIZE ];
 

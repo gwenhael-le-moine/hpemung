@@ -4,9 +4,9 @@
 
 #include "options.h"
 
-#include "core/keyboard.h" /* press_key(); release_key() */
-#include "core/emulator.h" /* for please_exit */
 #include "core/display.h"  /* LCD_HEIGHT; LCD_WIDTH; shouldRender; lcdScreenGS[] */
+#include "core/emulator.h" /* for please_exit */
+#include "core/keyboard.h" /* press_key(); release_key() */
 
 #include "ui4x/api.h"
 
