@@ -47,7 +47,8 @@ static config_t __config = {
     .fn_ram = "ram",
     .fn_port1 = "port1",
     .fn_port2 = "port2",
-    .fn_state = "state",
+    .fn_cpu = "cpu",
+    .fn_bus = "bus",
 };
 
 config_t* config_init( int argc, char* argv[] )
