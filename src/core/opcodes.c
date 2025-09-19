@@ -36,14 +36,14 @@ static inline void update_fields( void )
     fl[ 1 ] = fl[ 9 ] = cpu.p + 1;
 }
 
-static void op00( byte* opc ) // RTNSXM
+static void op00( byte* _opc ) // RTNSXM
 {
     cpu.hst |= HST_XM;
     cpu.pc = rstk_pop();
     cpu.cycles += 9;
 }
 
-static void op01( byte* opc ) // RTN
+static void op01( byte* _opc ) // RTN
 {
     cpu.pc = rstk_pop();
     cpu.cycles += 9;
@@ -63,49 +63,49 @@ static void op04_5( byte* opc ) // SETHEX / SETDEC
     cpu.cycles += 3;
 }
 
-static void op06( byte* opc ) // RSTK=C
+static void op06( byte* _opc ) // RSTK=C
 {
     rstk_push( nib_to_unsigned( cpu.reg[ C ], 5 ) );
     cpu.pc += 2;
     cpu.cycles += 8;
 }
 
-static void op07( byte* opc ) // C=RSTK
+static void op07( byte* _opc ) // C=RSTK
 {
     unsigned_to_nib( cpu.reg[ C ], rstk_pop(), 5 );
     cpu.pc += 2;
     cpu.cycles += 8;
 }
 
-static void op08( byte* opc ) // CLRST
+static void op08( byte* _opc ) // CLRST
 {
     reg_zero( cpu.st, 3 );
     cpu.pc += 2;
     cpu.cycles += 5;
 }
 
-static void op09( byte* opc ) // C=ST
+static void op09( byte* _opc ) // C=ST
 {
     reg_cpy( cpu.reg[ C ], cpu.st, 3 );
     cpu.pc += 2;
     cpu.cycles += 5;
 }
 
-static void op0A( byte* opc ) // ST=C
+static void op0A( byte* _opc ) // ST=C
 {
     reg_cpy( cpu.st, cpu.reg[ C ], 3 );
     cpu.pc += 2;
     cpu.cycles += 5;
 }
 
-static void op0B( byte* opc ) // CSTEX
+static void op0B( byte* _opc ) // CSTEX
 {
     reg_ex( cpu.reg[ C ], cpu.st, 3 );
     cpu.pc += 2;
     cpu.cycles += 5;
 }
 
-static void op0C( byte* opc ) // P=P+1
+static void op0C( byte* _opc ) // P=P+1
 {
     if ( cpu.p != 0xF ) {
         cpu.p++;
@@ -119,7 +119,7 @@ static void op0C( byte* opc ) // P=P+1
     cpu.cycles += 3;
 }
 
-static void op0D( byte* opc ) // P=P-1
+static void op0D( byte* _opc ) // P=P-1
 {
     if ( cpu.p ) {
         cpu.p--;
@@ -145,7 +145,7 @@ static void op0E( byte* opc ) // r=r&s f/A / r=r!s f/A
     cpu.cycles += 4 + len;
 }
 
-static void op0F( byte* opc ) // RTI
+static void op0F( byte* _opc ) // RTI
 {
     // TODO: Implement RTI
     cpu.inte = true;
@@ -345,28 +345,28 @@ static void op802_3( byte* opc ) // r=IN
     cpu.cycles += 7;
 }
 
-static void op804( byte* opc ) // UNCNFG
+static void op804( byte* _opc ) // UNCNFG
 {
     bus_unconfigure( nib_to_unsigned( cpu.reg[ C ], 5 ) );
     cpu.pc += 3;
     cpu.cycles += 12;
 }
 
-static void op805( byte* opc ) // CONFIG
+static void op805( byte* _opc ) // CONFIG
 {
     bus_configure( nib_to_unsigned( cpu.reg[ C ], 5 ) );
     cpu.pc += 3;
     cpu.cycles += 11;
 }
 
-static void op806( byte* opc ) // C=ID
+static void op806( byte* _opc ) // C=ID
 {
     unsigned_to_nib( cpu.reg[ C ], bus_get_id(), 5 );
     cpu.pc += 3;
     cpu.cycles += 11;
 }
 
-static void op807( byte* opc ) // SHUTDN
+static void op807( byte* _opc ) // SHUTDN
 {
     // TODO: Fix SHUTDN
     cpu.shutdown = config.allow_shutdn && ( !cpu.in[ 0 ] && !cpu.in[ 1 ] && !cpu.in[ 3 ] );
@@ -375,7 +375,7 @@ static void op807( byte* opc ) // SHUTDN
     cpu.cycles += 5;
 }
 
-static void op8080( byte* opc ) // INTON
+static void op8080( byte* _opc ) // INTON
 {
     cpu.keyscan = true;
     cpu.pc += 4;
@@ -386,7 +386,7 @@ static void op8080( byte* opc ) // INTON
     }
 }
 
-static void op8081( byte* opc ) // RSI
+static void op8081( byte* _opc ) // RSI
 {
     // TODO: Implement RSI
     // Note: Is the opcode 80810?
@@ -426,21 +426,21 @@ static void op808C_E( byte* opc ) // PC=(r)
     cpu.cycles += 23;
 }
 
-static void op808F( byte* opc ) // INTOFF
+static void op808F( byte* _opc ) // INTOFF
 {
     cpu.keyscan = false;
     cpu.pc += 4;
     cpu.cycles += 5;
 }
 
-static void op809( byte* opc ) // C+P+1
+static void op809( byte* _opc ) // C+P+1
 {
     alu_add_con( cpu.reg[ C ], cpu.p, 0, 5 );
     cpu.pc += 3;
     cpu.cycles += 8;
 }
 
-static void op80A( byte* opc ) // RESET
+static void op80A( byte* _opc ) // RESET
 {
     bus_reset();
     cpu.pc += 3;
