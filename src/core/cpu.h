@@ -29,7 +29,6 @@ typedef struct {
     bool int_pending : true;
 
     dword cycles;
-    dword inst_cnt;
 } Cpu;
 
 #define HST_XM 1

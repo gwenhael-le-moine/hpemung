@@ -19,7 +19,6 @@ static inline void decode( byte* ptr )
     if ( op[ ptr[ i ] ].exec ) {
         op[ ptr[ i ] ].exec( ptr );
         cpu.pc &= 0xFFFFF;
-        cpu.inst_cnt++;
     } else
         emulator_set_state( EMULATOR_STOP );
 }
