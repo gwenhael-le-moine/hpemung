@@ -12,6 +12,7 @@
 
 #include "rpl.h"
 #include "bus.h"
+#include "cpu.h"
 #include "types.h"
 
 #define MAX_LENGTH_FILENAME 2048
@@ -29,6 +30,9 @@ static address port2_size = ( 8192 * 1024 ); /* 4Mio in nibbles */
 
 static int read_mem_file( char* absolute_filename, nibble* mem, int size )
 {
+    if ( config.verbose )
+        fprintf( stderr, "Reading mem file %s\n", absolute_filename );
+
     struct stat st;
     FILE* fp;
     byte* tmp_mem;
@@ -37,7 +41,7 @@ static int read_mem_file( char* absolute_filename, nibble* mem, int size )
 
     if ( NULL == ( fp = fopen( absolute_filename, "r" ) ) ) {
         if ( config.verbose )
-            fprintf( stderr, "ct open %s\n", absolute_filename );
+            fprintf( stderr, "can\'t open %s\n", absolute_filename );
         return 0;
     }
 
@@ -108,6 +112,9 @@ static int read_mem_file( char* absolute_filename, nibble* mem, int size )
 
 static int write_mem_file( char* absolute_filename, nibble* mem, int size )
 {
+    if ( config.verbose )
+        fprintf( stderr, "Writing mem file %s\n", absolute_filename );
+
     FILE* fp;
     byte* tmp_mem;
     byte rbyte;
@@ -151,6 +158,56 @@ static int write_mem_file( char* absolute_filename, nibble* mem, int size )
 
     if ( config.verbose )
         printf( "wrote %s\n", absolute_filename );
+
+    return 1;
+}
+
+static int read_struct_file( const char* name, size_t s_size, void* s )
+{
+    if ( config.verbose )
+        fprintf( stderr, "Reading struct file %s\n", name );
+
+    FILE* f;
+
+    if ( ( f = fopen( name, "rb" ) ) == ( FILE* )NULL ) {
+        if ( config.verbose )
+            fprintf( stderr, "can\'t open %s\n", name );
+        return 0;
+    }
+
+    if ( fread( s, s_size, ( size_t )1, f ) != 1 ) {
+        if ( config.verbose )
+            fprintf( stderr, "can\'t read %s\n", name );
+        fclose( f );
+        return 0;
+    }
+
+    ( void )fclose( f );
+
+    return 1;
+}
+
+static int write_struct_file( const char* name, size_t s_size, void* s )
+{
+    if ( config.verbose )
+        fprintf( stderr, "Writing struct file %s\n", name );
+
+    FILE* f;
+
+    if ( ( f = fopen( name, "wb" ) ) == ( FILE* )NULL ) {
+        if ( config.verbose )
+            fprintf( stderr, "can\'t open %s\n", name );
+        return 0;
+    }
+
+    if ( fwrite( s, s_size, ( size_t )1, f ) != 1 ) {
+        if ( config.verbose )
+            fprintf( stderr, "can\'t write %s\n", name );
+        fclose( f );
+        return 0;
+    }
+
+    ( void )fclose( f );
 
     return 1;
 }
@@ -317,50 +374,42 @@ void load_file_on_stack( char* filename )
     free( obj );
 }
 
-void cpu_bus_init( char* filename )
+void cpu_init( char* filename )
+{
+    char fullpath[ MAX_LENGTH_FILENAME ];
+    get_absolute_working_dir_path();
+    sprintf( fullpath, "%s%s", absolute_working_dir_path, filename );
+
+    Cpu tmp_cpu;
+    read_struct_file( fullpath, sizeof( cpu ), &tmp_cpu );
+}
+void cpu_exit( char* filename )
+{
+    char fullpath[ MAX_LENGTH_FILENAME ];
+    get_absolute_working_dir_path();
+    sprintf( fullpath, "%s%s", absolute_working_dir_path, filename );
+
+    write_struct_file( fullpath, sizeof( cpu ), &cpu );
+}
+
+void bus_init( char* filename )
 {
     bus_reset();
 
-    /* char fullpath[ MAX_LENGTH_FILENAME ]; */
-    /* get_absolute_working_dir_path(); */
-    /* sprintf( fullpath, "%s%s", absolute_working_dir_path, filename ); */
+    char fullpath[ MAX_LENGTH_FILENAME ];
+    get_absolute_working_dir_path();
+    sprintf( fullpath, "%s%s", absolute_working_dir_path, filename );
 
-    /* int filesize = file_size( fullpath ); */
-
-    /* if ( filesize ) { */
-    /*     FILE* fp; */
-    /*     /\* BusInfo tmp_bus_info; *\/ */
-
-    /*     if ( NULL == ( fp = fopen( fullpath, "w" ) ) ) { */
-    /*         if ( config.verbose ) */
-    /*             fprintf( stderr, "can\'t open %s\n", fullpath ); */
-    /*         return; */
-    /*     } */
-    /*     if ( config.verbose ) */
-    /*         fprintf( stderr, "Loading bus_info from %s\n", fullpath ); */
-
-    /*     fread( &bus_info, sizeof( BusInfo ), 1, fp ); */
-
-    /*     fclose( fp ); */
-    /* } */
+    BusInfo tmp_bus_info;
+    read_struct_file( fullpath, sizeof( bus_info ), &tmp_bus_info );
 }
-void cpu_bus_exit( char* filename )
+void bus_exit( char* filename )
 {
-    /* char fullpath[ MAX_LENGTH_FILENAME ]; */
-    /* get_absolute_working_dir_path(); */
-    /* sprintf( fullpath, "%s%s", absolute_working_dir_path, filename ); */
+    char fullpath[ MAX_LENGTH_FILENAME ];
+    get_absolute_working_dir_path();
+    sprintf( fullpath, "%s%s", absolute_working_dir_path, filename );
 
-    /* FILE* fp; */
-
-    /* if ( NULL == ( fp = fopen( fullpath, "w" ) ) ) { */
-    /*     if ( config.verbose ) */
-    /*         fprintf( stderr, "can\'t open %s\n", fullpath ); */
-    /*     return; */
-    /* } */
-
-    /* fwrite( &bus_info, sizeof( BusInfo ), 1, fp ); */
-
-    /* fclose( fp ); */
+    write_struct_file( fullpath, sizeof( bus_info ), &bus_info );
 }
 
 void rom_init( char* filename )
@@ -459,7 +508,6 @@ void ram_init( char* filename )
 }
 void ram_exit( char* filename )
 {
-    fprintf( stderr, "\n\nfilename = %s\n", filename );
     char fullpath[ MAX_LENGTH_FILENAME ];
     get_absolute_working_dir_path();
     sprintf( fullpath, "%s%s", absolute_working_dir_path, filename );

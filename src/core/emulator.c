@@ -90,15 +90,17 @@ void emulator_init( void )
     ram_init( config.fn_ram );
     ports_init( config.fn_port1, config.fn_port2 );
 
-    cpu_bus_init( config.fn_state );
+    cpu_init( config.fn_cpu );
+    bus_init( config.fn_bus );
 }
 
 void emulator_exit( void )
 {
+    bus_exit( config.fn_bus );
+    cpu_exit( config.fn_cpu );
     ports_exit( config.fn_port1, config.fn_port2 );
     ram_exit( config.fn_ram );
     rom_exit();
-    cpu_bus_exit( config.fn_state );
 }
 
 bool emulator_run( void )
