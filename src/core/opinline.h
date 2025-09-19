@@ -135,7 +135,7 @@ inline void comp_gt( byte* reg1, byte* reg2, int len )
 inline void alu_add( byte* dest, byte* src, int len )
 {
     byte c = 0;
-    byte base = cpu.dec ? 10 : 16;
+    byte base = cpu.hexmode ? 16 : 10;
 
     while ( len-- ) {
         if ( *dest >= base )
@@ -156,7 +156,7 @@ inline void alu_add( byte* dest, byte* src, int len )
 inline void alu_sub( byte* dest, byte* src, int len )
 {
     byte c = 0;
-    byte base = cpu.dec ? 10 : 16;
+    byte base = cpu.hexmode ? 16 : 10;
 
     while ( len-- ) {
         *dest -= *src + c;
@@ -175,7 +175,7 @@ inline void alu_sub( byte* dest, byte* src, int len )
 inline void alu_sub2( byte* dest, byte* src, int len )
 {
     byte c = 0;
-    byte base = cpu.dec ? 10 : 16;
+    byte base = cpu.hexmode ? 16 : 10;
 
     while ( len-- ) {
         *dest = *src - ( *dest + c );
@@ -223,7 +223,7 @@ inline void alu_sub_con( byte* reg, byte con, int i, int len )
 
 inline void alu_inc( byte* reg, int len )
 {
-    if ( cpu.dec ) {
+    if ( !cpu.hexmode ) {
         byte c = 1;
         while ( len-- ) {
             if ( *reg >= 10 )
@@ -254,7 +254,7 @@ inline void alu_inc( byte* reg, int len )
 
 inline void alu_dec( byte* reg, int len )
 {
-    byte base = cpu.dec ? 10 : 16;
+    byte base = cpu.hexmode ? 16 : 10;
 
     while ( len-- ) {
         ( *reg )--;
@@ -270,7 +270,7 @@ inline void alu_dec( byte* reg, int len )
 
 inline void alu_neg( byte* reg, int len )
 {
-    byte base = cpu.dec ? 10 : 16;
+    byte base = cpu.hexmode ? 16 : 10;
 
     while ( len && *reg == 0 ) {
         reg++;
@@ -295,7 +295,7 @@ inline void alu_neg( byte* reg, int len )
 
 inline void alu_not( byte* reg, int len )
 {
-    byte base = cpu.dec ? 9 : 15;
+    byte base = cpu.hexmode ? 15 : 9;
 
     while ( len-- ) {
         *reg = base - *reg;

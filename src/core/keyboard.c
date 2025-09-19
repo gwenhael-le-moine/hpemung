@@ -45,15 +45,15 @@ static void kbd_key_pressed( int row, int col )
     if ( cpu.shutdown && no_key && ( cpu.in[ 0 ] || cpu.in[ 1 ] || cpu.in[ 3 ] ) )
         cpu.shutdown = false;
 
-    if ( cpu.keyscan && no_key && ( cpu.in[ 0 ] || cpu.in[ 1 ] || cpu.in[ 3 ] ) ) {
-        if ( cpu.inte ) {
-            cpu.keyintp = false;
+    if ( cpu.int_enable && no_key && ( cpu.in[ 0 ] || cpu.in[ 1 ] || cpu.in[ 3 ] ) ) {
+        if ( cpu.int_service ) {
+            cpu.int_pending = false;
             cpu_interrupt();
         } else
-            cpu.keyintp = true;
+            cpu.int_pending = true;
 
     } else if ( !cpu.in[ 0 ] && !cpu.in[ 1 ] && !cpu.in[ 3 ] )
-        cpu.keyintp = false;
+        cpu.int_pending = false;
 }
 
 static void kbd_key_released( int row, int col )
@@ -61,7 +61,7 @@ static void kbd_key_released( int row, int col )
     kbd_row[ row ] &= ~( 1 << col );
     update_in();
     if ( !cpu.in[ 0 ] && !cpu.in[ 1 ] && !cpu.in[ 3 ] )
-        cpu.keyintp = false;
+        cpu.int_pending = false;
 }
 
 /**********/
@@ -83,7 +83,7 @@ void pressKey( int hpkey )
             if ( cpu.shutdown && no_key )
                 cpu.shutdown = false;
 
-            if ( cpu.inte && no_key )
+            if ( cpu.int_service && no_key )
                 cpu_interrupt();
         }
         break;

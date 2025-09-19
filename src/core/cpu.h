@@ -8,21 +8,26 @@
 typedef struct {
     byte reg[ 4 ][ 16 ];
     byte reg_r[ 5 ][ 16 ];
-    byte st[ 4 ];
+    address d[ 2 ];
+
+    byte p;
+    address pc;
     byte in[ 4 ];
     byte out[ 3 ];
+    byte st[ 4 ];
+
     byte hst;
-    byte p;
-    address d[ 2 ];
-    address pc;
+
     address rstk[ 8 ];
     int rstk_ptr;
+
+    bool hexmode : true;
     bool carry : true;
-    bool dec : true;
     bool shutdown : true;
-    bool inte : true;
-    bool keyscan : true;
-    bool keyintp : true;
+    bool int_service : true;
+    bool int_enable : true;
+    bool int_pending : true;
+
     dword cycles;
     dword inst_cnt;
 } Cpu;

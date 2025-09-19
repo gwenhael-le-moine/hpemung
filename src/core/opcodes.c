@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include <string.h>
 
 #include "../options.h"         /* for config.allow_shutdn */
@@ -58,7 +59,7 @@ static void op02_3( byte* opc ) // RTNSC / RTNCC
 
 static void op04_5( byte* opc ) // SETHEX / SETDEC
 {
-    cpu.dec = ( opc[ 1 ] & 1 ) ? true : false;
+    cpu.hexmode = ( opc[ 1 ] & 1 ) ? false : true;
     cpu.pc += 2;
     cpu.cycles += 3;
 }
@@ -148,11 +149,11 @@ static void op0E( byte* opc ) // r=r&s f/A / r=r!s f/A
 static void op0F( byte* _opc ) // RTI
 {
     // TODO: Implement RTI
-    cpu.inte = true;
+    cpu.int_service = true;
     cpu.pc = rstk_pop();
     cpu.cycles += 9;
-    if ( ( cpu.keyintp && cpu.keyscan ) || kbd_on ) {
-        cpu.keyintp = false;
+    if ( ( cpu.int_pending && cpu.int_enable ) || kbd_on ) {
+        cpu.int_pending = false;
         cpu_interrupt();
     }
 }
@@ -377,11 +378,11 @@ static void op807( byte* _opc ) // SHUTDN
 
 static void op8080( byte* _opc ) // INTON
 {
-    cpu.keyscan = true;
+    cpu.int_enable = true;
     cpu.pc += 4;
     cpu.cycles += 5;
-    if ( cpu.keyintp ) {
-        cpu.keyintp = false;
+    if ( cpu.int_pending ) {
+        cpu.int_pending = false;
         cpu_interrupt();
     }
 }
@@ -428,7 +429,7 @@ static void op808C_E( byte* opc ) // PC=(r)
 
 static void op808F( byte* _opc ) // INTOFF
 {
-    cpu.keyscan = false;
+    cpu.int_enable = false;
     cpu.pc += 4;
     cpu.cycles += 5;
 }

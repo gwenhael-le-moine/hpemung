@@ -32,10 +32,10 @@ Cpu cpu;
 
 void cpu_interrupt( void )
 {
-    if ( !cpu.inte )
+    if ( !cpu.int_service )
         return;
 
-    cpu.inte = false;
+    cpu.int_service = false;
     cpu.rstk_ptr = ( cpu.rstk_ptr - 1 ) & 7;
     cpu.rstk[ cpu.rstk_ptr ] = cpu.pc;
     cpu.pc = 0x0000F;
