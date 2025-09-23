@@ -8,7 +8,7 @@
 
 static inline void decode( byte* ptr )
 {
-    Opcode* op = opcodes;
+    opcode_t* op = opcodes;
     int i = 0;
 
     while ( op[ ptr[ i ] ].next ) {

@@ -822,7 +822,7 @@ static void opFC_F( byte* opc ) // r=-r-1 A
     cpu.cycles += 7;
 }
 
-static Opcode opcodes0[ 16 ] = {
+static opcode_t opcodes0[ 16 ] = {
     {.exec = op00,   .next = NULL, .dissasm = "RTNSXM"            },
     {.exec = op01,   .next = NULL, .dissasm = "RTN"               },
     {.exec = op02_3, .next = NULL, .dissasm = "RTNSC"             },
@@ -841,7 +841,7 @@ static Opcode opcodes0[ 16 ] = {
     {.exec = op0F,   .next = NULL, .dissasm = "RTI"               }
 };
 
-static Opcode opcodes13[ 16 ] = {
+static opcode_t opcodes13[ 16 ] = {
     {.exec = op13a, .next = NULL, .dissasm = "D0=A"  },
     {.exec = op13a, .next = NULL, .dissasm = "D1=A"  },
     {.exec = op13a, .next = NULL, .dissasm = "AD0EX" },
@@ -860,7 +860,7 @@ static Opcode opcodes13[ 16 ] = {
     {.exec = op13b, .next = NULL, .dissasm = "CD1EXS"}
 };
 
-static Opcode opcodes15[ 16 ] = {
+static opcode_t opcodes15[ 16 ] = {
     {.exec = op15a, .next = NULL, .dissasm = "%D2 %F3"  },
     {.exec = op15a, .next = NULL, .dissasm = "%D2 %F3"  },
     {.exec = op15a, .next = NULL, .dissasm = "%D2 %F3"  },
@@ -879,7 +879,7 @@ static Opcode opcodes15[ 16 ] = {
     {.exec = op15b, .next = NULL, .dissasm = "%D2 %I3+1"}
 };
 
-static Opcode opcodes1[ 16 ] = {
+static opcode_t opcodes1[ 16 ] = {
     {.exec = op10,   .next = NULL,      .dissasm = "R%i2=%a2"    },
     {.exec = op11,   .next = NULL,      .dissasm = "%a2=R%i2"    },
     {.exec = op12,   .next = NULL,      .dissasm = "%a2R%i2EX"   },
@@ -898,7 +898,7 @@ static Opcode opcodes1[ 16 ] = {
     {.exec = op1B_F, .next = NULL,      .dissasm = "D1=(5) %X25" },
 };
 
-static Opcode opcodes808[ 16 ] = {
+static opcode_t opcodes808[ 16 ] = {
     {.exec = op8080,       .next = NULL, .dissasm = "INTON"                      },
     {.exec = op8081,       .next = NULL, .dissasm = "RSI"                        },
     {.exec = op8082,       .next = NULL, .dissasm = "LA #%N4"                    },
@@ -917,7 +917,7 @@ static Opcode opcodes808[ 16 ] = {
     {.exec = op808F,       .next = NULL, .dissasm = "INTOFF"                     }
 };
 
-static Opcode opcodes80[ 16 ] = {
+static opcode_t opcodes80[ 16 ] = {
     {.exec = op800_1, .next = NULL,       .dissasm = "OUT=CS"  },
     {.exec = op800_1, .next = NULL,       .dissasm = "OUT=C"   },
     {.exec = op802_3, .next = NULL,       .dissasm = "A=IN"    },
@@ -936,7 +936,7 @@ static Opcode opcodes80[ 16 ] = {
     {.exec = op80F,   .next = NULL,       .dissasm = "CPEX %I3"}
 };
 
-static Opcode opcodes81Af[ 16 ] = {
+static opcode_t opcodes81Af[ 16 ] = {
     {.exec = op81Af0, .next = NULL, .dissasm = "R%i5=%a5 %F3A" },
     {.exec = op81Af1, .next = NULL, .dissasm = "%a5=R%i5 %F3A" },
     {.exec = op81Af2, .next = NULL, .dissasm = "%a5R%i5EX %F3A"},
@@ -955,7 +955,7 @@ static Opcode opcodes81Af[ 16 ] = {
     {.exec = NULL,    .next = NULL, .dissasm = NULL            }
 };
 
-static Opcode opcodes81A[ 16 ] = {
+static opcode_t opcodes81A[ 16 ] = {
     {.exec = NULL, .next = opcodes81Af, .dissasm = NULL},
     {.exec = NULL, .next = opcodes81Af, .dissasm = NULL},
     {.exec = NULL, .next = opcodes81Af, .dissasm = NULL},
@@ -974,7 +974,7 @@ static Opcode opcodes81A[ 16 ] = {
     {.exec = NULL, .next = opcodes81Af, .dissasm = NULL}
 };
 
-static Opcode opcodes81B[ 16 ] = {
+static opcode_t opcodes81B[ 16 ] = {
     {.exec = NULL,     .next = NULL, .dissasm = NULL  },
     {.exec = NULL,     .next = NULL, .dissasm = NULL  },
     {.exec = op81B2_3, .next = NULL, .dissasm = "PC=A"},
@@ -993,7 +993,7 @@ static Opcode opcodes81B[ 16 ] = {
     {.exec = NULL,     .next = NULL, .dissasm = NULL  }
 };
 
-static Opcode opcodes81[ 16 ] = {
+static opcode_t opcodes81[ 16 ] = {
     {.exec = op810_3, .next = NULL,       .dissasm = "ASLC"                     },
     {.exec = op810_3, .next = NULL,       .dissasm = "BSLC"                     },
     {.exec = op810_3, .next = NULL,       .dissasm = "CSLC"                     },
@@ -1012,7 +1012,7 @@ static Opcode opcodes81[ 16 ] = {
     {.exec = op81C_F, .next = NULL,       .dissasm = "DSRB"                     }
 };
 
-static Opcode opcodes8[ 16 ] = {
+static opcode_t opcodes8[ 16 ] = {
     {.exec = NULL,   .next = opcodes80, .dissasm = NULL                          },
     {.exec = NULL,   .next = opcodes81, .dissasm = NULL                          },
     {.exec = op82,   .next = NULL,      .dissasm = "HST=0 #%X21"                 },
@@ -1031,7 +1031,7 @@ static Opcode opcodes8[ 16 ] = {
     {.exec = op8F,   .next = NULL,      .dissasm = "GOSBVL %X25"                 },
 };
 
-static Opcode opcodes9[ 16 ] = {
+static opcode_t opcodes9[ 16 ] = {
     {.exec = op9a, .next = NULL, .dissasm = "?%u2%#2%z2 %F1, %G32YES %T32+3"},
     {.exec = op9a, .next = NULL, .dissasm = "?%u2%#2%z2 %F1, %G32YES %T32+3"},
     {.exec = op9a, .next = NULL, .dissasm = "?%u2%#2%z2 %F1, %G32YES %T32+3"},
@@ -1050,7 +1050,7 @@ static Opcode opcodes9[ 16 ] = {
     {.exec = op9b, .next = NULL, .dissasm = "?%u2%>2%v2 %F1, %G32YES %T32+3"}
 };
 
-static Opcode opcodesA[ 16 ] = {
+static opcode_t opcodesA[ 16 ] = {
     {.exec = opAa, .next = NULL, .dissasm = "%t2=%t2%+2%w2 %F1"},
     {.exec = opAa, .next = NULL, .dissasm = "%t2=%t2%+2%w2 %F1"},
     {.exec = opAa, .next = NULL, .dissasm = "%t2=%t2%+2%w2 %F1"},
@@ -1069,7 +1069,7 @@ static Opcode opcodesA[ 16 ] = {
     {.exec = opAb, .next = NULL, .dissasm = "%x2%=2%y2%E2 %F1" }
 };
 
-static Opcode opcodesBb[ 16 ] = {
+static opcode_t opcodesBb[ 16 ] = {
     {.exec = opBb0_3, .next = NULL, .dissasm = "ASL %F1"   },
     {.exec = opBb0_3, .next = NULL, .dissasm = "BSL %F1"   },
     {.exec = opBb0_3, .next = NULL, .dissasm = "CSL %F1"   },
@@ -1088,7 +1088,7 @@ static Opcode opcodesBb[ 16 ] = {
     {.exec = opBbC_F, .next = NULL, .dissasm = "D=-D-1 %F1"}
 };
 
-static Opcode opcodesB[ 16 ] = {
+static opcode_t opcodesB[ 16 ] = {
     {.exec = opBa, .next = NULL,      .dissasm = "%t2=%p2%-2%q2 %F1"},
     {.exec = opBa, .next = NULL,      .dissasm = "%t2=%p2%-2%q2 %F1"},
     {.exec = opBa, .next = NULL,      .dissasm = "%t2=%p2%-2%q2 %F1"},
@@ -1107,7 +1107,7 @@ static Opcode opcodesB[ 16 ] = {
     {.exec = NULL, .next = opcodesBb, .dissasm = NULL               }
 };
 
-static Opcode opcodesF[ 16 ] = {
+static opcode_t opcodesF[ 16 ] = {
     {.exec = opF0_3, .next = NULL, .dissasm = "ASL A"   },
     {.exec = opF0_3, .next = NULL, .dissasm = "BSL A"   },
     {.exec = opF0_3, .next = NULL, .dissasm = "CSL A"   },
@@ -1126,7 +1126,7 @@ static Opcode opcodesF[ 16 ] = {
     {.exec = opFC_F, .next = NULL, .dissasm = "D=-D-1 A"},
 };
 
-Opcode opcodes[ 16 ] = {
+opcode_t opcodes[ 16 ] = {
     {.exec = NULL, .next = opcodes0, .dissasm = NULL             },
     {.exec = NULL, .next = opcodes1, .dissasm = NULL             },
     {.exec = op2,  .next = NULL,     .dissasm = "P= %I1"         },
