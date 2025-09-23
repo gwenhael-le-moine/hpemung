@@ -12,6 +12,7 @@ typedef struct {
 
     byte p;
     address pc;
+
     byte in[ 4 ];
     byte out[ 3 ];
     byte st[ 4 ];
@@ -22,7 +23,7 @@ typedef struct {
     int rstk_ptr;
 
     int fs_idx_lo[ 16 ];
-    int fl_idx_hi[ 16 ];
+    int fs_idx_hi[ 16 ];
 
     bool hexmode : true;
     bool carry : true;
