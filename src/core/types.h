@@ -9,4 +9,6 @@ typedef unsigned short word;
 typedef unsigned int dword;
 typedef signed int address;
 
+extern unsigned int nib_to_unsigned( byte* nib, int len );
+extern void unsigned_to_nib( byte* nib, int x, int len );
 #endif

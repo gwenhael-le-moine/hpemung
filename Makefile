@@ -88,7 +88,6 @@ HEADERS = src/options.h \
 	src/core/hdw.h \
 	src/core/keyboard.h \
 	src/core/opcodes.h \
-	src/core/opinline.h \
 	src/core/persistence.h \
 	src/core/ports.h \
 	src/core/rpl.h \
@@ -115,6 +114,7 @@ SRC = src/main.c \
 	src/core/ports.c \
 	src/core/rpl.c \
 	src/core/timers.c \
+	src/core/types.c \
 	src/ui4x_api_impl.c \
 	src/ui4x/48gx.c \
 	src/ui4x/48sx.c \
