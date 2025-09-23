@@ -376,40 +376,46 @@ void load_file_on_stack( char* filename )
 
 void cpu_init( char* filename )
 {
-    char fullpath[ MAX_LENGTH_FILENAME ];
-    get_absolute_working_dir_path();
-    sprintf( fullpath, "%s%s", absolute_working_dir_path, filename );
+    /* char fullpath[ MAX_LENGTH_FILENAME ]; */
+    /* get_absolute_working_dir_path(); */
+    /* sprintf( fullpath, "%s%s", absolute_working_dir_path, filename ); */
 
-    Cpu tmp_cpu;
-    read_struct_file( fullpath, sizeof( cpu ), &tmp_cpu );
+    /* cpu_t tmp_cpu; */
+    /* read_struct_file( fullpath, sizeof( cpu ), &tmp_cpu ); */
+
+    const int fs[ 16 ] = { 0, 0, 2, 0, 15, 3, 0, 0, 0, 0, 2, 0, 15, 3, 0, 0 };
+    ( void )memcpy( cpu.fs_idx_lo, fs, sizeof( fs ) );
+
+    const int fl[ 16 ] = { 1, 1, 1, 3, 1, 12, 2, 16, 1, 1, 1, 3, 1, 12, 2, 16 };
+    ( void )memcpy( cpu.fl_idx_hi, fl, sizeof( fl ) );
 }
 void cpu_exit( char* filename )
 {
-    char fullpath[ MAX_LENGTH_FILENAME ];
-    get_absolute_working_dir_path();
-    sprintf( fullpath, "%s%s", absolute_working_dir_path, filename );
+    /* char fullpath[ MAX_LENGTH_FILENAME ]; */
+    /* get_absolute_working_dir_path(); */
+    /* sprintf( fullpath, "%s%s", absolute_working_dir_path, filename ); */
 
-    write_struct_file( fullpath, sizeof( cpu ), &cpu );
+    /* write_struct_file( fullpath, sizeof( cpu ), &cpu ); */
 }
 
 void bus_init( char* filename )
 {
     bus_reset();
 
-    char fullpath[ MAX_LENGTH_FILENAME ];
-    get_absolute_working_dir_path();
-    sprintf( fullpath, "%s%s", absolute_working_dir_path, filename );
+    /* char fullpath[ MAX_LENGTH_FILENAME ]; */
+    /* get_absolute_working_dir_path(); */
+    /* sprintf( fullpath, "%s%s", absolute_working_dir_path, filename ); */
 
-    BusInfo tmp_bus_info;
-    read_struct_file( fullpath, sizeof( bus_info ), &tmp_bus_info );
+    /* BusInfo tmp_bus_info; */
+    /* read_struct_file( fullpath, sizeof( bus_info ), &tmp_bus_info ); */
 }
 void bus_exit( char* filename )
 {
-    char fullpath[ MAX_LENGTH_FILENAME ];
-    get_absolute_working_dir_path();
-    sprintf( fullpath, "%s%s", absolute_working_dir_path, filename );
+    /* char fullpath[ MAX_LENGTH_FILENAME ]; */
+    /* get_absolute_working_dir_path(); */
+    /* sprintf( fullpath, "%s%s", absolute_working_dir_path, filename ); */
 
-    write_struct_file( fullpath, sizeof( bus_info ), &bus_info );
+    /* write_struct_file( fullpath, sizeof( bus_info ), &bus_info ); */
 }
 
 void rom_init( char* filename )

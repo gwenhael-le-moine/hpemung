@@ -21,6 +21,9 @@ typedef struct {
     address rstk[ 8 ];
     int rstk_ptr;
 
+    int fs_idx_lo[ 16 ];
+    int fl_idx_hi[ 16 ];
+
     bool hexmode : true;
     bool carry : true;
     bool shutdown : true;
@@ -29,7 +32,7 @@ typedef struct {
     bool int_pending : true;
 
     dword cycles;
-} Cpu;
+} cpu_t;
 
 #define HST_XM 1
 #define HST_SB 2
@@ -38,7 +41,7 @@ typedef struct {
 
 enum RegisterNames { A, B, C, D };
 
-extern Cpu cpu;
+extern cpu_t cpu;
 
 extern void cpu_interrupt( void );
 extern void execute_instruction( void );

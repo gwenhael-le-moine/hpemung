@@ -27,7 +27,7 @@ static inline void decode( byte* ptr )
 /* public */
 /**********/
 
-Cpu cpu;
+cpu_t cpu;
 
 void cpu_interrupt( void )
 {
