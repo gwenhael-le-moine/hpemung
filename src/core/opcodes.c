@@ -5,8 +5,8 @@
 
 #include "types.h"
 #include "cpu.h"
-#include "bus.h"
-#include "keyboard.h"
+#include "bus.h"                /* bus_get_id(); bus_read(); bus_write(); bus_configure(); bus_unconfigure(); bus_reset(); */
+#include "keyboard.h"           /* kbd_on; kbd_out_changed(); */
 #include "opcodes.h"
 
 //                0	 1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
