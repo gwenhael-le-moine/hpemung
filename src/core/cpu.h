@@ -22,9 +22,6 @@ typedef struct {
     address rstk[ 8 ];
     int rstk_ptr;
 
-    int fs_idx_lo[ 16 ];
-    int fs_idx_hi[ 16 ];
-
     bool hexmode : true;
     bool carry : true;
     bool shutdown : true;

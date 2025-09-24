@@ -382,12 +382,6 @@ void cpu_init( char* filename )
 
     /* cpu_t tmp_cpu; */
     /* read_struct_file( fullpath, sizeof( cpu ), &tmp_cpu ); */
-
-    const int fs[ 16 ] = { 0, 0, 2, 0, 15, 3, 0, 0, 0, 0, 2, 0, 15, 3, 0, 0 };
-    ( void )memcpy( cpu.fs_idx_lo, fs, sizeof( fs ) );
-
-    const int fl[ 16 ] = { 1, 1, 1, 3, 1, 12, 2, 16, 1, 1, 1, 3, 1, 12, 2, 16 };
-    ( void )memcpy( cpu.fs_idx_hi, fl, sizeof( fl ) );
 }
 void cpu_exit( char* filename )
 {

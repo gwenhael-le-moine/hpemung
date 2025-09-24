@@ -9,6 +9,10 @@
 #include "keyboard.h"           /* kbd_on; kbd_out_changed(); */
 #include "opcodes.h"
 
+static int fs_idx_lo[ 16 ] = { 0, 0, 2, 0, 15, 3, 0, 0, 0, 0, 2, 0, 15, 3, 0, 0 };
+
+static int fs_idx_hi[ 16 ] = { 1, 1, 1, 3, 1, 12, 2, 16, 1, 1, 1, 3, 1, 12, 2, 16 };
+
 //                0	 1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
 static const int regr[ 16 ] = { A, B, C, D, B, C, A, C, A, B, C, D, B, C, A, C };
 static const int regs[ 16 ] = { B, C, A, C, A, B, C, D, B, C, A, C, A, B, C, D };
@@ -21,16 +25,16 @@ static const int regv[ 16 ] = { B, C, A, C, A, B, C, D, A, B, C, D, B, C, A, C }
 #define REGt( i ) ( cpu.reg[ regt[ i ] ] )
 #define REGu( i ) ( cpu.reg[ regu[ i ] ] )
 #define REGv( i ) ( cpu.reg[ regv[ i ] ] )
-#define REGrF( i, f ) ( REGr( i ) + cpu.fs_idx_lo[ f ] )
-#define REGsF( i, f ) ( REGs( i ) + cpu.fs_idx_lo[ f ] )
-#define REGtF( i, f ) ( REGt( i ) + cpu.fs_idx_lo[ f ] )
-#define REGuF( i, f ) ( REGu( i ) + cpu.fs_idx_lo[ f ] )
-#define REGvF( i, f ) ( REGv( i ) + cpu.fs_idx_lo[ f ] )
+#define REGrF( i, f ) ( REGr( i ) + fs_idx_lo[ f ] )
+#define REGsF( i, f ) ( REGs( i ) + fs_idx_lo[ f ] )
+#define REGtF( i, f ) ( REGt( i ) + fs_idx_lo[ f ] )
+#define REGuF( i, f ) ( REGu( i ) + fs_idx_lo[ f ] )
+#define REGvF( i, f ) ( REGv( i ) + fs_idx_lo[ f ] )
 
 static inline void update_fields( void )
 {
-    cpu.fs_idx_lo[ 0 ] = cpu.fs_idx_lo[ 8 ] = cpu.p;
-    cpu.fs_idx_hi[ 1 ] = cpu.fs_idx_hi[ 9 ] = cpu.p + 1;
+    fs_idx_lo[ 0 ] = fs_idx_lo[ 8 ] = cpu.p;
+    fs_idx_hi[ 1 ] = fs_idx_hi[ 9 ] = cpu.p + 1;
 }
 
 static inline void load( byte* reg, byte* data, int start, int len )
@@ -76,15 +80,13 @@ static inline void goyes( byte* opc, int offset )
 {
     if ( cpu.carry ) {
         address rel = nib_to_signed( opc + offset, 2 );
-        if ( rel ) {
+        if ( rel )
             cpu.pc += rel + offset;
-        } else {
+        else
             cpu.pc = rstk_pop();
-        }
         cpu.cycles += 7;
-    } else {
+    } else
         cpu.pc += offset + 2;
-    }
 }
 
 static inline void reg_zero( byte* reg, int len ) { memset( reg, 0, len ); }
@@ -486,7 +488,7 @@ static void op0D( byte* _opc ) // P=P-1
 
 static void op0E( byte* opc ) // r=r&s f/A / r=r!s f/A
 {
-    int len = ( opc[ 2 ] == 0xF ) ? 5 : cpu.fs_idx_hi[ opc[ 2 ] ];
+    int len = ( opc[ 2 ] == 0xF ) ? 5 : fs_idx_hi[ opc[ 2 ] ];
     if ( opc[ 3 ] & 8 )
         alu_or( REGrF( opc[ 3 ], opc[ 2 ] ), REGsF( opc[ 3 ], opc[ 2 ] ), len );
     else
@@ -568,13 +570,13 @@ static void op14( byte* opc ) // DATi=r A/B / r=DATi A/B
 static void op15a( byte* opc ) // DATi=r f / r=DATi f
 {
     if ( !( opc[ 2 ] & 2 ) ) {
-        bus_write( cpu.reg[ ( opc[ 2 ] & 4 ) >> 1 ] + cpu.fs_idx_lo[ opc[ 3 ] ], cpu.d[ opc[ 2 ] & 1 ], cpu.fs_idx_hi[ opc[ 3 ] ] );
+        bus_write( cpu.reg[ ( opc[ 2 ] & 4 ) >> 1 ] + fs_idx_lo[ opc[ 3 ] ], cpu.d[ opc[ 2 ] & 1 ], fs_idx_hi[ opc[ 3 ] ] );
     } else {
-        bus_read( cpu.reg[ ( opc[ 2 ] & 4 ) >> 1 ] + cpu.fs_idx_lo[ opc[ 3 ] ], cpu.d[ opc[ 2 ] & 1 ], cpu.fs_idx_hi[ opc[ 3 ] ] );
+        bus_read( cpu.reg[ ( opc[ 2 ] & 4 ) >> 1 ] + fs_idx_lo[ opc[ 3 ] ], cpu.d[ opc[ 2 ] & 1 ], fs_idx_hi[ opc[ 3 ] ] );
         cpu.cycles++;
     }
     cpu.pc += 4;
-    cpu.cycles += 16 + cpu.fs_idx_hi[ opc[ 3 ] ];
+    cpu.cycles += 16 + fs_idx_hi[ opc[ 3 ] ];
 }
 
 static void op15b( byte* opc ) // DATi=r n / r=DATi n
@@ -839,21 +841,20 @@ static void op814_7( byte* opc ) // rSRC
 
 static void op818( byte* opc ) // r=r+CON f/A / r=r-CON f/A
 {
-    int len = ( opc[ 3 ] == 0xF ) ? 5 : ( ( cpu.fs_idx_hi[ opc[ 3 ] ] == 1 ) ? 17 : cpu.fs_idx_hi[ opc[ 3 ] ] );
+    int len = ( opc[ 3 ] == 0xF ) ? 5 : ( ( fs_idx_hi[ opc[ 3 ] ] == 1 ) ? 17 : fs_idx_hi[ opc[ 3 ] ] );
     // Note: What happens if opc[4]&4
-    if ( !( opc[ 4 ] & 8 ) ) {
-        alu_add_con( cpu.reg[ opc[ 4 ] & 3 ], opc[ 5 ], cpu.fs_idx_lo[ opc[ 3 ] ], len );
-    } else {
-        alu_sub_con( cpu.reg[ opc[ 4 ] & 3 ], opc[ 5 ], cpu.fs_idx_lo[ opc[ 3 ] ], len );
-    }
+    if ( !( opc[ 4 ] & 8 ) )
+        alu_add_con( cpu.reg[ opc[ 4 ] & 3 ], opc[ 5 ], fs_idx_lo[ opc[ 3 ] ], len );
+    else
+        alu_sub_con( cpu.reg[ opc[ 4 ] & 3 ], opc[ 5 ], fs_idx_lo[ opc[ 3 ] ], len );
     cpu.pc += 6;
     cpu.cycles += 5 + len;
 }
 
 static void op819( byte* opc ) // rSRB f/A
 {
-    int len = ( opc[ 3 ] == 0xF ) ? 5 : cpu.fs_idx_hi[ opc[ 3 ] ];
-    alu_srb( cpu.reg[ opc[ 4 ] & 3 ] + cpu.fs_idx_lo[ opc[ 3 ] ], len );
+    int len = ( opc[ 3 ] == 0xF ) ? 5 : fs_idx_hi[ opc[ 3 ] ];
+    alu_srb( cpu.reg[ opc[ 4 ] & 3 ] + fs_idx_lo[ opc[ 3 ] ], len );
     cpu.pc += 5;
     cpu.cycles += 20;
 }
@@ -861,8 +862,8 @@ static void op819( byte* opc ) // rSRB f/A
 static void op81Af0( byte* opc ) // Ri=r f/A
 {
     int i = ( opc[ 5 ] & 7 ) > 4 ? opc[ 5 ] & 3 : opc[ 5 ] & 7;
-    int len = ( opc[ 3 ] == 0xF ) ? 5 : cpu.fs_idx_hi[ opc[ 3 ] ];
-    reg_cpy( cpu.reg_r[ i ] + cpu.fs_idx_lo[ opc[ 3 ] ], cpu.reg[ ( opc[ 5 ] & 8 ) >> 2 ] + cpu.fs_idx_lo[ opc[ 3 ] ], len );
+    int len = ( opc[ 3 ] == 0xF ) ? 5 : fs_idx_hi[ opc[ 3 ] ];
+    reg_cpy( cpu.reg_r[ i ] + fs_idx_lo[ opc[ 3 ] ], cpu.reg[ ( opc[ 5 ] & 8 ) >> 2 ] + fs_idx_lo[ opc[ 3 ] ], len );
     cpu.pc += 6;
     cpu.cycles += 6 + len;
 }
@@ -870,8 +871,8 @@ static void op81Af0( byte* opc ) // Ri=r f/A
 static void op81Af1( byte* opc ) // r=Ri f/A
 {
     int i = ( opc[ 5 ] & 7 ) > 4 ? opc[ 5 ] & 3 : opc[ 5 ] & 7;
-    int len = ( opc[ 3 ] == 0xF ) ? 5 : cpu.fs_idx_hi[ opc[ 3 ] ];
-    reg_cpy( cpu.reg[ ( opc[ 5 ] & 8 ) >> 2 ] + cpu.fs_idx_lo[ opc[ 3 ] ], cpu.reg_r[ i ] + cpu.fs_idx_lo[ opc[ 3 ] ], len );
+    int len = ( opc[ 3 ] == 0xF ) ? 5 : fs_idx_hi[ opc[ 3 ] ];
+    reg_cpy( cpu.reg[ ( opc[ 5 ] & 8 ) >> 2 ] + fs_idx_lo[ opc[ 3 ] ], cpu.reg_r[ i ] + fs_idx_lo[ opc[ 3 ] ], len );
     cpu.pc += 6;
     cpu.cycles += 6 + len;
 }
@@ -879,8 +880,8 @@ static void op81Af1( byte* opc ) // r=Ri f/A
 static void op81Af2( byte* opc ) // rRiEX f/A
 {
     int i = ( opc[ 5 ] & 7 ) > 4 ? opc[ 5 ] & 3 : opc[ 5 ] & 7;
-    int len = ( opc[ 3 ] == 0xF ) ? 5 : cpu.fs_idx_hi[ opc[ 3 ] ];
-    reg_ex( cpu.reg[ ( opc[ 5 ] & 8 ) >> 2 ] + cpu.fs_idx_lo[ opc[ 3 ] ], cpu.reg_r[ i ] + cpu.fs_idx_lo[ opc[ 3 ] ], len );
+    int len = ( opc[ 3 ] == 0xF ) ? 5 : fs_idx_hi[ opc[ 3 ] ];
+    reg_ex( cpu.reg[ ( opc[ 5 ] & 8 ) >> 2 ] + fs_idx_lo[ opc[ 3 ] ], cpu.reg_r[ i ] + fs_idx_lo[ opc[ 3 ] ], len );
     cpu.pc += 6;
     cpu.cycles += 6 + len;
 }
@@ -993,23 +994,23 @@ static void op8F( byte* opc ) // GOSBVL
 static void op9a( byte* opc ) // ?u=v f / ?u#v f / ?u=0 f / ?u#0 f
 {
     if ( !( opc[ 2 ] & 8 ) ) {
-        comp_eq( REGuF( opc[ 2 ], opc[ 1 ] ), REGvF( opc[ 2 ], opc[ 1 ] ), cpu.fs_idx_hi[ opc[ 1 ] ] );
+        comp_eq( REGuF( opc[ 2 ], opc[ 1 ] ), REGvF( opc[ 2 ], opc[ 1 ] ), fs_idx_hi[ opc[ 1 ] ] );
     } else {
-        comp_zero( cpu.reg[ opc[ 2 ] & 3 ] + cpu.fs_idx_lo[ opc[ 1 ] ], cpu.fs_idx_hi[ opc[ 1 ] ] );
+        comp_zero( cpu.reg[ opc[ 2 ] & 3 ] + fs_idx_lo[ opc[ 1 ] ], fs_idx_hi[ opc[ 1 ] ] );
     }
     if ( opc[ 2 ] & 4 )
         cpu.carry = !cpu.carry;
     goyes( opc, 3 );
-    cpu.cycles += 6 + cpu.fs_idx_hi[ opc[ 1 ] ];
+    cpu.cycles += 6 + fs_idx_hi[ opc[ 1 ] ];
 }
 
 static void op9b( byte* opc ) // ?u>v f / u<v f / u>=v f / u<=v f
 {
-    comp_gt( REGuF( opc[ 2 ], opc[ 1 ] ), REGvF( opc[ 2 ], opc[ 1 ] ), cpu.fs_idx_hi[ opc[ 1 ] ] );
+    comp_gt( REGuF( opc[ 2 ], opc[ 1 ] ), REGvF( opc[ 2 ], opc[ 1 ] ), fs_idx_hi[ opc[ 1 ] ] );
     if ( opc[ 2 ] & 8 )
         cpu.carry = !cpu.carry;
     goyes( opc, 3 );
-    cpu.cycles += 6 + cpu.fs_idx_hi[ opc[ 1 ] ];
+    cpu.cycles += 6 + fs_idx_hi[ opc[ 1 ] ];
 }
 
 static void opAa( byte* opc ) // t=t+v f / t=t-1 f
@@ -1018,32 +1019,32 @@ static void opAa( byte* opc ) // t=t+v f / t=t-1 f
         case 0x0:
         case 0x4:
         case 0x8:
-            alu_add( REGtF( opc[ 2 ], opc[ 1 ] ), REGvF( opc[ 2 ], opc[ 1 ] ), cpu.fs_idx_hi[ opc[ 1 ] ] );
+            alu_add( REGtF( opc[ 2 ], opc[ 1 ] ), REGvF( opc[ 2 ], opc[ 1 ] ), fs_idx_hi[ opc[ 1 ] ] );
             break;
         case 0xC:
-            alu_dec( REGtF( opc[ 2 ], opc[ 1 ] ), cpu.fs_idx_hi[ opc[ 1 ] ] );
+            alu_dec( REGtF( opc[ 2 ], opc[ 1 ] ), fs_idx_hi[ opc[ 1 ] ] );
             break;
     }
     cpu.pc += 3;
-    cpu.cycles += 3 + cpu.fs_idx_hi[ opc[ 1 ] ];
+    cpu.cycles += 3 + fs_idx_hi[ opc[ 1 ] ];
 }
 
 static void opAb( byte* opc ) // t=0 f / t=r f / trEX f
 {
     switch ( opc[ 2 ] & 0xC ) {
         case 0x0:
-            reg_zero( REGtF( opc[ 2 ], opc[ 1 ] ), cpu.fs_idx_hi[ opc[ 1 ] ] );
+            reg_zero( REGtF( opc[ 2 ], opc[ 1 ] ), fs_idx_hi[ opc[ 1 ] ] );
             break;
         case 0x4:
         case 0x8:
-            reg_cpy( REGtF( opc[ 2 ], opc[ 1 ] ), REGrF( opc[ 2 ], opc[ 1 ] ), cpu.fs_idx_hi[ opc[ 1 ] ] );
+            reg_cpy( REGtF( opc[ 2 ], opc[ 1 ] ), REGrF( opc[ 2 ], opc[ 1 ] ), fs_idx_hi[ opc[ 1 ] ] );
             break;
         case 0xC:
-            reg_ex( REGtF( opc[ 2 ], opc[ 1 ] ), REGrF( opc[ 2 ], opc[ 1 ] ), cpu.fs_idx_hi[ opc[ 1 ] ] );
+            reg_ex( REGtF( opc[ 2 ], opc[ 1 ] ), REGrF( opc[ 2 ], opc[ 1 ] ), fs_idx_hi[ opc[ 1 ] ] );
             break;
     }
     cpu.pc += 3;
-    cpu.cycles += 3 + cpu.fs_idx_hi[ opc[ 1 ] ];
+    cpu.cycles += 3 + fs_idx_hi[ opc[ 1 ] ];
 }
 
 static void opBa( byte* opc ) // t=t-v f / t=t+1 f / t=v-t f
@@ -1051,45 +1052,45 @@ static void opBa( byte* opc ) // t=t-v f / t=t+1 f / t=v-t f
     switch ( opc[ 2 ] & 0xC ) {
         case 0x0:
         case 0x8:
-            alu_sub( REGtF( opc[ 2 ], opc[ 1 ] ), REGvF( opc[ 2 ], opc[ 1 ] ), cpu.fs_idx_hi[ opc[ 1 ] ] );
+            alu_sub( REGtF( opc[ 2 ], opc[ 1 ] ), REGvF( opc[ 2 ], opc[ 1 ] ), fs_idx_hi[ opc[ 1 ] ] );
             break;
         case 0x4:
-            alu_inc( REGtF( opc[ 2 ], opc[ 1 ] ), cpu.fs_idx_hi[ opc[ 1 ] ] );
+            alu_inc( REGtF( opc[ 2 ], opc[ 1 ] ), fs_idx_hi[ opc[ 1 ] ] );
             break;
         case 0xC:
-            alu_sub2( REGtF( opc[ 2 ], opc[ 1 ] ), REGvF( opc[ 2 ], opc[ 1 ] ), cpu.fs_idx_hi[ opc[ 1 ] ] );
+            alu_sub2( REGtF( opc[ 2 ], opc[ 1 ] ), REGvF( opc[ 2 ], opc[ 1 ] ), fs_idx_hi[ opc[ 1 ] ] );
             break;
     }
     cpu.pc += 3;
-    cpu.cycles += 3 + cpu.fs_idx_hi[ opc[ 1 ] ];
+    cpu.cycles += 3 + fs_idx_hi[ opc[ 1 ] ];
 }
 
 static void opBb0_3( byte* opc ) // rSL f
 {
-    alu_sl( cpu.reg[ opc[ 2 ] & 3 ] + cpu.fs_idx_lo[ opc[ 1 ] ], cpu.fs_idx_hi[ opc[ 1 ] ] );
+    alu_sl( cpu.reg[ opc[ 2 ] & 3 ] + fs_idx_lo[ opc[ 1 ] ], fs_idx_hi[ opc[ 1 ] ] );
     cpu.pc += 3;
-    cpu.cycles += 3 + cpu.fs_idx_hi[ opc[ 1 ] ];
+    cpu.cycles += 3 + fs_idx_hi[ opc[ 1 ] ];
 }
 
 static void opBb4_7( byte* opc ) // rSR f
 {
-    alu_sr( cpu.reg[ opc[ 2 ] & 3 ] + cpu.fs_idx_lo[ opc[ 1 ] ], cpu.fs_idx_hi[ opc[ 1 ] ] );
+    alu_sr( cpu.reg[ opc[ 2 ] & 3 ] + fs_idx_lo[ opc[ 1 ] ], fs_idx_hi[ opc[ 1 ] ] );
     cpu.pc += 3;
-    cpu.cycles += 3 + cpu.fs_idx_hi[ opc[ 1 ] ];
+    cpu.cycles += 3 + fs_idx_hi[ opc[ 1 ] ];
 }
 
 static void opBb8_B( byte* opc ) // r=-r f
 {
-    alu_neg( cpu.reg[ opc[ 2 ] & 3 ] + cpu.fs_idx_lo[ opc[ 1 ] ], cpu.fs_idx_hi[ opc[ 1 ] ] );
+    alu_neg( cpu.reg[ opc[ 2 ] & 3 ] + fs_idx_lo[ opc[ 1 ] ], fs_idx_hi[ opc[ 1 ] ] );
     cpu.pc += 3;
-    cpu.cycles += 3 + cpu.fs_idx_hi[ opc[ 1 ] ];
+    cpu.cycles += 3 + fs_idx_hi[ opc[ 1 ] ];
 }
 
 static void opBbC_F( byte* opc ) // r=-r-1 f
 {
-    alu_not( cpu.reg[ opc[ 2 ] & 3 ] + cpu.fs_idx_lo[ opc[ 1 ] ], cpu.fs_idx_hi[ opc[ 1 ] ] );
+    alu_not( cpu.reg[ opc[ 2 ] & 3 ] + fs_idx_lo[ opc[ 1 ] ], fs_idx_hi[ opc[ 1 ] ] );
     cpu.pc += 3;
-    cpu.cycles += 3 + cpu.fs_idx_hi[ opc[ 1 ] ];
+    cpu.cycles += 3 + fs_idx_hi[ opc[ 1 ] ];
 }
 
 static void opC( byte* opc ) // t=t+v A / t=t-1 A
