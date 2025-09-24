@@ -6,40 +6,46 @@
 #include "types.h"
 
 typedef struct {
+    byte* rom_data;
+    address rom_mask;
+
     address hdw_base;
+    bool hdw_cfg : true;
+
     address ram_size;
     address ram_base;
-    address ce1_size;
-    address ce1_base;
-    address ce2_size;
-    address ce2_base;
-    address nce3_size;
-    address nce3_base;
-    bool hdw_cfg : true;
     bool ram_sz_cfg : true;
     bool ram_cfg : true;
+    byte* ram_data;
+    address ram_mask;
+
+    address ce1_size;
+    address ce1_base;
     bool ce1_sz_cfg : true;
     bool ce1_cfg : true;
+    bool ce1_r_o : true;
+    bool ce1_bs : true;
+    byte* ce1_data;
+    address ce1_mask;
+
+    address ce2_size;
+    address ce2_base;
     bool ce2_sz_cfg : true;
     bool ce2_cfg : true;
+    bool ce2_r_o : true;
+    byte* ce2_data;
+    address ce2_mask;
+
+    address nce3_size;
+    address nce3_base;
     bool nce3_sz_cfg : true;
     bool nce3_cfg : true;
-    bool ce1_r_o : true;
-    bool ce2_r_o : true;
     bool nce3_r_o : true;
-    bool ce1_bs : true;
+    byte* nce3_data;
+    address nce3_mask;
+
     bool da19 : true;
     bool ben : true;
-    byte* rom_data;
-    byte* ram_data;
-    byte* ce1_data;
-    byte* ce2_data;
-    byte* nce3_data;
-    address rom_mask;
-    address ram_mask;
-    address ce1_mask;
-    address ce2_mask;
-    address nce3_mask;
     dword map_cnt;
 } BusInfo;
 
