@@ -237,6 +237,8 @@ static void create_annunciators_textures( void )
 // Returns -1 is no key is pressed
 static int mouse_click_to_hpkey( int x, int y )
 {
+    x /= __config.scale;
+    y /= __config.scale;
     /* return immediatly if the click isn't even in the keyboard area */
     if ( y < OFFSET_Y_KEYBOARD )
         return -1;
@@ -245,8 +247,8 @@ static int mouse_click_to_hpkey( int x, int y )
     y -= OFFSET_Y_KEYBOARD;
 
     for ( int i = 0; i < NB_KEYS; i++ )
-        if ( ( BUTTONS[ i ].x < x && ( BUTTONS[ i ].x + BUTTONS[ i ].w ) > x ) &&
-             ( BUTTONS[ i ].y < y && ( BUTTONS[ i ].y + BUTTONS[ i ].h ) > y ) )
+        if ( ( BUTTONS[ i ].x < x && x < ( BUTTONS[ i ].x + BUTTONS[ i ].w ) ) &&
+             ( BUTTONS[ i ].y < y && y < ( BUTTONS[ i ].y + BUTTONS[ i ].h ) ) )
             return i;
 
     return -1;
@@ -893,11 +895,6 @@ static void _draw_serial_devices_path( void )
 {
     char text[ 1024 ] = "";
 
-    if ( __config.verbose ) {
-        fprintf( stderr, "wire_name: %s\n", __config.wire_name );
-        fprintf( stderr, "ir_name: %s\n", __config.ir_name );
-    }
-
     if ( __config.wire_name ) {
         strcat( text, "wire: " );
         strcat( text, __config.wire_name );
@@ -979,8 +976,8 @@ static int apply_contrast( int value, int contrast )
     int max = 19;
     int min = 3;
 
-    // return ( value / ( max - min ) ) * ( max - contrast );
-    return value;
+    int contrasted = ( value / ( max - min ) ) * ( max - contrast );
+    return contrasted;
 }
 
 static void setup_colors( void )
@@ -1010,15 +1007,20 @@ static void setup_colors( void )
                 colors[ i ].g = colors[ i ].gray_rgb;
                 colors[ i ].b = colors[ i ].gray_rgb;
             } else {
-                if ( i == COLOR_PIXEL_ON || i == COLOR_PIXEL_GREY_2 || i == COLOR_PIXEL_GREY_1 ) {
-                    colors[ i ].r = apply_contrast( ( colors[ i ].rgb >> 16 ) & 0xff, contrast );
-                    colors[ i ].g = apply_contrast( ( colors[ i ].rgb >> 8 ) & 0xff, contrast );
-                    colors[ i ].b = apply_contrast( colors[ i ].rgb & 0xff, contrast );
-                } else {
-                    colors[ i ].r = ( colors[ i ].rgb >> 16 ) & 0xff;
-                    colors[ i ].g = ( colors[ i ].rgb >> 8 ) & 0xff;
-                    colors[ i ].b = colors[ i ].rgb & 0xff;
-                }
+                colors[ i ].r = ( colors[ i ].rgb >> 16 ) & 0xff;
+                colors[ i ].g = ( colors[ i ].rgb >> 8 ) & 0xff;
+                colors[ i ].b = colors[ i ].rgb & 0xff;
+            }
+            if ( i == COLOR_PIXEL_ON || i == COLOR_PIXEL_GREY_2 || i == COLOR_PIXEL_GREY_1 ) {
+                // COLOR_PIXEL_ON, COLOR_PIXEL_GREY_2 and COLOR_PIXEL_GREY_1 are
+                // computed based on COLOR_PIXEL_OFF and contrast
+                colors[ i ].r = apply_contrast( colors[ COLOR_PIXEL_OFF ].r, contrast );
+                colors[ i ].g = apply_contrast( colors[ COLOR_PIXEL_OFF ].g, contrast );
+
+                if ( __config.black_lcd )
+                    colors[ i ].b = apply_contrast( colors[ COLOR_PIXEL_OFF ].b, contrast );
+                else
+                    colors[ i ].b = 128 - ( ( 19 - contrast ) * ( ( 128 - colors[ COLOR_PIXEL_OFF ].b ) / 16 ) );
             }
         }
     }
@@ -1100,10 +1102,7 @@ void ui_update_display_sdl( void )
                     color = COLOR_PIXEL_GREY_2;
                     break;
                 case 3:
-                    color = COLOR_PIXEL_ON;
-                    break;
                 default:
-                    fprintf( stderr, "%i\n", pixel );
                     color = COLOR_PIXEL_ON;
                     break;
             }
