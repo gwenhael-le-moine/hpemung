@@ -5,7 +5,6 @@
 
 #include <SDL3/SDL.h>
 
-#include "../core/persistence.h"
 #include "../options.h"
 
 #include "api.h"
@@ -239,6 +238,7 @@ static int mouse_click_to_hpkey( int x, int y )
 {
     x /= __config.scale;
     y /= __config.scale;
+
     /* return immediatly if the click isn't even in the keyboard area */
     if ( y < OFFSET_Y_KEYBOARD )
         return -1;
@@ -416,11 +416,6 @@ static int sdlkey_to_hpkey( SDL_Keycode k )
             close_and_exit();
             return -1;
 
-        case SDLK_F11:
-            {
-                load_file_on_stack( "zeldahp.dir" );
-            }
-            break;
         default:
             return -1;
     }
