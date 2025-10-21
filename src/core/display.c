@@ -39,7 +39,7 @@ static inline address draw_lcd_line( address adr, int y )
             bit = 4;
         }
 
-        byte pixel = ( ( data & 1 ) << 6 );
+        byte pixel = ( data & 1 ) << 6;
         if ( pixel != 0 )
             pixel = 3;
 
@@ -79,13 +79,13 @@ byte lcdScreenGS[ LCD_WIDTH * LCD_HEIGHT ];
 
 void display_update( void )
 {
+    display_line_count = 0;
+
     if ( !display_enable && !off_cnt ) { /* Turn off display */
         off_cnt = 1;
         off_line = display_line_count;
-        display_line_count = 0;
     } else if ( display_enable && off_cnt ) { /* Turn on display */
         off_cnt = 0;
-        display_line_count = 0;
         in_menu = 0;
         cur_adr = display_base;
     }
