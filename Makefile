@@ -20,6 +20,7 @@ PKG_CONFIG ?= pkg-config
 OPTIM ?= 2
 FULL_WARNINGS ?= no
 WITH_SDL ?= yes
+WITH_SDL2 = no
 
 makeflags +=-j$(NUM_CORES) -l$(NUM_CORES)
 
@@ -34,6 +35,13 @@ NCURSES_LIBS = $(shell "$(PKG_CONFIG)" --libs ncursesw)
 ifeq ($(WITH_SDL), yes)
 	SDL_CFLAGS = $(shell "$(PKG_CONFIG)" --cflags sdl3) -DHAS_SDL=1
 	SDL_LIBS = $(shell "$(PKG_CONFIG)" --libs sdl3)
+	SDL_SRC = src/ui4x/sdl.c
+	SDL_HEADERS = src/ui4x/sdl.h
+endif
+
+ifeq ($(WITH_SDL2), yes)
+	SDL_CFLAGS = $(shell "$(PKG_CONFIG)" --cflags sdl2) -DHAS_SDL=1 -DHAS_SDL2=1
+	SDL_LIBS = $(shell "$(PKG_CONFIG)" --libs sdl2)
 	SDL_SRC = src/ui4x/sdl.c
 	SDL_HEADERS = src/ui4x/sdl.h
 endif
