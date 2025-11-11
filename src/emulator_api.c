@@ -78,6 +78,8 @@ static hpkey_t keyboard48[ NB_HP48_KEYS ] = {
     {0x00,   false},
 };
 
+static config_t __config;
+
 void press_key( int hpkey )
 {
     if ( hpkey < 0 || hpkey > NB_KEYS )
@@ -126,6 +128,11 @@ void get_lcd_buffer( int* target )
 
 int get_contrast( void ) { return display_contrast; }
 
-void init_emulator( config_t* conf ) { emulator_init(); }
+void init_emulator( config_t* conf )
+{
+    __config = *conf;
+
+    emulator_init();
+}
 
 void exit_emulator( void ) { emulator_exit(); }

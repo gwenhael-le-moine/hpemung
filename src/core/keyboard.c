@@ -4,7 +4,7 @@
 #include "types.h"
 #include "cpu.h"
 
-static byte kbd_row[ KEYS_BUFFER_SIZE ];
+static byte kbd_row[ 9 ];       /* KEYS_BUFFER_SIZE */
 
 static void update_in( void )
 {

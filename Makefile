@@ -89,6 +89,7 @@ override CFLAGS := -std=c11 \
 	$(CFLAGS)
 
 HEADERS = src/options.h \
+	src/emulator_api.h \
 	src/core/bus.h \
 	src/core/cpu.h \
 	src/core/display.h \
@@ -103,7 +104,6 @@ HEADERS = src/options.h \
 	src/core/types.h \
 	src/ui4x/api.h \
 	src/ui4x/bitmaps_misc.h \
-	src/ui4x/common.h \
 	src/ui4x/inner.h \
 	src/ui4x/ncurses.h \
 	$(SDL_HEADERS) \
@@ -111,6 +111,7 @@ HEADERS = src/options.h \
 
 SRC = src/main.c \
 	src/options.c \
+	src/emulator_api.c \
 	src/core/bus.c \
 	src/core/cpu.c \
 	src/core/display.c \
@@ -123,12 +124,11 @@ SRC = src/main.c \
 	src/core/rpl.c \
 	src/core/timers.c \
 	src/core/types.c \
-	src/ui4x_api_impl.c \
 	src/ui4x/48gx.c \
 	src/ui4x/48sx.c \
 	src/ui4x/49g.c \
 	src/ui4x/50g.c \
-	src/ui4x/common.c \
+	src/ui4x/api.c \
 	src/ui4x/fonts.c \
 	src/ui4x/ncurses.c \
 	$(SDL_SRC) \

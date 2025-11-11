@@ -3,13 +3,13 @@
 #include <sys/time.h>
 #include <time.h>
 
+#include "emulator_api.h"
 #include "options.h"
 
 #include "core/display.h"
 #include "core/emulator.h"
 
 #include "ui4x/api.h"
-#include "ui4x/common.h"
 
 /* static long long time_in_useconds( void ) */
 /* { */
@@ -40,7 +40,8 @@ int main( int argc, char* argv[] )
     init_emulator( &config );
 
     /* (G)UI */
-    setup_ui( &config );
+    setup_ui( &config, press_key, release_key, is_key_pressed, get_annunciators, get_display_state, get_lcd_buffer, get_contrast,
+              exit_emulator );
     ui_start( &config );
 
     do {

@@ -6,9 +6,11 @@
 #include "bus.h"
 #include "display.h"
 
-static byte lcdScreen[ LCD_WIDTH * LCD_HEIGHT ];
-static byte prev_lcdScreen[ LCD_WIDTH * LCD_HEIGHT ];
-static byte prev2_lcdScreen[ LCD_WIDTH * LCD_HEIGHT ];
+#define LCD_HEIGHT_48 64
+
+static byte lcdScreen[ LCD_WIDTH * LCD_HEIGHT_48 ];
+static byte prev_lcdScreen[ LCD_WIDTH * LCD_HEIGHT_48 ];
+static byte prev2_lcdScreen[ LCD_WIDTH * LCD_HEIGHT_48 ];
 
 static address cur_adr;
 static bool in_menu;
@@ -75,7 +77,7 @@ bool shouldRender = false;
 
 byte display_contrast = 12;
 
-byte lcdScreenGS[ LCD_WIDTH * LCD_HEIGHT ];
+byte lcdScreenGS[ LCD_WIDTH * LCD_HEIGHT_48 ];
 
 void display_update( void )
 {
@@ -103,7 +105,7 @@ void display_update( void )
 
         display_line_count++;
 
-        if ( display_line_count == LCD_HEIGHT ) {
+        if ( display_line_count == LCD_HEIGHT_48 ) {
             display_line_count = 0;
             in_menu = 0;
             cur_adr = display_base;
