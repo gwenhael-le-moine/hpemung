@@ -59,12 +59,13 @@ int main( int argc, char* argv[] )
 
         .verbose = config.verbose,
 
+        .name = config.progname,
         .progname = config.progname,
         .wire_name = config.wire_name,
         .ir_name = config.ir_name,
+
+        .style_filename = NULL  /* FIXME */
     };
-    /* setup_ui( &config_ui, press_key, release_key, is_key_pressed, get_annunciators, get_display_state, get_lcd_buffer, get_contrast, */
-    /*           exit_emulator ); */
 
     ui4x_emulator_api_t emulator_api = { .press_key = press_key,
                                          .release_key = release_key,
@@ -75,7 +76,6 @@ int main( int argc, char* argv[] )
                                          .get_contrast = get_contrast,
                                          .do_stop = emulator_stop };
     init_ui( &config_ui, &emulator_api );
-    /* ui_start(); */
 
     do {
         ui_handle_pending_inputs();
@@ -90,8 +90,6 @@ int main( int argc, char* argv[] )
                 ui_refresh_output();
         }
     } while ( !please_exit );
-
-    // close_and_exit();
 
     return 0;
 }
