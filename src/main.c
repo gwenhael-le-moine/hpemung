@@ -43,7 +43,6 @@ int main( int argc, char* argv[] )
     ui4x_config_t config_ui = {
         .model = config.model,
         .shiftless = config.shiftless,
-        .big_screen = config.big_screen,
         .black_lcd = config.black_lcd,
 
         .frontend = config.frontend,
@@ -53,7 +52,7 @@ int main( int argc, char* argv[] )
 
         .chromeless = config.chromeless,
         .fullscreen = config.fullscreen,
-        .scale = config.scale,
+        .zoom = config.scale,
 
         .tiny = config.tiny,
         .small = config.small,
@@ -64,12 +63,22 @@ int main( int argc, char* argv[] )
         .wire_name = config.wire_name,
         .ir_name = config.ir_name,
     };
-    setup_ui( &config_ui, press_key, release_key, is_key_pressed, get_annunciators, get_display_state, get_lcd_buffer, get_contrast,
-              exit_emulator );
-    ui_start();
+    /* setup_ui( &config_ui, press_key, release_key, is_key_pressed, get_annunciators, get_display_state, get_lcd_buffer, get_contrast, */
+    /*           exit_emulator ); */
+
+    ui4x_emulator_api_t emulator_api = { .press_key = press_key,
+                                         .release_key = release_key,
+                                         .is_key_pressed = is_key_pressed,
+                                         .is_display_on = get_display_state,
+                                         .get_annunciators = get_annunciators,
+                                         .get_lcd_buffer = get_lcd_buffer,
+                                         .get_contrast = get_contrast,
+                                         .do_stop = emulator_stop };
+    init_ui( &config_ui, &emulator_api );
+    /* ui_start(); */
 
     do {
-        ui_get_event();
+        ui_handle_pending_inputs();
 
         emulator_run();
 
@@ -78,11 +87,11 @@ int main( int argc, char* argv[] )
             lastTime_gui_update = currentTime;
 
             if ( shouldRender )
-                ui_update_display();
+                ui_refresh_output();
         }
     } while ( !please_exit );
 
-    close_and_exit();
+    // close_and_exit();
 
     return 0;
 }

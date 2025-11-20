@@ -82,7 +82,7 @@ static config_t __config;
 
 void press_key( int hpkey )
 {
-    if ( hpkey < 0 || hpkey > NB_KEYS )
+    if ( hpkey < 0 || hpkey > ui_get_nb_keys() )
         return;
     // Check not already pressed (may be important: avoids a useless do_kbd_int)
     if ( KEYBOARD[ hpkey ].pressed )
@@ -95,7 +95,7 @@ void press_key( int hpkey )
 
 void release_key( int hpkey )
 {
-    if ( hpkey < 0 || hpkey > NB_KEYS )
+    if ( hpkey < 0 || hpkey > ui_get_nb_keys() )
         return;
     // Check not already released (not critical)
     if ( !KEYBOARD[ hpkey ].pressed )
@@ -108,7 +108,7 @@ void release_key( int hpkey )
 
 bool is_key_pressed( int hpkey )
 {
-    if ( hpkey < 0 || hpkey > NB_KEYS )
+    if ( hpkey < 0 || hpkey > ui_get_nb_keys() )
         return false;
 
     return KEYBOARD[ hpkey ].pressed;
@@ -122,7 +122,7 @@ void get_lcd_buffer( int* target )
 {
     display_update();
 
-    for ( int xy = 0; xy < ( LCD_HEIGHT * LCD_WIDTH ); ++xy )
+    for ( int xy = 0; xy < ( ui_get_lcd_height() * LCD_WIDTH ); ++xy )
         target[ xy ] = ( int )lcdScreenGS[ xy ];
 }
 
@@ -136,3 +136,5 @@ void init_emulator( config_t* conf )
 }
 
 void exit_emulator( void ) { emulator_exit(); }
+
+void emulator_stop( void ) { please_exit = true; }

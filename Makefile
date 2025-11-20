@@ -19,6 +19,7 @@ PKG_CONFIG ?= pkg-config
 
 OPTIM ?= 2
 FULL_WARNINGS ?= no
+WITH_GTK ?= yes
 WITH_SDL ?= yes
 WITH_SDL2 = no
 
@@ -46,7 +47,14 @@ ifeq ($(WITH_SDL2), yes)
 	SDL_HEADERS = src/ui4x/sdl.h
 endif
 
-LIBS = $(SDL_LIBS) $(NCURSES_LIBS)
+ifeq ($(WITH_GTK), yes)
+	GTK_CFLAGS = -DHAS_GTK=1 $(shell "$(PKG_CONFIG)" --cflags gtk4)
+	GTK_LIBS = $(shell "$(PKG_CONFIG)" --libs gtk4)
+	GTK_SRC = src/ui4x/gtk.c
+	GTK_HEADERS = src/ui4x/gtk.h
+endif
+
+LIBS = $(GTK_LIBS) $(SDL_LIBS) $(NCURSES_LIBS)
 
 #CFLAGS = -Wall -Werror -O3 -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=unused-but-set-variable -Wno-error=missing-braces -Wno-error=incompatible-pointer-types
 
@@ -80,6 +88,7 @@ override CFLAGS := -std=c11 \
 	$(call cc-option,-Wno-unknown-warning-option) \
 	$(EXTRA_WARNING_CFLAGS) \
 	$(SDL_CFLAGS) \
+	$(GTK_CFLAGS) \
 	-O$(OPTIM) \
 	-D_GNU_SOURCE=1 \
 	-DVERSION_MAJOR=$(VERSION_MAJOR) \
@@ -130,6 +139,7 @@ SRC = src/main.c \
 	src/ui4x/50g.c \
 	src/ui4x/api.c \
 	src/ui4x/fonts.c \
+	src/ui4x/bitmaps_misc.c \
 	src/ui4x/ncurses.c \
 	$(SDL_SRC) \
 	$(GTK_SRC)

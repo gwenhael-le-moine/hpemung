@@ -90,7 +90,7 @@ void pressKey( int hpkey )
     case HP48_KEY_PLUS:
         kbd_key_pressed( 0, 0 );
         break;
-    case HP48_KEY_SPC:
+    case HP48_KEY_SPACE:
         kbd_key_pressed( 0, 1 );
         break;
     case HP48_KEY_PERIOD:
@@ -99,7 +99,7 @@ void pressKey( int hpkey )
     case HP48_KEY_0:
         kbd_key_pressed( 0, 3 );
         break;
-    case HP48_KEY_QUOTE:
+    case HP48_KEY_M:
         kbd_key_pressed( 0, 4 );
         break;
     case HP48_KEY_MINUS:
@@ -117,7 +117,7 @@ void pressKey( int hpkey )
     case HP48_KEY_A:
         kbd_key_pressed( 1, 4 );
         break;
-    case HP48_KEY_SHR:
+    case HP48_KEY_RIGHTSHIFT:
         kbd_key_pressed( 1, 5 );
         break;
     case HP48_KEY_MUL:
@@ -132,13 +132,13 @@ void pressKey( int hpkey )
     case HP48_KEY_4:
         kbd_key_pressed( 2, 3 );
         break;
-    case HP48_KEY_MTH:
+    case HP48_KEY_G:
         kbd_key_pressed( 2, 4 );
         break;
-    case HP48_KEY_SHL:
+    case HP48_KEY_LEFTSHIFT:
         kbd_key_pressed( 2, 5 );
         break;
-    case HP48_KEY_DIV:
+    case HP48_KEY_DIVIDE:
         kbd_key_pressed( 3, 0 );
         break;
     case HP48_KEY_9:
@@ -150,70 +150,70 @@ void pressKey( int hpkey )
     case HP48_KEY_7:
         kbd_key_pressed( 3, 3 );
         break;
-    case HP48_KEY_SIN:
+    case HP48_KEY_S:
         kbd_key_pressed( 3, 4 );
         break;
     case HP48_KEY_ALPHA:
         kbd_key_pressed( 3, 5 );
         break;
-    case HP48_KEY_BS:
+    case HP48_KEY_BACKSPACE:
         kbd_key_pressed( 4, 0 );
         break;
     case HP48_KEY_DEL:
         kbd_key_pressed( 4, 1 );
         break;
-    case HP48_KEY_EEX:
+    case HP48_KEY_Z:
         kbd_key_pressed( 4, 2 );
         break;
-    case HP48_KEY_NEG:
+    case HP48_KEY_Y:
         kbd_key_pressed( 4, 3 );
         break;
     case HP48_KEY_ENTER:
         kbd_key_pressed( 4, 4 );
         break;
-    case HP48_KEY_INV:
+    case HP48_KEY_X:
         kbd_key_pressed( 5, 0 );
         break;
-    case HP48_KEY_POWER:
+    case HP48_KEY_W:
         kbd_key_pressed( 5, 1 );
         break;
-    case HP48_KEY_SQRT:
+    case HP48_KEY_V:
         kbd_key_pressed( 5, 2 );
         break;
-    case HP48_KEY_TAN:
+    case HP48_KEY_U:
         kbd_key_pressed( 5, 3 );
         break;
-    case HP48_KEY_COS:
+    case HP48_KEY_T:
         kbd_key_pressed( 5, 4 );
         break;
-    case HP48_KEY_RIGHT:
+    case HP48_KEY_R:
         kbd_key_pressed( 6, 0 );
         break;
-    case HP48_KEY_DOWN:
+    case HP48_KEY_Q:
         kbd_key_pressed( 6, 1 );
         break;
-    case HP48_KEY_LEFT:
+    case HP48_KEY_P:
         kbd_key_pressed( 6, 2 );
         break;
-    case HP48_KEY_EVAL:
+    case HP48_KEY_O:
         kbd_key_pressed( 6, 3 );
         break;
-    case HP48_KEY_STO:
+    case HP48_KEY_N:
         kbd_key_pressed( 6, 4 );
         break;
-    case HP48_KEY_NXT:
+    case HP48_KEY_L:
         kbd_key_pressed( 7, 0 );
         break;
-    case HP48_KEY_UP:
+    case HP48_KEY_K:
         kbd_key_pressed( 7, 1 );
         break;
-    case HP48_KEY_VAR:
+    case HP48_KEY_J:
         kbd_key_pressed( 7, 2 );
         break;
-    case HP48_KEY_CST:
+    case HP48_KEY_I:
         kbd_key_pressed( 7, 3 );
         break;
-    case HP48_KEY_PRG:
+    case HP48_KEY_H:
         kbd_key_pressed( 7, 4 );
         break;
     case HP48_KEY_F:
@@ -244,7 +244,7 @@ void releaseKey( int hpkey )
     case HP48_KEY_PLUS:
         kbd_key_released( 0, 0 );
         break;
-    case HP48_KEY_SPC:
+    case HP48_KEY_SPACE:
         kbd_key_released( 0, 1 );
         break;
     case HP48_KEY_PERIOD:
@@ -253,7 +253,7 @@ void releaseKey( int hpkey )
     case HP48_KEY_0:
         kbd_key_released( 0, 3 );
         break;
-    case HP48_KEY_QUOTE:
+    case HP48_KEY_M:
         kbd_key_released( 0, 4 );
         break;
     case HP48_KEY_MINUS:
@@ -271,7 +271,7 @@ void releaseKey( int hpkey )
     case HP48_KEY_A:
         kbd_key_released( 1, 4 );
         break;
-    case HP48_KEY_SHR:
+    case HP48_KEY_RIGHTSHIFT:
         kbd_key_released( 1, 5 );
         break;
     case HP48_KEY_MUL:
@@ -286,13 +286,13 @@ void releaseKey( int hpkey )
     case HP48_KEY_4:
         kbd_key_released( 2, 3 );
         break;
-    case HP48_KEY_MTH:
+    case HP48_KEY_G:
         kbd_key_released( 2, 4 );
         break;
-    case HP48_KEY_SHL:
+    case HP48_KEY_LEFTSHIFT:
         kbd_key_released( 2, 5 );
         break;
-    case HP48_KEY_DIV:
+    case HP48_KEY_DIVIDE:
         kbd_key_released( 3, 0 );
         break;
     case HP48_KEY_9:
@@ -304,70 +304,70 @@ void releaseKey( int hpkey )
     case HP48_KEY_7:
         kbd_key_released( 3, 3 );
         break;
-    case HP48_KEY_SIN:
+    case HP48_KEY_S:
         kbd_key_released( 3, 4 );
         break;
     case HP48_KEY_ALPHA:
         kbd_key_released( 3, 5 );
         break;
-    case HP48_KEY_BS:
+    case HP48_KEY_BACKSPACE:
         kbd_key_released( 4, 0 );
         break;
     case HP48_KEY_DEL:
         kbd_key_released( 4, 1 );
         break;
-    case HP48_KEY_EEX:
+    case HP48_KEY_Z:
         kbd_key_released( 4, 2 );
         break;
-    case HP48_KEY_NEG:
+    case HP48_KEY_Y:
         kbd_key_released( 4, 3 );
         break;
     case HP48_KEY_ENTER:
         kbd_key_released( 4, 4 );
         break;
-    case HP48_KEY_INV:
+    case HP48_KEY_X:
         kbd_key_released( 5, 0 );
         break;
-    case HP48_KEY_POWER:
+    case HP48_KEY_W:
         kbd_key_released( 5, 1 );
         break;
-    case HP48_KEY_SQRT:
+    case HP48_KEY_V:
         kbd_key_released( 5, 2 );
         break;
-    case HP48_KEY_TAN:
+    case HP48_KEY_U:
         kbd_key_released( 5, 3 );
         break;
-    case HP48_KEY_COS:
+    case HP48_KEY_T:
         kbd_key_released( 5, 4 );
         break;
-    case HP48_KEY_RIGHT:
+    case HP48_KEY_R:
         kbd_key_released( 6, 0 );
         break;
-    case HP48_KEY_DOWN:
+    case HP48_KEY_Q:
         kbd_key_released( 6, 1 );
         break;
-    case HP48_KEY_LEFT:
+    case HP48_KEY_P:
         kbd_key_released( 6, 2 );
         break;
-    case HP48_KEY_EVAL:
+    case HP48_KEY_O:
         kbd_key_released( 6, 3 );
         break;
-    case HP48_KEY_STO:
+    case HP48_KEY_N:
         kbd_key_released( 6, 4 );
         break;
-    case HP48_KEY_NXT:
+    case HP48_KEY_L:
         kbd_key_released( 7, 0 );
         break;
-    case HP48_KEY_UP:
+    case HP48_KEY_K:
         kbd_key_released( 7, 1 );
         break;
-    case HP48_KEY_VAR:
+    case HP48_KEY_J:
         kbd_key_released( 7, 2 );
         break;
-    case HP48_KEY_CST:
+    case HP48_KEY_I:
         kbd_key_released( 7, 3 );
         break;
-    case HP48_KEY_PRG:
+    case HP48_KEY_H:
         kbd_key_released( 7, 4 );
         break;
     case HP48_KEY_F:

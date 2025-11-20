@@ -17,4 +17,6 @@ extern int get_contrast( void );
 extern void init_emulator( config_t* conf );
 extern void exit_emulator( void );
 
+extern void emulator_stop( void );
+
 #endif /* EMULATOR_API_H */

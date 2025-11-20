@@ -56,9 +56,7 @@ config_t* config_init( int argc, char* argv[] )
     int option_index;
     int c = '?';
 
-    int clopt_model = -1;
     int clopt_verbose = -1;
-    int clopt_big_screen = -1;
     int clopt_black_lcd = -1;
     int clopt_shiftless = -1;
     int clopt_frontend = -1;
@@ -81,14 +79,7 @@ config_t* config_init( int argc, char* argv[] )
         {"throttle",       no_argument,       &clopt_throttle,     true            },
         {"allow-shutdown", no_argument,       &clopt_allow_shutdn, true            },
 
-        /* {"big-screen",     no_argument,       &clopt_big_screen,   true            }, */
         {"black-lcd",      no_argument,       &clopt_black_lcd,    true            },
-
-        /* {"48sx",           no_argument,       &clopt_model,        MODEL_48SX      }, */
-        /* {"48gx",           no_argument,       &clopt_model,        MODEL_48GX      }, */
-        /* {"40g",            no_argument,       &clopt_model,        MODEL_40G       }, */
-        /* {"49g",            no_argument,       &clopt_model,        MODEL_49G       }, */
-        /* {"50g",            no_argument,       &clopt_model,        MODEL_50G       }, */
 
         {"shiftless",      no_argument,       &clopt_shiftless,    true            },
 
@@ -108,8 +99,6 @@ config_t* config_init( int argc, char* argv[] )
 
         {"mono",           no_argument,       &clopt_mono,         true            },
         {"gray",           no_argument,       &clopt_gray,         true            },
-
-        {0,                0,                 0,                   0               }
     };
 
     const char* help_text = "usage: %s [options]\n"
@@ -119,12 +108,7 @@ config_t* config_init( int argc, char* argv[] )
                             "     --verbose      display more informations\n"
                             "     --throttle     throttle CPU speed (default: false)\n"
                             "     --allow-shutdown allow shutdown (default: false)\n"
-                            /* "     --big-screen   131×80 screen (default: false)\n" */
                             "     --black-lcd    (default: false)\n"
-                            /* "     --48gx         emulate a HP 48GX\n" */
-                            /* "     --48sx         emulate a HP 48SX\n" */
-                            /* "     --40g          emulate a HP 40G\n" */
-                            /* "     --49g          emulate a HP 49G\n" */
                             "     --sdl          graphical (SDL) front-end (default: true)\n"
                             "     --gtk          graphical (gtk4) front-end (default: false)\n"
                             "     --tui          text front-end (default: false)\n"
@@ -144,8 +128,6 @@ config_t* config_init( int argc, char* argv[] )
                             "false)\n"
                             "     --shiftless    don't map the shift keys to let them free for numbers (default: "
                             "false)\n"
-                            /* "     --reset        force a reset\n" */
-                            /* "     --monitor      start with monitor (default: no)\n" */
                             "\n";
 
     while ( c != EOF ) {
@@ -178,10 +160,6 @@ config_t* config_init( int argc, char* argv[] )
     /****************************************************/
     if ( clopt_verbose != -1 )
         __config.verbose = clopt_verbose == true;
-    /* if ( clopt_model != -1 ) */
-    /*     __config.model = clopt_model; */
-    /* if ( clopt_big_screen != -1 ) */
-    /*     __config.big_screen = clopt_big_screen == true; */
     if ( clopt_black_lcd != -1 )
         __config.black_lcd = clopt_black_lcd == true;
     if ( clopt_frontend != -1 )
@@ -206,9 +184,6 @@ config_t* config_init( int argc, char* argv[] )
         __config.throttle = clopt_throttle == true;
     if ( clopt_allow_shutdn != -1 )
         __config.allow_shutdn = clopt_allow_shutdn == true;
-
-    /* if ( __config.model == MODEL_49G || __config.model == MODEL_50G ) */
-    /*     __config.black_lcd = true; */
 
     __config.progname = basename( strdup( argv[ 0 ] ) );
 
