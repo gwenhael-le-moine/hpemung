@@ -48,7 +48,7 @@ ifeq ($(WITH_SDL2), yes)
 endif
 
 ifeq ($(WITH_GTK), yes)
-	GTK_CFLAGS = -DHAS_GTK=1 $(shell "$(PKG_CONFIG)" --cflags gtk4)
+	GTK_CFLAGS = $(shell "$(PKG_CONFIG)" --cflags gtk4) -DHAS_GTK=1
 	GTK_LIBS = $(shell "$(PKG_CONFIG)" --libs gtk4)
 	GTK_SRC = src/ui4x/gtk.c
 	GTK_HEADERS = src/ui4x/gtk.h
@@ -72,7 +72,7 @@ EXTRA_WARNING_CFLAGS := -Wunused-function \
 	$(call cc-option,-Wunused-variable)
 endif
 
-override CFLAGS := -std=c11 \
+override CFLAGS := -std=gnu2x \
 	-Wall -Wextra -Wpedantic \
 	-Wformat=2 -Wshadow \
 	-Wwrite-strings -Wstrict-prototypes -Wold-style-definition \

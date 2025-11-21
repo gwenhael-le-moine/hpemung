@@ -64,7 +64,7 @@ int main( int argc, char* argv[] )
         .wire_name = config.wire_name,
         .ir_name = config.ir_name,
 
-        .style_filename = NULL  /* FIXME */
+        .style_filename = NULL /* FIXME */
     };
 
     ui4x_emulator_api_t emulator_api = { .press_key = press_key,

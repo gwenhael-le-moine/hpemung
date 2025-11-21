@@ -120,7 +120,7 @@ void pressKey( int hpkey )
     case HP48_KEY_RIGHTSHIFT:
         kbd_key_pressed( 1, 5 );
         break;
-    case HP48_KEY_MUL:
+    case HP48_KEY_MULTIPLY:
         kbd_key_pressed( 2, 0 );
         break;
     case HP48_KEY_6:
@@ -274,7 +274,7 @@ void releaseKey( int hpkey )
     case HP48_KEY_RIGHTSHIFT:
         kbd_key_released( 1, 5 );
         break;
-    case HP48_KEY_MUL:
+    case HP48_KEY_MULTIPLY:
         kbd_key_released( 2, 0 );
         break;
     case HP48_KEY_6:
