@@ -136,6 +136,7 @@ SRC = src/main.c \
 	src/ui4x/48gx.c \
 	src/ui4x/48sx.c \
 	src/ui4x/49g.c \
+	src/ui4x/40g.c \
 	src/ui4x/50g.c \
 	src/ui4x/api.c \
 	src/ui4x/fonts.c \
