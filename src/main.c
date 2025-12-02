@@ -9,7 +9,7 @@
 #include "core/display.h"
 #include "core/emulator.h"
 
-#include "ui4x/api.h"
+#include "ui4x/src/api.h"
 
 /* static long long time_in_useconds( void ) */
 /* { */

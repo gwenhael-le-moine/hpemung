@@ -8,7 +8,7 @@
 #include "core/emulator.h" /* for please_exit */
 #include "core/keyboard.h" /* press_key(); release_key() */
 
-#include "ui4x/api.h"
+#include "ui4x/src/api.h"
 
 #define KEYBOARD keyboard48
 

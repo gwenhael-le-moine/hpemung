@@ -3,7 +3,7 @@
 
 #include <stdbool.h>
 
-#include "ui4x/api.h"
+#include "ui4x/src/api.h"
 
 typedef struct {
     /* duplicating ui4x_config_t here so that config_init can return one big struct */
